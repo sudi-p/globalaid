@@ -1,0 +1,11 @@
+@import '../../../base/base.module.scss';
+.goBack{
+	cursor: pointer;
+	background-color: $primary;
+	width: max-content;
+	padding: 10px;
+	color: white;
+}
+.position{
+	font-weight: bold;
+}

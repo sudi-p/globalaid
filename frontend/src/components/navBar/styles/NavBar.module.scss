@@ -1,0 +1,39 @@
+@import '../../base/base.module.scss';
+.navBarContainer{
+	
+	padding: 0 30px;
+	position: relative;
+	height: 60px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid #bbb;
+}
+
+.navBarLogo{
+	background: url('https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674412883/GlobalAid/GlobalAid_Logo.png');
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
+	height: 60px;
+	width: 60px;
+}
+.link{
+	margin: 0 20px;
+	text-decoration: none;
+	text-align: center;
+	color: black;
+	&:hover{
+		color: $primary;
+	}
+}
+.link:first-child{
+	margin: 0 20px 0 0;
+}
+.link:last-child{
+	margin: 0 0 0 20px;
+}
+.activeLink{
+	color: $primary;
+	font-weight: bold;
+}

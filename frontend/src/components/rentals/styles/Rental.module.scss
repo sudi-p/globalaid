@@ -1,0 +1,23 @@
+.rental{
+	padding: 20px;
+	border: 1px solid #bbb;
+	border-bottom: none;
+	width: 80%;
+	margin: auto;
+	
+	&:last-child{
+		border-bottom: 1px solid #bbb;
+	}
+}
+.rentalDetails{
+	display: flex;
+}
+.description{
+	margin-left: 20px;
+	.title{
+		font-weight: bold;
+	}
+}
+.rentalFooter{
+	padding-top: 10px;
+}
