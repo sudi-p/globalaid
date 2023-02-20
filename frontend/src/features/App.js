@@ -1,4 +1,3 @@
-import React from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
 import DashboardContainer from  './dashboard/DashboardContainer';
@@ -19,7 +18,7 @@ function App() {
         <Routes>
           <Route path='/' element={<DashboardContainer />} />
           <Route path='/login' element={<LoginContainer />} />
-          <Route path='/register' element={<RegisterContainer />} />
+          <Route path='/signup' element={<RegisterContainer />} />
           <Route path='/jobs/job/:id' element={<Job />} />
           <Route path='/jobs' element={<Jobs />} />
           <Route path='/rentals' element={<Rentals />} />
