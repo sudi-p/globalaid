@@ -7,8 +7,10 @@ import multer from "multer";
 import helmet from "helmet";
 import morgan from "morgan";
 import path from 'path';
-import router from './routes/auth.js';
+import authRoutes from './routes/auth.js';
+import userRoutes from './routes/users.js';
 import { fileURLToPath } from 'url';
+import { register } from './controllers/auth.js';
 
 // Configurations
 const __filename = fileURLToPath(import.meta.url);
@@ -23,7 +25,7 @@ app.use(bodyParser.json({limit: "30mb", exteneded: true}))
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true}))
 app.use(cors());
 app.use("/assets", express.static(path.join(__dirname, 'public/assets')));
-import { register } from './controllers/auth.js';
+
 
 //File Storage
 const storage = multer.diskStorage({
@@ -38,10 +40,11 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 //Routes with files
-app.post("/auth/register", upload.single("picture"), register);
+// app.post("/auth/register", upload.single("picture"), register);
 
 //Routes
-app.use("/auth", router)
+app.use("/auth", authRoutes)
+app.use("/user", userRoutes)
 
 //Mongoose Setup
 const PORT = process.env.PORT || 6001;

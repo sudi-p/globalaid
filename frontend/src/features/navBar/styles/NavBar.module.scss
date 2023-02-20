@@ -1,6 +1,5 @@
 @import '../../base/base.module.scss';
 .navBarContainer{
-	
 	padding: 0 30px;
 	position: relative;
 	height: 60px;
@@ -9,7 +8,6 @@
 	align-items: center;
 	border-bottom: 1px solid #bbb;
 }
-
 .navBarLogo{
 	background: url('https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674412883/GlobalAid/GlobalAid_Logo.png');
 	background-size: cover;
@@ -17,6 +15,11 @@
 	background-position: center;
 	height: 60px;
 	width: 60px;
+}
+.navBarLinks{
+	display: flex;
+	align-items: center;
+	width: max-content;
 }
 .link{
 	margin: 0 20px;
