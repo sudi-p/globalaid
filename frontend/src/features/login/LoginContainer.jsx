@@ -1,32 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import getClient from '../../lib/api';
-import { useDispatch } from 'react-redux';
 import styles from './styles/LoginContainer.module.scss';
-import { loginStart, loginSuccess, loginFail } from './LoginSlice';
-import axios from 'axios';
 import BoxWrapper from '../../components/boxWrapper/BoxWrapper';
+import { fetchUserSuccess } from '../navBar/LoggedInUserSlice';
 
 const LoginContainer = () => {
     const dispatch = useDispatch();
-    const [ username, setUsername] = useState('');
+    const navigate = useNavigate();
+    const [ error, setError] = useState('');
+    const [ email, setEmail] = useState('');
     const [ password, setPassword] = useState('');
+    const loggedInUser = useSelector(state => state.loggedInUser);
     const login = () => {
-        dispatch(loginStart)
         getClient()
-        .post('http://localhost:3001/auth/login', {
-            'username': username,
+        .post('/auth/login/', {
+            'email': email,
             'password': password
-        }).then(res =>{
+        }).then(async(res) =>{
             console.log(res)
-            dispatch(loginSuccess(res.data))
+            document.cookie = "token="+res.data.token+";expires=Thu, 01 Aug 2030 00:00:00 UTC; path=/;";
+            dispatch(fetchUserSuccess({email: res.data.user.email}))
+            await navigate("/");
         }).catch(err => {
-            dispatch(loginFail(err.message))
+            setError(err.response.data.msg)
         })
     }
+    useEffect(()=> {
+        if (loggedInUser.isLoggedIn) navigate("/")
+    }, [navigate, loggedInUser])
+    
     return(
         <BoxWrapper>
             Login
-            <input className={styles.input} type="text" onChange={(e) => setUsername(e.target.value)} value={username} />
+            <span className={styles.error}>{error}</span>
+            <input className={styles.input} type="text" onChange={(e) => setEmail(e.target.value)} value={email} />
             <input className={styles.input} type="text" onChange={(e) => setPassword(e.target.value)} value={password} />
             <button onClick={() => login()}>Submit</button>
         </BoxWrapper>

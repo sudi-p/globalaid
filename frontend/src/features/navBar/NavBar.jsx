@@ -10,13 +10,18 @@ const NavBar = (props) => {
     useEffect(()=> {
         dispatch(fetchUserStart())
         getClient()
-        .get('/getUser')
-        .then(res => dispatch(fetchUserSuccess(res)))
-        .catch(err => dispatch(fetchUserError()))
+        .get('/user/getuser/')
+        .then(res => {
+            console.log(res)
+            dispatch(fetchUserSuccess(res.data))
+        })
+        .catch(err => {
+            console.log(err)
+            dispatch(fetchUserError())
+        })
     }, [])
     const loggedInUser = useSelector(state => state.loggedInUser)
-    const { isLoggedIn, username} = loggedInUser;
-    console.log(loggedInUser)
+    const { isLoggedIn, email} = loggedInUser;
 	return(
 		<div className={styles.navBarContainer}>
             <div className={styles.navBarLinks}>
@@ -35,7 +40,7 @@ const NavBar = (props) => {
             </div>
             <div className={styles.navBarLogo}/>
             <div className={styles.navBarLinks}>
-                {isLoggedIn ? username: (
+                {isLoggedIn ? email: (
                     <>
                         <NavLink
                             className={({isActive}) => `${styles.link} ${isActive && styles.activeLink}`}
