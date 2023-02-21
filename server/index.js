@@ -10,7 +10,8 @@ import path from 'path';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
 import { fileURLToPath } from 'url';
-import { register } from './controllers/auth.js';
+import { verifyToken } from './middleware/auth.js';
+// import { register } from './controllers/auth.js';
 
 // Configurations
 const __filename = fileURLToPath(import.meta.url);
@@ -43,11 +44,12 @@ const upload = multer({ storage });
 // app.post("/auth/register", upload.single("picture"), register);
 
 //Routes
-app.use("/auth", authRoutes)
-app.use("/user", userRoutes)
+app.use("/api/auth", authRoutes)
+app.use("/api/user", userRoutes)
 
 //Mongoose Setup
 const PORT = process.env.PORT || 6001;
+mongoose.set('strictQuery', true);
 mongoose.connect(process.env.MONGO_URL,{
     useNewUrlParser: true,
     useUnifiedTopology: true,
