@@ -12,7 +12,6 @@ const NavBar = (props) => {
         getClient()
         .get('/user/getuser/')
         .then(res => {
-            console.log(res)
             dispatch(fetchUserSuccess(res.data))
         })
         .catch(err => {

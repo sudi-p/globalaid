@@ -6,27 +6,22 @@ const initialState = {
 	status: StoreState.EMPTY,
 };
 
-const jobExample = [{
-	'id': 1,
-	'position': 'Line Cook',
-	'company': 'Wendys',
-	'salary': '17'
-}];
+
 const JobsSlice = createSlice({
 	name: 'jobs',
 	initialState: initialState,
 	reducers:{
-		fetchJobs: (state) => {
+		fetchJobsStart: (state) => {
 			state.status = StoreState.LOADING;
-			state.jobs = jobExample;
 		},
 		fetchJobsSuccess: (state, action) => {
 			const { payload } = action;
+			console.log(payload)
 			state.status = StoreState.SUCCESS;
-			state.jobs = payload;
+			state.jobs = payload.jobs;
 		}
 	}
 })
 
 export default JobsSlice.reducer;
-export const {fetchJobs, fetchJobsSuccess } = JobsSlice.actions;
+export const {fetchJobsStart, fetchJobsSuccess } = JobsSlice.actions;

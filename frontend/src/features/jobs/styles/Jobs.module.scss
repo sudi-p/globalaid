@@ -1,6 +1,27 @@
+@import '../../base/base.module.scss';
 .jobs{
 	
 }
-.job{
+
+.createJob{
+	border: 1px solid $primary;
+	border-radius: 4px;
+	color: $primary;
+	width: max-content;
+	padding: 10px;
+	margin: 10px 5px;
+	cursor: pointer;
+}
+.jobBox{
 	border: 1px solid #bbb;
+	padding: 20px;
+	margin: 0 auto 10px auto;
+	width: 560px;
+}
+.jobBoxFooter{
+	margin-top: 10px;
+	border-top: 1px solid $primary;
+	padding-top: 10px;
+	display: flex;
+	align-items: center;
 }
