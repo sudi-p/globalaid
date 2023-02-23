@@ -10,8 +10,6 @@ import path from 'path';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
 import { fileURLToPath } from 'url';
-import { verifyToken } from './middleware/auth.js';
-// import { register } from './controllers/auth.js';
 
 // Configurations
 const __filename = fileURLToPath(import.meta.url);
@@ -55,5 +53,4 @@ mongoose.connect(process.env.MONGO_URL,{
     useUnifiedTopology: true,
 }).then(()=> {
     app.listen(PORT, () => console.log(`SERVER PORT: ${PORT}`))
-
 }).catch((error) => console.log(error));
