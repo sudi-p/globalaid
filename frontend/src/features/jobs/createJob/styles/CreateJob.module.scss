@@ -23,19 +23,5 @@
 .inputError{
     color: red;
 }
-.actionButton{
-    width: max-content;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 10px;
-    display: inline;
-}
-.cancelButton{
-    border: 1px solid $primary;
-    color: $primary;
-    margin-right: 10px;
-}
-.submitButton{
-    background-color: $primary;
-    color: white;
-}
+
+
