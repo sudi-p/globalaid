@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import getClient from '../../../lib/api';
 import { fetchJobsSuccess } from '../JobsSlice';
+import { Button, Stack, TextField } from '@mui/material/';
 import styles from './styles/CreateJob.module.scss';
 
 const CreateJob = (props) => {
     const dispatch = useDispatch();
-    const { setShowModal } = props;
+    const { setShowCreateJobModal } = props;
     const [ title, setTitle ] = useState('');
     const [ description, setDescription ] = useState('');
     const [ company, setCompany ] = useState('');
@@ -35,7 +36,7 @@ const CreateJob = (props) => {
         })
         .then(res => {
             dispatch(fetchJobsSuccess(res.data))
-            setShowModal(false);
+            setShowCreateJobModal(false);
         })
         .catch(err => console.log(err))
     }
@@ -43,13 +44,18 @@ const CreateJob = (props) => {
         <div className={styles.createJob}>
             <div className={styles.createJobTitle}>CreateJob</div>
             <div className={styles.inputBox}>
-                <div className={styles.label}>Title *</div>
-                <input className={styles.input} onChange={(e) => setTitle(e.target.value)} value={title}/>
+                
+                <TextField label="Title" onChange={(e) => setTitle(e.target.value)} value={title}/>
                 <span className={styles.inputError}>{titleError}</span>
             </div>
             <div className={styles.inputBox}>
-                <div className={styles.label}>Description</div>
-                <textarea style={{ 'resize': 'none'}} type="text" className={styles.input} onChange={(e) => setDescription(e.target.value)} rows='4' value={description}/>
+                
+                <TextField
+                    multiline
+                    rows={4}
+                    label="Description"
+                    onChange={(e) => setDescription(e.target.value)}
+                    value={description}/>
                 <span className={styles.inputError}>{descriptionError}</span>
             </div>
             <div className={styles.inputBox}>
@@ -74,8 +80,19 @@ const CreateJob = (props) => {
                 
                 Are you hiring for this Job? If you are not hiring or not associated with the hiring process in anyway, Select No.<input style={{ 'resize': 'none'}} type="checkbox" className={styles.input} onChange={() => setIsOwner(!isOwner)} value={isOwner}/>
             </div>
-            <div onClick={() => setShowModal(false)} className={`${styles.actionButton} ${styles.cancelButton}`}>Cancel</div>
-            <div onClick={()=> createJob()} className={`${styles.actionButton} ${styles.submitButton}`}>Post Job</div>
+            <Stack spacing={2} direction="row">
+            <Button
+                color="primary"
+                variant="outlined"
+                onClick={() => setShowCreateJobModal(false)}
+            >Cancel</Button>
+            <Button
+                color="primary"
+                variant="contained"
+                onClick={()=> createJob()}
+            >Post Job</Button>
+            </Stack>
+            
         </div>
     )
 }
