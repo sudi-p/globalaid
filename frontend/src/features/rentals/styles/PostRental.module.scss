@@ -12,11 +12,6 @@
 }
 .inputBox{
     margin-bottom: 15px;
-    select {
-        padding: 5px;
-        border: 1px solid #bbb;
-        
-    }
 }
 .input{
     border: 1px solid #bbb;
@@ -25,15 +20,7 @@
     width: 400px;
     padding: 5px;
 }
-input[type=number]{
-    display: inline;
-    width: 40px;
-    margin-left: 10px;
-}
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button {
-  opacity: 1;
-}
+
 .inputError{
     color: red;
 }
@@ -42,12 +29,7 @@ input[type=number]::-webkit-outer-spin-button {
     margin-top: 10px;
     position: relative
 }
-.actionButton{
-    width: max-content;
-    padding: 8px;
-    border-radius: 4px;
-    cursor: pointer;
-}
+
 .continueButton{
     color: green;    
     border: 1px solid green;
@@ -69,18 +51,4 @@ input[type=number]::-webkit-outer-spin-button {
     height: max-content;
     border: 1px solid #bbb;
 }
-.closeIcon{
-    display: flex;
-    justify-content: flex-end;
-    padding-right: 5px;
-    margin-bottom: 4px;;
-}
-.confirmCancelButton{
-    color: white;    
-    background-color: red;
-    margin-right: 10px;
-}
-.postButton{
-    background-color: $primary;
-    color: white;
-}
+
