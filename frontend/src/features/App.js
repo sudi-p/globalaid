@@ -1,6 +1,7 @@
 
-import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
+
 import DashboardContainer from  './dashboard/DashboardContainer';
 import Jobs from './jobs/Jobs';
 import Job from './jobs/job/Job';
@@ -18,7 +19,7 @@ const theme = createTheme({
       contrastText: "#fff"
     },
     secondary: {
-      main: "'#11cb5f'",
+      main: '#11cb5f',
     },
   },
 });
