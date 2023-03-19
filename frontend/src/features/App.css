@@ -1,8 +1,15 @@
-html, body div{
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
+*{
+  vertical-align: baseline;
+	font-weight: inherit;
   font-family: 'Montserrat', sans-serif;
+	font-style: inherit;
+	font-size: 100%;
+	border: 0 none;
+	outline: 0;
+	padding: 0;
+	margin: 0;
+}
+body { line-height: 1; color: black; background: white; }
+p{
+  margin: 5px 0 10px 0;
 }
