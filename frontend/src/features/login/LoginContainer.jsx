@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import getClient from '../../lib/api';
 import styles from './styles/LoginContainer.module.scss';
-import BoxWrapper from '../../components/boxWrapper/BoxWrapper';
 import { fetchUserSuccess } from '../navBar/LoggedInUserSlice';
 
 const LoginContainer = () => {
@@ -32,13 +31,18 @@ const LoginContainer = () => {
     }, [navigate, loggedInUser])
     
     return(
-        <BoxWrapper>
-            Login
+        <div className={styles.login}>
+            Welcome to GlobalAid,
+            Sign In to Continue.
+
+            Don't have an account? <Link to="/signup/"> Create a account </Link>
+            It takes less than a minute.
             <span className={styles.error}>{error}</span>
             <input className={styles.input} type="text" onChange={(e) => setEmail(e.target.value)} value={email} />
             <input className={styles.input} type="text" onChange={(e) => setPassword(e.target.value)} value={password} />
-            <button onClick={() => login()}>Submit</button>
-        </BoxWrapper>
+            Forgot Password?
+            <button onClick={() => login()}>Sign In</button>
+        </div>
     )
 }
 export default LoginContainer;

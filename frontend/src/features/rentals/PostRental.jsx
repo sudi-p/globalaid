@@ -8,7 +8,6 @@ import {
     FormHelperText,
     InputLabel,
     Select,
-    Box,
     Checkbox
 } from '@mui/material';
 import { useForm } from 'react-hook-form';

@@ -11,11 +11,13 @@ import RegisterContainer from './register/Register';
 import Rentals from './rentals/RentalsContainer';
 
 import './App.css';
+import NavbarLayout from './layout/NavbarLayout';
+import AuthLayout from './layout/AuthLayout';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#41b3A3",
+      main: "#84A0C5",
       contrastText: "#fff"
     },
     secondary: {
@@ -28,14 +30,17 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        <NavBar />
         <Routes>
-          <Route path='/' element={<DashboardContainer />} />
-          <Route path='/login' element={<LoginContainer />} />
-          <Route path='/signup' element={<RegisterContainer />} />
-          <Route path='/jobs/job/:id' element={<Job />} />
-          <Route path='/jobs' element={<Jobs />} />
-          <Route path='/rentals' element={<Rentals />} />
+          <Route path='/' element={<NavbarLayout />}>
+            <Route index element={<DashboardContainer />} />
+            <Route path='/jobs/job/:id' element={<Job />} />
+            <Route path='/jobs' element={<Jobs />} />
+            <Route path='/rentals' element={<Rentals />} />
+          </Route>
+          <Route path='/' element={<AuthLayout />}>
+            <Route path='/login' element={<LoginContainer />} />
+            <Route path='/signup' element={<RegisterContainer />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>
