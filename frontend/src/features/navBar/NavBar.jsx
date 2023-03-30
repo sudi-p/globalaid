@@ -1,12 +1,16 @@
 import getClient from '../../lib/api'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import { fetchUserStart, fetchUserSuccess, fetchUserError } from './LoggedInUserSlice';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { fetchUserStart, fetchUserSuccess, clearLoggedInUser } from './LoggedInUserSlice';
 import styles from './styles/NavBar.module.scss';
+import { Paper } from '@mui/material';
+import { ExpandMore as ExpandMoreIcon, ExpandLess as ExpandLessIcon } from '@mui/icons-material';
 
 const NavBar = (props) => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const [expandMenu, setExpandMenu ] = useState(false);
     useEffect(()=> {
         dispatch(fetchUserStart())
         getClient()
@@ -16,9 +20,14 @@ const NavBar = (props) => {
         })
         .catch(err => {
             console.log(err)
-            dispatch(fetchUserError())
+            dispatch(clearLoggedInUser())
         })
     }, [])
+    const logout = async () => {
+        document.cookie = "token= 0k;expires=Thu, 01 Aug 2018 00:00:00 UTC; path=/;";
+        dispatch(clearLoggedInUser())
+        await navigate("/")
+    }
     const loggedInUser = useSelector(state => state.loggedInUser)
     const { isLoggedIn, email} = loggedInUser;
 	return(
@@ -39,7 +48,23 @@ const NavBar = (props) => {
             </div>
             <div className={styles.navBarLogo}/>
             <div className={styles.navBarLinks}>
-                {isLoggedIn ? email: (
+                {isLoggedIn ? (
+                    <div className={styles.extraMenuArrow}>
+                        {email}
+                        <span>
+                            {expandMenu ? (
+                            <>
+                                <ExpandLessIcon onClick={() => setExpandMenu(false)} color="primary" /><Paper
+                                    variant="outlined"
+                                >
+                                    <div onClick={() => logout()}>Log Out</div>
+                                </Paper>
+                            </>)
+                             : <ExpandMoreIcon onClick={()=> setExpandMenu(true)} color="primary"/>}
+                        </span>
+                        
+                    </div>
+                ): (
                     <>
                         <NavLink
                             className={({isActive}) => `${styles.link} ${isActive && styles.activeLink}`}

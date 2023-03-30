@@ -43,7 +43,6 @@ export const login = async(req, res) => {
         const isMatch = await bcrypt.compare(password, user.password)
         if (!isMatch) return res.status(400).json({msg: "Oops! Password wrong"})
         const token = jwt.sign({ id: user._id}, process.env.JWT_SECRET);
-        console.log(user)
         delete user.password;
         res.status(200).json({token, user});
     } catch(err){

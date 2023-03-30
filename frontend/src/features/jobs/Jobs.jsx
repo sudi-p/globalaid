@@ -10,7 +10,7 @@ import styles from './styles/Jobs.module.scss';
 
 function App() {
   const dispatch = useDispatch();
-  const [ showCreateJobModal, setShowCreateJobModal] = useState(true);
+  const [ showCreateJobModal, setShowCreateJobModal] = useState(false);
   const jobsData = useSelector(state => state.jobs);
   const { jobs, status } = jobsData;
   useEffect(() => {

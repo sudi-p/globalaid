@@ -8,7 +8,7 @@ import PostRental from './PostRental';
 
 function App() {
   const dispatch = useDispatch();
-  const [ showPostRentalModal, setShowPostRentalModal ] = useState(true);
+  const [ showPostRentalModal, setShowPostRentalModal ] = useState(false);
   const rentals = useSelector(state => state.rentals.rentals);
   useEffect(() => {
     dispatch(fetchRentalsStart());

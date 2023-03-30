@@ -9,18 +9,20 @@ import {
     IconButton,
     Button,
     Stack,
-    Typography,
     FormHelperText,
-    CircularProgress
+    CircularProgress,
+    Grid,
+    Alert
 } from "@mui/material/";
-import { useForm } from 'react-hook-form';
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-
 import {
     Visibility,
     VisibilityOff
 } from '@mui/icons-material/';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+
 import getClient from '../../lib/api';
 import styles from './styles/Register.module.scss';
 
@@ -39,7 +41,10 @@ const UserSchema = yup.object().shape({
         .min(4)
         .max(15)
         .required("Please enter the password"),
-    confirmPassword: yup.string().oneOf([yup.ref("password"), null])
+    confirmPassword: yup
+        .string()
+        .oneOf([yup.ref("password"), ""], "Confirm Password must match Password")
+        .required("Please enter the confirm password"),
 })
 
 const Register = (props) => {
@@ -57,7 +62,6 @@ const Register = (props) => {
     const [ password, setPassword ] = useState('');
     const [ confirmPassword, setConfirmPassword ] = useState('');
     const registerSubmit = () => {
-        console.log()
         setLoading(true);
         setError('');
         getClient()
@@ -68,19 +72,22 @@ const Register = (props) => {
             email
         })
         .then(res => navigate('/login/'))
-        .catch(err => setError(err.response.data.msg));
+        .catch(err =>{
+            setError(err.response.data.msg);
+            setLoading(false)
+        });
     }
     return(
-        <div className={styles.register}>
-            <Typography variant="h4" gutterBottom>Welcome to GlobalAid</Typography>
+        <>
+            <div className={styles.title}>Welcome to GlobalAid</div>
             <form onSubmit={handleSubmit(registerSubmit)}>
-                <span className={styles.inputError}>{error}</span>
+                {error && (<Alert severity="error">{error}</Alert>)}
                 <Stack spacing={2} direction="row">
                     <div className={styles.inputWrapper}>
                         <TextField
                             {...register("firstName")}
-                            type="text"
                             label="First Name"
+                            name="firstName"
                             onChange={(e) => setFirstName(e.target.value)}
                             value={firstName}
                             error={Boolean(errors.firstName)}
@@ -90,8 +97,8 @@ const Register = (props) => {
                     <div className={styles.inputWrapper}>
                         <TextField
                             {...register("lastName")}
-                            className={styles.input}
                             label="Last Name"
+                            name="lastName"
                             onChange={(e) => setLastName(e.target.value)}
                             value={lastName}
                             error={Boolean(errors.lastName)}
@@ -165,16 +172,22 @@ const Register = (props) => {
                         <FormHelperText>{errors.confirmPassword?.message}</FormHelperText>
                     </FormControl>
                 </div>
-
-                <div>Already have an account? <Link to="/login/">Sign In </Link> to continue</div>
-                <Button
-                    variant='contained'
-                    color="primary"
-                    type="submit"
-                >Submit</Button>
-                {loading && (<CircularProgress color="success" />)}
+                <Grid
+                    container
+                    flexDirection="column"
+                    justifyContent="flex-end"
+                >
+                    <div className={styles.login}>Already have an account? <Link className={styles.link} to="/login/">Sign In </Link> to continue</div>
+                    <Button
+                        variant='contained'
+                        color="secondary"
+                        type="submit"
+                    >{loading ? (<CircularProgress color="success" />) : "Submit"}</Button>
+                    
+                </Grid>
+                
             </form>
-        </div>
+        </>
     );
 };
 

@@ -7,14 +7,18 @@ export default function AuthLayout() {
     <>
         <div className={styles.wrapper}>
             <div className={styles.common}>
-                <Link to='/'><div className={styles.logo} />
-                <div className={styles.title}>GlobalAid</div>
-                <div className={styles.subTitle}>Simplifying Student Life</div>
-                </Link>
-                <div className={styles.image} />
+              <div className={styles.link}>
+                  <Link to='/'><div className={styles.logo} />
+                  <div className={styles.title}>GlobalAid</div>
+                  <div className={styles.subTitle}>Simplifying Student Life</div>
+                  </Link>
+              </div>
+              <div className={styles.image} />
             </div>
-            <div className={styles.content}>
+            <div className={styles.contentWrapper}>
+              <div className={styles.content}>
                 <Outlet />
+              </div>
             </div>
         </div>
         
