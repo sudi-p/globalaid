@@ -4,10 +4,44 @@ import { Link, useNavigate } from 'react-router-dom';
 import getClient from '../../lib/api';
 import styles from './styles/LoginContainer.module.scss';
 import { fetchUserSuccess } from '../navBar/LoggedInUserSlice';
+import {
+    TextField,
+    FormControl,
+    InputLabel,
+    OutlinedInput,
+    InputAdornment,
+    IconButton,
+    FormHelperText,
+    Button,
+    Grid,
+    Alert,
+} from '@mui/material';
+import {
+    Visibility,
+    VisibilityOff
+} from '@mui/icons-material/';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+const LoginSchema = yup.object().shape({
+    email: yup
+        .string()
+        .required("Please enter the email"),
+    password: yup
+        .string()
+        .min(4)
+        .max(15)
+        .required("Please enter the password"),
+})
 
 const LoginContainer = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [showPassword, setShowPassword] = React.useState(false);
+    const { register, handleSubmit, formState: { errors}} = useForm({
+        resolver: yupResolver(LoginSchema),
+    })
     const [ error, setError] = useState('');
     const [ email, setEmail] = useState('');
     const [ password, setPassword] = useState('');
@@ -20,7 +54,7 @@ const LoginContainer = () => {
         }).then(async(res) =>{
             console.log(res)
             document.cookie = "token="+res.data.token+";expires=Thu, 01 Aug 2030 00:00:00 UTC; path=/;";
-            dispatch(fetchUserSuccess({email: res.data.user.email}))
+            fetchUserSuccess(res.data)
             await navigate("/");
         }).catch(err => {
             setError(err.response.data.msg)
@@ -31,18 +65,66 @@ const LoginContainer = () => {
     }, [navigate, loggedInUser])
     
     return(
-        <div className={styles.login}>
-            Welcome to GlobalAid,
-            Sign In to Continue.
+        <>
+            <div className={styles.title}>Welcome to GlobalAid</div>
+            <div className={styles.info}>
+                <p>Sign In to Continue.</p>
 
-            Don't have an account? <Link to="/signup/"> Create a account </Link>
-            It takes less than a minute.
-            <span className={styles.error}>{error}</span>
-            <input className={styles.input} type="text" onChange={(e) => setEmail(e.target.value)} value={email} />
-            <input className={styles.input} type="text" onChange={(e) => setPassword(e.target.value)} value={password} />
-            Forgot Password?
-            <button onClick={() => login()}>Sign In</button>
-        </div>
+                <p>Don't have an account? <Link className={styles.link} to="/signup/"> Create an account </Link></p>
+                It takes less than a minute.
+            </div>
+            {error && (<Alert severity="error">{error}</Alert>)}
+            <form onSubmit={handleSubmit(login)}>
+                <div className={styles.inputWrapper}>
+                    <TextField
+                        fullWidth
+                        {...register("email")}
+                        label="Email"
+                        onChange={(e) => setEmail(e.target.value)}
+                        value={email}
+                        error={Boolean(errors.email)}
+                        helperText={errors.email?.message}
+                    />
+                </div>
+                <div className={styles.inputWrapper}>
+                    <FormControl
+                        fullWidth
+                        variant="outlined"
+                        error={Boolean(errors.password)}
+                    >
+                        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                        <OutlinedInput
+                            type={showPassword ? 'text' : 'password'}
+                            {...register("password")}
+                            endAdornment={
+                            <InputAdornment position="end">
+                                <IconButton
+                                onClick={() => setShowPassword(!showPassword)}
+                                onMouseDown={(e) => e.preventDefault()}
+                                edge="end"
+                                >
+                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                                </IconButton>
+                            </InputAdornment>
+                            }
+                            label="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <FormHelperText>{errors.password?.message}</FormHelperText>
+                    </FormControl>
+                </div>
+                <Grid container>
+                <Button
+                    variant="contained"
+                    type="submit"
+                    color="secondary"
+                    fullWidth
+                >Sign In</Button>
+                </Grid>
+                
+            </form>
+        </>
     )
 }
 export default LoginContainer;

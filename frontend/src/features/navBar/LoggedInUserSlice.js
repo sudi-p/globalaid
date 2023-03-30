@@ -22,13 +22,13 @@ const LoggedInUserSlice = createSlice({
             state.email = email;
             state.status = StoreState.SUCCESS;
         },
-        'fetchUserError': (state, action) => {
+        'clearLoggedInUser': (state, action) => {
             state.isLoggedIn = false;
             state.email = '';
-            state.status = StoreState.ERROR;
+            state.status = StoreState.SUCCESS;
         },
     }
 });
 
 export default LoggedInUserSlice.reducer;
-export const { fetchUserStart, fetchUserSuccess, fetchUserError } = LoggedInUserSlice.actions;
+export const { fetchUserStart, fetchUserSuccess, clearLoggedInUser } = LoggedInUserSlice.actions;

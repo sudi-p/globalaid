@@ -87,6 +87,7 @@ const PostRental = (props) => {
                 <form onSubmit={(handleSubmit(postRental))}>
                     <div className={styles.inputBox}>
                         <TextField
+                            fullWidth
                             label="Title"
                             {...register("title")}
                             onChange={(e) => setTitle(e.target.value)}
@@ -97,6 +98,7 @@ const PostRental = (props) => {
                     </div>
                     <div className={styles.inputBox}>
                         <TextField
+                            fullWidth
                             multiline
                             rows={4}
                             {...register("description")}
@@ -112,6 +114,7 @@ const PostRental = (props) => {
                     </div>
                     <div className={styles.inputBox}>
                         <TextField
+                            fullWidth
                             label="Location"
                             {...register("location")}
                             onChange={(e) => setLocation(e.target.value)}
@@ -145,7 +148,8 @@ const PostRental = (props) => {
                     </div>
                     <Stack spacing={2} direction="row">
                         <div className={styles.inputBox}>
-                            <TextField 
+                            <TextField
+                                fullWidth
                                 label="Number of Bedrooms"
                                 {...register("bedRoom")}
                                 type="number"
@@ -158,6 +162,7 @@ const PostRental = (props) => {
                         </div>
                         <div className={styles.inputBox}>
                             <TextField
+                                fullWidth
                                 label="Number of Washrooms"
                                 type="number"
                                 {...register("washRoom")}
@@ -172,6 +177,7 @@ const PostRental = (props) => {
                     <Stack spacing={2} direction="row">
                         <div className={styles.inputBox}>
                             <TextField
+                                fullWidth
                                 label="Email"
                                 type="text"
                                 {...register("email")}
@@ -184,6 +190,7 @@ const PostRental = (props) => {
                         </div>
                         <div className={styles.inputBox}>
                             <TextField
+                                fullWidth
                                 label="Mobile Number"
                                 type="text"
                                 {...register("phone")}
@@ -205,13 +212,14 @@ const PostRental = (props) => {
                                 Are you sure you want to cancel? All information will be lost.
                                 <Stack spacing={2} direction="row">
                                     <Button
-                                        onClick={() => confirmCancel()}
-                                        variant="contained"
-                                > Cancel</Button>
-                                    <Button
                                         onClick={() => setShowConfirmCancel(false)}
                                         variant="outlined"
                                     >Go Back</Button>
+                                    <Button
+                                        onClick={() => confirmCancel()}
+                                        variant="contained"
+                                    > Cancel</Button>
+                                    
                                 </Stack>
                             </div>
                         )}
@@ -222,6 +230,7 @@ const PostRental = (props) => {
                             >Cancel</Button>
                             <Button
                                 variant="contained"
+                                color="secondary"
                                 type="submit"
                                 id="submit"
                             >Post Rental</Button>

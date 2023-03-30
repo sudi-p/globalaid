@@ -6,6 +6,8 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	font-weight: 600;
+	color: #73767a;
 	border-bottom: 1px solid #bbb;
 }
 .navBarLogo{
@@ -21,13 +23,21 @@
 	align-items: center;
 	width: max-content;
 }
+.extraMenuArrow{
+	display: flex;
+	align-items: center;
+	position: relative;
+}
 .link{
 	margin: 0 20px;
 	text-decoration: none;
 	text-align: center;
-	color: black;
+	color: inherit;
+	transition: all 0.3s ease 0s;
 	&:hover{
 		color: $primary;
+	}&:first-child{
+		margin: 0 20px 0 0;
 	}
 }
 .link:first-child{
