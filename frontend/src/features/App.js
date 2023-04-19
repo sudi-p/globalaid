@@ -5,14 +5,13 @@ import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import DashboardContainer from  './dashboard/DashboardContainer';
 import Jobs from './jobs/Jobs';
 import Job from './jobs/job/Job';
-import NavBar from './navBar/NavBar';
 import LoginContainer from './login/LoginContainer';
 import RegisterContainer from './register/Register';
 import Rentals from './rentals/RentalsContainer';
 
 import './App.css';
-import NavbarLayout from './layout/NavbarLayout';
-import AuthLayout from './layout/AuthLayout';
+import NavbarLayout from './layout/navBarLayout/NavbarLayout';
+import AuthLayout from './layout/authLayout/AuthLayout';
 
 const theme = createTheme({
   palette: {
@@ -23,6 +22,10 @@ const theme = createTheme({
     secondary: {
       main: '#41b3A3',
       contrastText: "#fff"
+    },
+    text: {
+      primary: '#173A5E',
+      secondary: '#46505A',
     },
   },
 });

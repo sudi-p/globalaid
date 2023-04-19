@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import getClient from '../../lib/api';
 import styles from './styles/LoginContainer.module.scss';
-import { fetchUserSuccess } from '../navBar/LoggedInUserSlice';
+import { fetchUserSuccess } from '../layout/navBarLayout/LoggedInUserSlice';
 import {
     TextField,
     FormControl,
@@ -36,7 +36,6 @@ const LoginSchema = yup.object().shape({
 })
 
 const LoginContainer = () => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = React.useState(false);
     const { register, handleSubmit, formState: { errors}} = useForm({
