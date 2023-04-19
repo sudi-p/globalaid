@@ -11,6 +11,7 @@ const rentalsSlice = createSlice({
 	initialState: initialState,
 	reducers: {
 		fetchRentalsStart: (state) => {
+
 			state.status = StoreState.LOADING;
 		},
 		fetchRentalsSuccess: (state, action) => {

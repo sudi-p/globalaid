@@ -1,4 +1,8 @@
-@import '../../base/base.module.scss';
+@import '../../../base/base.module.scss';
+.navbarLayout{
+	display: flex;
+	flex-direction: column;
+}
 .navBarContainer{
 	padding: 0 30px;
 	position: relative;
@@ -28,6 +32,11 @@
 	align-items: center;
 	position: relative;
 }
+.extraNav{
+	position: absolute;
+	padding: 20px;
+	
+}
 .link{
 	margin: 0 20px;
 	text-decoration: none;
@@ -49,4 +58,11 @@
 .activeLink{
 	color: $primary;
 	font-weight: bold;
+}
+.outlet{
+	background-color: $gray-lightest;
+	min-height: 100vh;
+	height: 100%;
+	padding-top: 20px;
+	flex-grow: 1;
 }

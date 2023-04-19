@@ -1,0 +1,7 @@
+@import '../../base/base.module.scss';
+.activeJob{
+	border: 1px solid $gray-light;
+	border-radius: 5px;
+	flex: 2;
+	margin-left:10px;
+}

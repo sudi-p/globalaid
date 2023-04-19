@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import rentalsReducer from '../features/rentals/RentalsSlice';
 import jobsReducer from '../features/jobs/JobsSlice';
 import jobReducer from '../features/jobs/job/JobSlice';
-import loggedInUserReducer from '../features/navBar/LoggedInUserSlice';
+import loggedInUserReducer from '../features/layout/navBarLayout/LoggedInUserSlice';
 
 // export const store = configureStore({
 //   reducer: {

@@ -45,6 +45,8 @@ const upload = multer({ storage });
 app.use("/api/auth", authRoutes)
 app.use("/api/user", userRoutes)
 
+//Socket
+const io = require('socket.io')
 //Mongoose Setup
 const PORT = process.env.PORT || 6001;
 mongoose.set('strictQuery', true);
@@ -53,4 +55,10 @@ mongoose.connect(process.env.MONGO_URL,{
     useUnifiedTopology: true,
 }).then(()=> {
     app.listen(PORT, () => console.log(`SERVER PORT: ${PORT}`))
+    const io = require("socket.io")(server, {
+        pingTimeout: 60000,
+        cors: {
+            origin: "http://locahost:3000"
+        }
+    })
 }).catch((error) => console.log(error));
