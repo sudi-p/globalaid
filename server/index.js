@@ -46,7 +46,27 @@ app.use("/api/auth", authRoutes)
 app.use("/api/user", userRoutes)
 
 //Socket
-const io = require('socket.io')
+import { Server } from 'socket.io';
+import http from 'http';
+const httpServer = http.createServer(app); 
+const io = new Server(httpServer, {
+    pingTimeout: 60000,
+    cors: {
+        origin: "http://localhost:3000"
+    }
+})
+io.on("connection", (socket) => {
+    console.log("Nice! connected to socket.io")
+
+    socket.on('setup', (userData)=>{
+        socket.join(userData._id)
+        socket.emit('connected');
+    })
+    socket.on('join chat', (room) => {
+        socket.join(room);
+        console.log("User joined Room: "+room)
+    })
+})
 //Mongoose Setup
 const PORT = process.env.PORT || 6001;
 mongoose.set('strictQuery', true);
@@ -54,11 +74,5 @@ mongoose.connect(process.env.MONGO_URL,{
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(()=> {
-    app.listen(PORT, () => console.log(`SERVER PORT: ${PORT}`))
-    const io = require("socket.io")(server, {
-        pingTimeout: 60000,
-        cors: {
-            origin: "http://locahost:3000"
-        }
-    })
+    httpServer.listen(PORT, () => console.log(`SERVER PORT: ${PORT}`))
 }).catch((error) => console.log(error));

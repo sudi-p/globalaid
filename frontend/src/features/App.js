@@ -12,6 +12,7 @@ import Rentals from './rentals/RentalsContainer';
 import './App.css';
 import NavbarLayout from './layout/navBarLayout/NavbarLayout';
 import AuthLayout from './layout/authLayout/AuthLayout';
+import Chat from './chat/Chat';
 
 const theme = createTheme({
   palette: {
@@ -40,6 +41,7 @@ function App() {
             <Route path='/jobs/job/:id' element={<Job />} />
             <Route path='/jobs' element={<Jobs />} />
             <Route path='/rentals' element={<Rentals />} />
+            <Route path='/chat' element={<Chat />} />
           </Route>
           <Route path='/' element={<AuthLayout />}>
             <Route path='/login' element={<LoginContainer />} />
