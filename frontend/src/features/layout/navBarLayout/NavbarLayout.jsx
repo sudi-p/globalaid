@@ -12,6 +12,7 @@ import { Paper, Button, Stack } from "@mui/material";
 import {
   ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
+  Message
 } from "@mui/icons-material";
 
 const NavBar = (props) => {
@@ -68,6 +69,7 @@ const NavBar = (props) => {
       </div>
       <div className={styles.navBarLogo} />
       <div className={styles.navBarLinks}>
+        <NavLink to='/chat'><Message/></NavLink>
         {isLoggedIn ? (
           <Stack direction="row" spacing={2} >
             <Button
