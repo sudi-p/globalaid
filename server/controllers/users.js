@@ -1,5 +1,6 @@
 import User from '../models/User.js';
-import Job from '../models/Job.js';
+import Job from '../models/Ad.js';
+import Conversation from '../models/Chat.js';
 
 export const getUser = async(req, res) => {
     try{
@@ -49,10 +50,20 @@ export const getJobs = async(req,res) => {
     }
 }
 
+export const getChats = async(req, res) => {
+    try{
+        const chats = await Conversation.find();
+        console.log(chats)
+    } catch (err){
+        res.status(500).json({'message': err.message})
+    }
+}
+
 export const getRentals = async(req, res) => {
     try{
         const rentals = [
             {
+                'id': "63f45ba2631adf1b0a35b94f",
                 'title': "2 Bedroom Hall Kitchen Apartment for rent",
                 'price': 2000,
                 'images': ['https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/76900a54-e2ed-435e-9dd4-6d9b702149cd.webp','https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/ae4fa65c-749d-41a7-920f-6956eab4c138.webp','https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/e12e3117-3e56-4f7c-888a-761165979e2d.webp','https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/8e3e4e55-83e1-4e03-b2f9-89c86b0bdcb9.webp'],
