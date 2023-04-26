@@ -8,6 +8,7 @@ import Job from './jobs/job/Job';
 import LoginContainer from './login/LoginContainer';
 import RegisterContainer from './register/Register';
 import Rentals from './rentals/RentalsContainer';
+import PostAd from './postAd/PostAd';
 
 import './App.css';
 import NavbarLayout from './layout/navBarLayout/NavbarLayout';
@@ -41,6 +42,7 @@ function App() {
             <Route path='/jobs/job/:id' element={<Job />} />
             <Route path='/jobs' element={<Jobs />} />
             <Route path='/rentals' element={<Rentals />} />
+            <Route path='/postad' element={<PostAd />} />
             <Route path='/chat' element={<Chat />} />
           </Route>
           <Route path='/' element={<AuthLayout />}>
