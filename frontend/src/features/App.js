@@ -18,7 +18,7 @@ import Chat from './chat/Chat';
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#84A0C5",
+      main: "#3570D0",
       contrastText: "#fff"
     },
     secondary: {
@@ -42,7 +42,6 @@ function App() {
             <Route path='/jobs/job/:id' element={<Job />} />
             <Route path='/jobs' element={<Jobs />} />
             <Route path='/rentals' element={<Rentals />} />
-            <Route path='/postad' element={<PostAd />} />
             <Route path='/chat' element={<Chat />} />
           </Route>
           <Route path='/' element={<AuthLayout />}>
