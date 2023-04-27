@@ -1,5 +1,5 @@
-# Project Name: Global Aid
-# Objective:
+# Global Aid
+## Objective:
 This website will help the students to look for job and rental. The owner will post their property. Students can view the property and chat with the owner regarding the rent and other information. Any person with the information for the job will post the job title, position, location and company name. Other users can see the posted jobs.
 
 ## We have two folders and 1 file inside the project.
