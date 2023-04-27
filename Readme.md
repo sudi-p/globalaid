@@ -1,5 +1,3 @@
-If you are in windows install cmder
-
 ## We have two folders and 1 file inside the project.
 1. frontend: written in react
 2. server: Writted in node.js and express(mongo db)
@@ -14,5 +12,8 @@ If you are in windows install cmder
       3.3 nodemon index.js
 ### 4. Setup the frontend[open another tab in terminal]
       4.1 cd frontend
-      4.2 npm run install/ npm install
+      4.2 npm run install or npm install
       4.3 npm run start
+
+### Suggestions
+      1. If you are in windows install cmder
