@@ -53,7 +53,7 @@ export default function PostAd(props) {
                         size="large"
                         label="Title"
                     />
-                    <Alert severity="info">Add title so that the users can relate it more easily</Alert>
+                    <Alert severity="info">Please add a title for your ad to help users relate to it more easily.</Alert>
                     <TextField
                         onChange={(e) => setDescription(e.target.value)}
                         value={description}
@@ -64,8 +64,8 @@ export default function PostAd(props) {
                         rows={4}
                     />
                     <Stack direction="row" spacing={6} justifyContent={"center"}>
-                        <div onClick={() => setJobType('rent')} className={`${jobType == "rent" && styles.activeAdType} ${styles.adType}`}><HomeIcon /><span>Rent a Property</span> </div>
-                        <div onClick={() => setJobType('job')} className={`${jobType == "job" && styles.activeAdType} ${styles.adType}`}><EngineeringIcon /> <span>Job Vacancy</span> </div>
+                        <div onClick={() => setJobType('rent')} className={`${jobType === "rent" && styles.activeAdType} ${styles.adType}`}><HomeIcon /><span>Rent a Property</span> </div>
+                        <div onClick={() => setJobType('job')} className={`${jobType === "job" && styles.activeAdType} ${styles.adType}`}><EngineeringIcon /> <span>Job Vacancy</span> </div>
                     </Stack>
                     <Button variant="contained" size="large">Next</Button>
                 </Stack>

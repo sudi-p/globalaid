@@ -8,7 +8,7 @@ import Job from './jobs/job/Job';
 import LoginContainer from './login/LoginContainer';
 import RegisterContainer from './register/Register';
 import Rentals from './rentals/RentalsContainer';
-import PostAd from './postAd/PostAd';
+import CreateRental from './rentals/CreateRental';
 
 import './App.css';
 import NavbarLayout from './layout/navBarLayout/NavbarLayout';
@@ -41,7 +41,10 @@ function App() {
             <Route index element={<DashboardContainer />} />
             <Route path='/jobs/job/:id' element={<Job />} />
             <Route path='/jobs' element={<Jobs />} />
-            <Route path='/rentals' element={<Rentals />} />
+            <Route path='/rentals/'>
+              <Route index element={<Rentals />} />
+              <Route path='/rentals/create-rental/:id' element={<CreateRental />} />
+            </Route>
             <Route path='/chat' element={<Chat />} />
           </Route>
           <Route path='/' element={<AuthLayout />}>

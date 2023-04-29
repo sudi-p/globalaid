@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import getClient from '../../lib/api';
 import styles from './styles/RentalsContainer.module.scss';
 import { fetchRentalsStart, fetchRentalsSuccess, fetchRentalsError } from './RentalsSlice';
 import Rental from './Rental';
-import PostRental from './PostRental';
 
 function App() {
   const dispatch = useDispatch();
-  const [ showPostRentalModal, setShowPostRentalModal ] = useState(false);
   const rentals = useSelector(state => state.rentals.rentals);
   useEffect(() => {
     dispatch(fetchRentalsStart());
@@ -22,11 +20,7 @@ function App() {
   }, [])
   return (
     <div className={styles.rentals}>
-      Rentals
-      <div onClick={() => setShowPostRentalModal(true)} className={styles.postRental}>
-        Post Rental
-      </div>
-      { showPostRentalModal && <PostRental setShowPostRentalModal={setShowPostRentalModal}/>}
+      Rentals      
       {rentals.map(rental => {
         return(
           <Rental rental={rental} />
