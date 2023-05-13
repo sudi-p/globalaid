@@ -8,17 +8,25 @@ import {
   clearLoggedInUser,
 } from "./LoggedInUserSlice";
 import styles from "./styles/NavBar.module.scss";
-import { Paper, Button, Stack } from "@mui/material";
+import { Paper, Button, Stack, Divider } from "@mui/material";
 import {
   ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
-  Message
+  ChatBubbleOutline
 } from "@mui/icons-material";
+import PostAd from '../../postAd/PostAd';
 
 const NavBar = (props) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [expandMenu, setExpandMenu] = useState(false);
+  const [open, setOpen] = React.useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
   useEffect(() => {
     dispatch(fetchUserStart());
     getClient()
@@ -69,37 +77,60 @@ const NavBar = (props) => {
       </div>
       <div className={styles.navBarLogo} />
       <div className={styles.navBarLinks}>
-        <NavLink to='/chat'><Message/></NavLink>
         {isLoggedIn ? (
-          <Stack direction="row" spacing={2} >
+          <Stack direction="row" spacing={2} alignItems={"center"}>
+            <NavLink to='/chat'><ChatBubbleOutline color="primary" /></NavLink>
             <Button
               variant="contained"
               sx={{ textTransform: "None", fontWeight: "bold" }}
               size="small"
+              onClick={() => handleClickOpen()}
             >
               Post Ad
             </Button>
+            <PostAd open={open} handleClose={handleClose} />
             <span className={styles.extraMenuArrow}>
-				{email}
-				{expandMenu ? (
-					<>
-					<ExpandLessIcon
-						onClick={() => setExpandMenu(false)}
-						color="primary"
-					/>
-						<Paper variant="outlined" className={styles.extraNav}>
-							My Account
-							<div onClick={() => logout()}>Log Out</div>
-						</Paper>
-					
-					</>
-				) : (
-					<ExpandMoreIcon
-					onClick={() => setExpandMenu(true)}
-					color="primary"
-					/>
-				)}
-			</span>
+              {email}
+              {expandMenu ? (
+                <>
+                  <ExpandLessIcon
+                    onClick={() => setExpandMenu(false)}
+                    color="primary"
+                  />
+                  <Paper variant="outlined" elevation={3} className={styles.extraNav}>
+                    <Stack justifyContent="flex-start">
+                      <NavLink
+                        className={({ isActive }) =>
+                          `${styles.link} ${isActive && styles.activeLink}`
+                        }
+                        to="/my-ads/"
+                      >
+                        My Account
+                      </NavLink>
+                      <Divider />
+                      <NavLink
+                        className={({ isActive }) =>
+                          `${styles.link} ${isActive && styles.activeLink}`
+                        }
+                        to="/my-ads/"
+                      >
+                        MyAds
+                      </NavLink>
+                      <Divider />
+                      <div className={styles.link} onClick={() => logout()}>Log Out</div>
+                    </Stack>
+
+
+                  </Paper>
+
+                </>
+              ) : (
+                <ExpandMoreIcon
+                  onClick={() => setExpandMenu(true)}
+                  color="primary"
+                />
+              )}
+            </span>
           </Stack>
         ) : (
           <>
@@ -121,7 +152,7 @@ const NavBar = (props) => {
             </NavLink>
           </>
         )}
-        </div>
+      </div>
     </div>
   );
 };

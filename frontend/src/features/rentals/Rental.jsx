@@ -4,7 +4,6 @@ import styles from './styles/Rental.module.scss';
 
 const Rental = (props) => {
 	const { rental } = props;
-	console.log(rental)
 	const { title, price, priceNegotiable, description, postedDate, bedrooms, bathrooms, images, moveInDate, location, type } = rental;
 	return (
 		<div className={styles.rental}>

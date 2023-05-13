@@ -1,14 +1,18 @@
 @import '../../base/base.module.scss';
 
 .postRental{
-    width: 500px;
+    width: 700px;
+    margin: 0 auto;
     z-index: 1;
 }
 .title{
     color: $primary;
-    font-weight: bold;
-    font-size: 20px;
-    margin-bottom: 10px;
+    text-align: center;
+    font-size: 30px;
+    margin: 10px 0 40px 0;
+    letter-spacing: 1px;
+    line-height: 1.4;
+    text-transform: uppercase;
 }
 .inputBox{
     margin-bottom: 15px;

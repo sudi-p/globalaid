@@ -20,7 +20,7 @@ const AdSchema = new mongoose.Schema(
     },
     location: {
       type: String,
-      required: true,
+      required: false,
       min: 2,
       max: 50,
     },

@@ -24,8 +24,11 @@
 }
 .navBarLinks{
 	display: flex;
+	width: 400px;
 	align-items: center;
-	width: max-content;
+	&:last-child{
+		justify-content: end;
+	}
 }
 .extraMenuArrow{
 	display: flex;
@@ -34,8 +37,18 @@
 }
 .extraNav{
 	position: absolute;
-	padding: 20px;
-	
+	top: 40px;
+	left: 0;
+	right: 0;
+	width: inherit;
+	.link{
+		padding: 10px;
+		text-align: left;
+		margin: 0 10px;
+		&:first-child, &:last-child{
+			margin: 0 10px;
+		}
+	}
 }
 .link{
 	margin: 0 20px;
