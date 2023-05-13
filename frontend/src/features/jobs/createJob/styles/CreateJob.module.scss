@@ -1,23 +1,29 @@
 @import '../../../base/base.module.scss';
 .createJob{
     opacity: 1;
-    width: 460px;
+    width: 700px;
     padding: 20px;
+    margin: auto;
 }
-.createJobTitle{
+.title{
     color: $primary;
-    font-weight: bold;
-    font-size: 20px;
-    margin-bottom: 10px;
+    text-align: center;
+    font-size: 30px;
+    margin: 10px 0 40px 0;
+    letter-spacing: 1px;
+    line-height: 1.4;
+    text-transform: uppercase;
 }
 .inputBox{
     margin-bottom: 15px;
+    line-height: 1.5;
+    display: flex;
 }
 .input{
-    border: 1px solid #bbb;
+    
     display: block;
     border-radius: 4px;
-    width: 400px;
+    width: 35px;
     padding: 5px;
 }
 .inputError{

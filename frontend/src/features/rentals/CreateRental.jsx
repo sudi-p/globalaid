@@ -1,19 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-    Button,
-    MenuItem,
-    Stack,
-    TextField,
-    FormControl,
-    FormHelperText,
-    InputLabel,
-    Select,
-    Checkbox,
-    Box,
-    Stepper,
-    Step,
-    StepLabel
+    Button, MenuItem, Stack, TextField,
+    FormControl, FormHelperText, InputLabel, InputAdornment,
+    Select, Checkbox, Box, Stepper,
+    Step, StepLabel, Divider
 } from '@mui/material';
+import {
+    LocalPhone as LocalPhoneIcon,
+    Email as EmailIcon,
+    Bed as BedIcon,
+    Bathtub as BathtubIcon
+} from '@mui/icons-material/';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -55,6 +52,45 @@ const steps = [
 ];
 
 const PostRental = (props) => {
+    return (
+        <div className={styles.postRental}>
+            <div className={styles.title}>Two bedroom apartment in scarborough</div>
+            <Stack spacing={5}>
+                <Box sx={{ width: '100%' }}>
+                    <Stepper activeStep={2} alternativeLabel>
+                        {steps.map((label) => (
+                            <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                </Box>
+                <FileUpload />
+            </Stack>
+        </div>
+    )
+}
+export default PostRental;
+
+const FileUpload = (props) => {
+    const [images, setImages] = useState([]);
+    const [imageURLs, setImageURLs] = useState([]);
+    useEffect(() => {
+        if (images.length < 1) return;
+        const newImageUrls = [];
+        images.forEach(image => newImageUrls.push(URL.createObjectURL(image)));
+        setImageURLs(newImageUrls)
+    }, [images])
+    return (
+        <div>
+            File Upload
+            <input type="file" multiple accept="image/*" onChange={(e) => setImages([...e.target.files])} />
+            {imageURLs.map(imageSrc => <img src={imageSrc} alt="rental images" />)}
+        </div>
+    )
+}
+
+const DetailedInformation = (props) => {
     const { register, handleSubmit, formState: { errors }, } = useForm({
         resolver: yupResolver(PostRentalSchema),
     });
@@ -70,119 +106,127 @@ const PostRental = (props) => {
         e.preventDefault()
         console.log("Hello")
     }
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            setLocation({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+            });
+        });
+    }, []);
+    console.log(location)
     return (
-        <div className={styles.postRental}>
-            <form onSubmit={(handleSubmit(postRental))}>
-                <Stack spacing={4}>
-                    <Box sx={{ width: '100%' }}>
-                        <Stepper activeStep={1} alternativeLabel>
-                            {steps.map((label) => (
-                                <Step key={label}>
-                                    <StepLabel>{label}</StepLabel>
-                                </Step>
-                            ))}
-                        </Stepper>
-                    </Box>
+        <form onSubmit={(handleSubmit(postRental))}>
+            <Stack spacing={5}>
+                <TextField
+                    fullWidth
+                    label="Location"
+                    {...register("location")}
+                    onChange={(e) => setLocation(e.target.value)}
+                    error={Boolean(errors.location)}
+                    helperText={errors.location?.message}
+                />
+                <FormControl
+                    fullWidth
+                    error={errors.rentalType}
+                    helperText={errors.rentalType?.message}
+                >
+                    <InputLabel id="demo-simple-select-label">Rental Type</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        {...register("rentalType")}
+                        value={rentalType}
+                        onChange={(e) => setRentalType(e.target.value)}
+                    >
+                        <MenuItem value="Condo">Condo</MenuItem>
+                        <MenuItem value="Apartment">Apartment</MenuItem>
+                        <MenuItem value="House">House</MenuItem>
+                        <MenuItem value="Town House">Town House</MenuItem>
+                        <MenuItem value="Basement">Basement</MenuItem>
+                    </Select>
+                    <FormHelperText>{errors.rentalType?.message}</FormHelperText>
+                </FormControl>
+                <Stack spacing={4} direction="row">
                     <TextField
                         fullWidth
-                        label="Location"
-                        {...register("location")}
-                        onChange={(e) => setLocation(e.target.value)}
-                        value={location}
-                        error={Boolean(errors.location)}
-                        helperText={errors.location?.message}
+                        label="Number of Bedrooms"
+                        {...register("bedRoom")}
+                        type="number"
+                        className={styles.TextField}
+                        onChange={(e) => setBedRoom(e.target.value)}
+                        value={bedRoom}
+                        error={errors.bedRoom}
+                        helperText={errors.bedRoom?.message}
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end"><BedIcon /></InputAdornment>,
+                        }}
                     />
-                    <FormControl
+                    <TextField
                         fullWidth
-                        error={errors.rentalType}
-                        helperText={errors.rentalType?.message}
-                    >
-                        <InputLabel id="demo-simple-select-label">Rental Type</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            {...register("rentalType")}
-                            value={rentalType}
-                            onChange={(e) => setRentalType(e.target.value)}
-                        >
-                            <MenuItem value="Condo">Condo</MenuItem>
-                            <MenuItem value="Apartment">Apartment</MenuItem>
-                            <MenuItem value="House">House</MenuItem>
-                            <MenuItem value="Town House">Town House</MenuItem>
-                            <MenuItem value="Basement">Basement</MenuItem>
-                        </Select>
-                        <FormHelperText>{errors.rentalType?.message}</FormHelperText>
-                    </FormControl>
-                    <Stack spacing={4} direction="row">
-                        <TextField
-                            fullWidth
-                            label="Number of Bedrooms"
-                            {...register("bedRoom")}
-                            type="number"
-                            className={styles.TextField}
-                            onChange={(e) => setBedRoom(e.target.value)}
-                            value={bedRoom}
-                            error={errors.bedRoom}
-                            helperText={errors.bedRoom?.message}
-                        />
-                        <TextField
-                            fullWidth
-                            label="Number of Washrooms"
-                            type="number"
-                            {...register("washRoom")}
-                            className={styles.TextField}
-                            onChange={(e) => setWashRoom(e.target.value)}
-                            value={washRoom}
-                            error={errors.washRoom}
-                            helperText={errors.washRoom?.message}
-                        />
-                    </Stack>
-                    <Stack spacing={4} direction="row">
-                        <TextField
-                            fullWidth
-                            label="Email"
-                            type="text"
-                            {...register("email")}
-                            className={styles.TextField}
-                            onChange={(e) => setEmail(e.target.value)}
-                            value={email}
-                            error={errors.email}
-                            helperText={errors.email?.message}
-                        />
-                        <TextField
-                            fullWidth
-                            label="Mobile Number"
-                            type="text"
-                            {...register("phone")}
-                            className={styles.TextField}
-                            onChange={(e) => setPhone(e.target.value)}
-                            value={phone}
-                            error={errors.phone}
-                            helperText={errors.phone?.message}
-                        />
-                    </Stack>
-                    <div>
-                        Are you the owner of this place?
-                        <Checkbox onChange={() => setIsOwner(!isOwner)} value={isOwner} />
-                    </div>
-                    <Stack spacing={3} >
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            type="submit"
-                            size="large"
-                            id="submit"
-                        >Save and Continue</Button>
-                        <Button
-                            variant="outlined"
-                            size="large"
-                            onClick={() => setShowPostRentalModal(false)}
-                        >Save for Later</Button>
-
-                    </Stack>
+                        label="Number of Washrooms"
+                        type="number"
+                        {...register("washRoom")}
+                        className={styles.TextField}
+                        onChange={(e) => setWashRoom(e.target.value)}
+                        value={washRoom}
+                        error={errors.washRoom}
+                        helperText={errors.washRoom?.message}
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end"><BathtubIcon /></InputAdornment>,
+                        }}
+                    />
                 </Stack>
-            </form>
-        </div>
+                <Divider />
+                <Stack spacing={4} direction="row">
+                    <TextField
+                        fullWidth
+                        label="Email"
+                        type="text"
+                        {...register("email")}
+                        className={styles.TextField}
+                        onChange={(e) => setEmail(e.target.value)}
+                        value={email}
+                        error={errors.email}
+                        helperText={errors.email?.message}
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end"><EmailIcon /></InputAdornment>,
+                        }}
+                    />
+                    <TextField
+                        fullWidth
+                        label="Mobile Number"
+                        type="text"
+                        {...register("phone")}
+                        className={styles.TextField}
+                        onChange={(e) => setPhone(e.target.value)}
+                        value={phone}
+                        error={errors.phone}
+                        helperText={errors.phone?.message}
+                        InputProps={{
+                            endAdornment: <InputAdornment position="end"><LocalPhoneIcon /></InputAdornment>,
+                        }}
+                    />
+                </Stack>
+                <div>
+                    Are you the owner of this place?
+                    <Checkbox onChange={() => setIsOwner(!isOwner)} value={isOwner} />
+                </div>
+                <Stack spacing={3} >
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        type="submit"
+                        size="large"
+                        id="submit"
+                    >Save and Continue</Button>
+                    <Button
+                        variant="outlined"
+                        size="large"
+                        onClick={() => setShowPostRentalModal(false)}
+                    >Save for Later</Button>
+                </Stack>
+            </Stack>
+        </form>
     )
 }
-export default PostRental;
