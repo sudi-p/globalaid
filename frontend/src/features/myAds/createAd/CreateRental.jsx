@@ -51,26 +51,24 @@ const steps = [
     'Media',
 ];
 
-const PostRental = (props) => {
+const CreateRental = (props) => {
     return (
-        <div className={styles.postRental}>
-            <div className={styles.title}>Two bedroom apartment in scarborough</div>
-            <Stack spacing={5}>
-                <Box sx={{ width: '100%' }}>
-                    <Stepper activeStep={2} alternativeLabel>
-                        {steps.map((label) => (
-                            <Step key={label}>
-                                <StepLabel>{label}</StepLabel>
-                            </Step>
-                        ))}
-                    </Stepper>
-                </Box>
-                <FileUpload />
-            </Stack>
-        </div>
+
+        <Stack spacing={5}>
+            <Box sx={{ width: '100%' }}>
+                <Stepper activeStep={1} alternativeLabel>
+                    {steps.map((label) => (
+                        <Step key={label}>
+                            <StepLabel>{label}</StepLabel>
+                        </Step>
+                    ))}
+                </Stepper>
+            </Box>
+            <DetailedInformation />
+        </Stack>
     )
 }
-export default PostRental;
+export default CreateRental;
 
 const FileUpload = (props) => {
     const [images, setImages] = useState([]);
@@ -86,6 +84,11 @@ const FileUpload = (props) => {
             File Upload
             <input type="file" multiple accept="image/*" onChange={(e) => setImages([...e.target.files])} />
             {imageURLs.map(imageSrc => <img src={imageSrc} alt="rental images" />)}
+            <Button
+                variant="outlined"
+                size="large"
+                onClick={() => console.log(false)}
+            >Save for Later</Button>
         </div>
     )
 }
@@ -94,7 +97,6 @@ const DetailedInformation = (props) => {
     const { register, handleSubmit, formState: { errors }, } = useForm({
         resolver: yupResolver(PostRentalSchema),
     });
-    const { setShowPostRentalModal } = props;
     const [bedRoom, setBedRoom] = useState('');
     const [washRoom, setWashRoom] = useState('');
     const [rentalType, setRentalType] = useState('');
@@ -106,15 +108,15 @@ const DetailedInformation = (props) => {
         e.preventDefault()
         console.log("Hello")
     }
-    useEffect(() => {
-        navigator.geolocation.getCurrentPosition((position) => {
-            setLocation({
-                latitude: position.coords.latitude,
-                longitude: position.coords.longitude,
-            });
-        });
-    }, []);
-    console.log(location)
+    // useEffect(() => {
+    //     navigator.geolocation.getCurrentPosition((position) => {
+    //         setLocation({
+    //             latitude: position.coords.latitude,
+    //             longitude: position.coords.longitude,
+    //         });
+    //     });
+    // }, []);
+    // console.log(location)
     return (
         <form onSubmit={(handleSubmit(postRental))}>
             <Stack spacing={5}>
@@ -128,8 +130,7 @@ const DetailedInformation = (props) => {
                 />
                 <FormControl
                     fullWidth
-                    error={errors.rentalType}
-                    helperText={errors.rentalType?.message}
+                    error={Boolean(errors.rentalType)}
                 >
                     <InputLabel id="demo-simple-select-label">Rental Type</InputLabel>
                     <Select
@@ -156,7 +157,7 @@ const DetailedInformation = (props) => {
                         className={styles.TextField}
                         onChange={(e) => setBedRoom(e.target.value)}
                         value={bedRoom}
-                        error={errors.bedRoom}
+                        error={Boolean(errors.bedRoom)}
                         helperText={errors.bedRoom?.message}
                         InputProps={{
                             endAdornment: <InputAdornment position="end"><BedIcon /></InputAdornment>,
@@ -170,7 +171,7 @@ const DetailedInformation = (props) => {
                         className={styles.TextField}
                         onChange={(e) => setWashRoom(e.target.value)}
                         value={washRoom}
-                        error={errors.washRoom}
+                        error={Boolean(errors.washRoom)}
                         helperText={errors.washRoom?.message}
                         InputProps={{
                             endAdornment: <InputAdornment position="end"><BathtubIcon /></InputAdornment>,
@@ -187,7 +188,7 @@ const DetailedInformation = (props) => {
                         className={styles.TextField}
                         onChange={(e) => setEmail(e.target.value)}
                         value={email}
-                        error={errors.email}
+                        error={Boolean(errors.email)}
                         helperText={errors.email?.message}
                         InputProps={{
                             endAdornment: <InputAdornment position="end"><EmailIcon /></InputAdornment>,
@@ -201,7 +202,7 @@ const DetailedInformation = (props) => {
                         className={styles.TextField}
                         onChange={(e) => setPhone(e.target.value)}
                         value={phone}
-                        error={errors.phone}
+                        error={Boolean(errors.phone)}
                         helperText={errors.phone?.message}
                         InputProps={{
                             endAdornment: <InputAdornment position="end"><LocalPhoneIcon /></InputAdornment>,
@@ -220,11 +221,7 @@ const DetailedInformation = (props) => {
                         size="large"
                         id="submit"
                     >Save and Continue</Button>
-                    <Button
-                        variant="outlined"
-                        size="large"
-                        onClick={() => setShowPostRentalModal(false)}
-                    >Save for Later</Button>
+
                 </Stack>
             </Stack>
         </form>

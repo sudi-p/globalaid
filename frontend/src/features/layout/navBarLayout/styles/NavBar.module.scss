@@ -42,11 +42,14 @@
 	right: 0;
 	width: inherit;
 	.link{
-		padding: 10px;
+		padding: 20px;
 		text-align: left;
 		margin: 0 10px;
 		&:first-child, &:last-child{
 			margin: 0 10px;
+		}
+		&:hover{
+			background-color: $gray-lightest;
 		}
 	}
 }

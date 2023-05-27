@@ -1,29 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-// import { NavLink } from 'react-router-dom';
 import { fetchJobsStart, fetchJobsSuccess } from './JobsSlice';
 import { Email, LocalPhone, LocationOnOutlined } from '@mui/icons-material/';
 import getClient from '../../lib/api';
-// import Modal from '../../components/modal/Modal';
-// import CreateJob from './createJob/CreateJob';
 import styles from './styles/Jobs.module.scss';
 import { Chip, Stack, Paper } from '@mui/material';
-// import ActiveJob from './ActiveJob';
 import Filter from './Filter';
 import SearchBar from './SearchBar';
 
 function Jobs() {
   const dispatch = useDispatch();
-  // const [ showCreateJobModal, setShowCreateJobModal] = useState(false);
   const jobsData = useSelector(state => state.jobs);
   const { jobs, status } = jobsData;
   const [activeJob, setActiveJob] = useState({})
   useEffect(() => {
     getJobs();
   },[]);
-  // useEffect(() => {
-  //   setActiveJob(jobs[0])
-  // },[jobs]);
 
   const getJobs = async () => {
     dispatch(fetchJobsStart());
@@ -59,8 +51,8 @@ const JobsList = ({jobs, setActiveJob}) =>{
     <Stack spacing={2} className={styles.content}>
         <SearchBar />
         <Paper elevation={0} variant="outlined" className={styles.jobsSection}>
-          <Stack flexItems="center" spacing={2} >
-            {jobs && jobs.map(job => (<JobBox setActiveJob={setActiveJob} job={job} />))}
+          <Stack spacing={2} >
+            {jobs && jobs.map(job => (<JobBox key={job._id} setActiveJob={setActiveJob} job={job} />))}
           </Stack>
         </Paper>
       </Stack>

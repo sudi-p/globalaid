@@ -2,10 +2,7 @@ import mongoose from "mongoose";
 
 const AdSchema = new mongoose.Schema(
   {
-    userId: {
-      type: String,
-      required: true,
-    },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User"},
     title: {
       type: String,
       required: true,
@@ -24,17 +21,37 @@ const AdSchema = new mongoose.Schema(
       min: 2,
       max: 50,
     },
+    adType: {
+      type: String,
+      required: true,
+    },
     email: String,
     phone: String,
     available: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
   {
     timeStamps: true,
   }
 );
+AdSchema.methods.isComplete = async function() {
+  try{
+    const adType = this.adType;
+    if (adType == "rent"){
+      const rents = await Rental.find({ad: this._id});
+      return rents.length>0
+    } else {
+      const jobs = await Job.find({ad: this._id})
+      return jobs.length>0
+    }
+  } catch(err){
+    console.log(err)
+  }
+  
+}
+
 const JobSchema = new mongoose.Schema(
   {
     ad: { type: mongoose.Schema.Types.ObjectId, ref: "Ad" },
@@ -48,9 +65,18 @@ const JobSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    available: {
-      type: Boolean,
-      default: true,
+    jobType: {
+      type: String,
+      required: true,
+      min: 2,
+      max: 50,
+    },    
+    salary: String,
+    jobSite: {
+      type: String,
+      required: true,
+      min: 2,
+      max: 50,
     },
   },
   {
@@ -83,4 +109,5 @@ const RentalSchema = new mongoose.Schema(
 
 const Ad = mongoose.model("Ad", AdSchema);
 export const Job = mongoose.model("Job", JobSchema);
+export const Rental = mongoose.model("Rental", RentalSchema);
 export default Ad;
