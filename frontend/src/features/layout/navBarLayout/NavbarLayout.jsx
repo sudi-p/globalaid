@@ -88,7 +88,7 @@ const NavBar = (props) => {
             >
               Post Ad
             </Button>
-            <PostAd open={open} handleClose={handleClose} />
+            {open && <PostAd handleClose={handleClose} />}
             <span className={styles.extraMenuArrow}>
               {email}
               {expandMenu ? (
@@ -97,13 +97,13 @@ const NavBar = (props) => {
                     onClick={() => setExpandMenu(false)}
                     color="primary"
                   />
-                  <Paper variant="outlined" elevation={3} className={styles.extraNav}>
+                  <Paper sx={{ zIndex: 10}} variant="outlined" elevation={3} className={styles.extraNav}>
                     <Stack justifyContent="flex-start">
                       <NavLink
                         className={({ isActive }) =>
                           `${styles.link} ${isActive && styles.activeLink}`
                         }
-                        to="/my-ads/"
+                        to="/myads/"
                       >
                         My Account
                       </NavLink>
@@ -112,7 +112,7 @@ const NavBar = (props) => {
                         className={({ isActive }) =>
                           `${styles.link} ${isActive && styles.activeLink}`
                         }
-                        to="/my-ads/"
+                        to="/myads/"
                       >
                         MyAds
                       </NavLink>

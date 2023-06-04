@@ -16,7 +16,6 @@ const JobsSlice = createSlice({
 		},
 		fetchJobsSuccess: (state, action) => {
 			const { payload } = action;
-			console.log(payload)
 			state.status = StoreState.SUCCESS;
 			state.jobs = payload.jobs;
 		}

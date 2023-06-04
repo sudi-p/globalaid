@@ -8,9 +8,7 @@ import Job from './jobs/job/Job';
 import LoginContainer from './login/LoginContainer';
 import RegisterContainer from './register/Register';
 import Rentals from './rentals/RentalsContainer';
-import CreateRental from './rentals/CreateRental';
-
-import CreateJob from './jobs/createJob/CreateJob';
+import CompleteAd from './myAds/createAd/CreateAd';
 import MyAds from "./myAds/MyAds";
 import MyAd from "./myAds/myAd/MyAd";
 import './App.css';
@@ -46,15 +44,16 @@ function App() {
             <Route path='/jobs/job/:id' element={<Job />} />
             <Route path='/jobs/'>
               <Route index element={<Jobs />} />
-              <Route path='/jobs/create-job/:id' element={<CreateJob />} />
+              
             </Route>
             <Route path='/rentals/'>
               <Route index element={<Rentals />} />
-              <Route path='/rentals/create-rental/:id' element={<CreateRental />} />
+              
             </Route>
-            <Route path='/my-ads/'>
+            <Route path='/myads/'>
               <Route index element={<MyAds />} />
-              <Route path='/my-ads/:id' element={<MyAd />} />
+              <Route path='/myads/:id' element={<MyAd />} />
+              <Route path='/myads/create-ad/:adId' element={<CompleteAd />} />
             </Route>
             <Route path='/chat' element={<Chat />} />
           </Route>
