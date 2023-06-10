@@ -26,6 +26,7 @@ function Jobs() {
       console.log(error.message)
     }
   }
+  console.log("Hello from jobs")
   return (
     <div className={styles.jobsContainer}>
       {/* <div className={styles.jobsTitle}>

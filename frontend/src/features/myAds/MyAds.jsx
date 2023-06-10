@@ -22,7 +22,7 @@ export default function MyAds() {
             MyAds
             {ads.map(ad => {
                 console.log(ad)
-                const { _id: adId, title, description, adType, isComplete } = ad;
+                const { _id: adId, title, description, adType, isComplete, views, price, replies } = ad;
                 console.log(adId)
                 return (
                     <div key={adId} className={styles.ad}>
@@ -36,6 +36,12 @@ export default function MyAds() {
                                 </div>
                                 <div className={styles.adDescription}>
                                     {description}
+                                </div>
+                                <div className={styles.adTitle}>
+                                    Views
+                                </div>
+                                <div className={styles.adDescription}>
+                                    Replies
                                 </div>
                             </div>
                         </Stack>
