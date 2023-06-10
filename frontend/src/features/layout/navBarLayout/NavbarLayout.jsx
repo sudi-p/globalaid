@@ -8,7 +8,7 @@ import {
   clearLoggedInUser,
 } from "./LoggedInUserSlice";
 import styles from "./styles/NavBar.module.scss";
-import { Paper, Button, Stack, Divider } from "@mui/material";
+import { Paper, Button, Stack, Divider, ClickAwayListener } from "@mui/material";
 import {
   ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
@@ -47,6 +47,7 @@ const NavBar = (props) => {
   };
   const loggedInUser = useSelector((state) => state.loggedInUser);
   const { isLoggedIn, email } = loggedInUser;
+  console.log(loggedInUser.status);
   return (
     <div className={styles.navBarContainer}>
       <div className={styles.navBarLinks}>
@@ -97,31 +98,39 @@ const NavBar = (props) => {
                     onClick={() => setExpandMenu(false)}
                     color="primary"
                   />
-                  <Paper sx={{ zIndex: 10}} variant="outlined" elevation={3} className={styles.extraNav}>
-                    <Stack justifyContent="flex-start">
-                      <NavLink
-                        className={({ isActive }) =>
-                          `${styles.link} ${isActive && styles.activeLink}`
-                        }
-                        to="/myads/"
-                      >
-                        My Account
-                      </NavLink>
-                      <Divider />
-                      <NavLink
-                        className={({ isActive }) =>
-                          `${styles.link} ${isActive && styles.activeLink}`
-                        }
-                        to="/myads/"
-                      >
-                        MyAds
-                      </NavLink>
-                      <Divider />
-                      <div className={styles.link} onClick={() => logout()}>Log Out</div>
-                    </Stack>
-
-
-                  </Paper>
+                  <ClickAwayListener
+                    onClickAway={() => setExpandMenu(false)}
+                  >
+                    <Paper
+                      onClick={() => setExpandMenu(false)}
+                      sx={{ zIndex: 10 }}
+                      variant="outlined"
+                      elevation={3}
+                      className={styles.extraNav}
+                    >
+                      <Stack justifyContent="flex-start">
+                        <NavLink
+                          className={({ isActive }) =>
+                            `${styles.link} ${isActive && styles.activeLink}`
+                          }
+                          to="/myads/"
+                        >
+                          My Account
+                        </NavLink>
+                        <Divider />
+                        <NavLink
+                          className={({ isActive }) =>
+                            `${styles.link} ${isActive && styles.activeLink}`
+                          }
+                          to="/myads/"
+                        >
+                          MyAds
+                        </NavLink>
+                        <Divider />
+                        <div className={styles.link} onClick={() => logout()}>Log Out</div>
+                      </Stack>
+                    </Paper>
+                  </ClickAwayListener>
 
                 </>
               ) : (
