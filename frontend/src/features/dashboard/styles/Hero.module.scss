@@ -1,0 +1,29 @@
+@import '../../../features/base/base.module.scss';
+.hero{
+    width: 90%;
+    margin: auto;
+}
+.heroContainer{
+    padding: 10px;
+}
+.heroJobImage{
+    height: 200px;
+    width: 600px;
+    flex: 1;
+    border-radius: 12px;
+    overflow: hidden;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0.9;
+}
+.heroText{
+    font-size: 20px;
+    font-weight: 600;
+    flex: 1;
+    line-height: 1.1;
+}
+.viewMoreLink{
+    color: $primary;
+    text-decoration: none;
+}
