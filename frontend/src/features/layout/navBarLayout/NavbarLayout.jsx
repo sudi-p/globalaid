@@ -15,6 +15,7 @@ import {
   ChatBubbleOutline
 } from "@mui/icons-material";
 import PostAd from '../../postAd/PostAd';
+import Footer from './Footer';
 
 const NavBar = (props) => {
   const dispatch = useDispatch();
@@ -47,7 +48,6 @@ const NavBar = (props) => {
   };
   const loggedInUser = useSelector((state) => state.loggedInUser);
   const { isLoggedIn, email } = loggedInUser;
-  console.log(loggedInUser.status);
   return (
     <div className={styles.navBarContainer}>
       <div className={styles.navBarLinks}>
@@ -83,6 +83,7 @@ const NavBar = (props) => {
             <NavLink to='/chat'><ChatBubbleOutline color="primary" /></NavLink>
             <Button
               variant="contained"
+              color="primary"
               sx={{ textTransform: "None", fontWeight: "bold" }}
               size="small"
               onClick={() => handleClickOpen()}
@@ -173,6 +174,7 @@ export default function NavbarLayout() {
       <div className={styles.outlet}>
         <Outlet />
       </div>
+      <Footer />
     </div>
   );
 }

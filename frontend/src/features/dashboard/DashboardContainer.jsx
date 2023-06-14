@@ -1,4 +1,7 @@
 import React from 'react';
+import Hero from './Hero';
+import TopRentals from './TopRentals';
+import TopJobs from './TopJobs';
 // import { useDispatch, useSelector } from 'react-redux';
 
 function DashboardContainer() {
@@ -6,9 +9,12 @@ function DashboardContainer() {
   // const rentals = useSelector(state => state.rentals);
   return (
     <div className="App">
-      Dashboard
+      <Hero />
+      <TopRentals />
+      <TopJobs />
     </div>
   );
 }
 
 export default DashboardContainer;
+

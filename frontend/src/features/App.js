@@ -20,7 +20,7 @@ import PageNotFound from './pagenotfound/PageNotFound';
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#3570D0",
+      main: "#41b3A3",
       contrastText: "#fff"
     },
     secondary: {
