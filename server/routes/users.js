@@ -13,8 +13,8 @@ import { verifyToken } from "../middleware/auth.js";
 const router = express.Router();
 
 router.get("/getuser/", verifyToken, getUser);
-router.get("/getjobs/", verifyToken, getJobs);
-router.get("/getrentals/", verifyToken, getRentals);
+router.get("/getjobs/", getJobs);
+router.get("/getrentals/", getRentals);
 router.get("/createad/", verifyToken, createAd);
 router.post("/createad/", verifyToken, createAd);
 router.post("/createjob/", verifyToken, createJob);
