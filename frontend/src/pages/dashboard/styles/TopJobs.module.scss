@@ -1,0 +1,48 @@
+@import '../../../styles/base.module.scss';
+.topBox{
+    padding: 40px;
+    width: 90%;
+    margin: auto;
+}
+.topBoxTitle{
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+.topBoxViewMore{
+    color: $primary;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+}
+.jobCard{
+    padding: 20px;
+    cursor: pointer;
+    filter: brightness(97%);
+    &:hover{
+        filter: brightness(100%);
+    }
+}
+.titleLocation{
+    width: 180px;
+    margin-bottom: 20px;
+    .title{
+        display: block;
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    .location{
+        color: $gray-light;
+    }
+}
+.description{
+    height: 63px;
+    font-size: 15px;
+    overflow: hidden;
+    width: 100%;
+    line-height: 1.4;
+    margin-bottom: 20px;
+}
+.salary{
+    font-weight: 500;
+}

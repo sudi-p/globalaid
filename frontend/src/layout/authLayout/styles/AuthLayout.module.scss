@@ -1,0 +1,58 @@
+@import '../../../styles/base.module.scss';
+.wrapper{
+    background-color: $primary;
+    height: 100vh;
+    display: flex;
+}
+.common{
+    flex: 1;
+    color: white;
+    padding: 10px 0 0 50px;
+    box-sizing: border-box;
+    .link{
+        width: max-content;
+    }
+    a{
+        color: white;
+        text-decoration: none;
+    }
+    .logo{
+        background: url('https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674412883/GlobalAid/GlobalAid_Logo.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        height: 60px;
+        width: 60px;
+        margin-bottom: 20px;
+    }
+    .title{
+        font-weight: bold;
+        font-size: xxx-large;
+        margin-bottom: 15px;
+        width: max-content;
+    }
+    .subTitle{
+        font-size: large;
+        width: max-content;
+    }
+    .image{
+        background: url('https://res.cloudinary.com/dtqxwjmwn/image/upload/v1679203677/GlobalAid/website%20images/signup.png');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        height: 581px;
+        width: 537px;
+        position: relative;
+        left: 150px;
+    }
+}
+.contentWrapper{
+    flex: 2;    
+    background-color: #fff;
+    padding: 100px 0 0 200px;
+    border-radius: 40px 0 0 40px;
+}
+.content{
+    width: 450px;
+    height: max-content;
+}

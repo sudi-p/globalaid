@@ -1,0 +1,57 @@
+@import '../../../../styles/base.module.scss';
+.postRental{
+    width: 700px;
+    margin: 0 auto;
+    z-index: 1;
+}
+.title{
+    color: $primary;
+    text-align: center;
+    font-size: 30px;
+    margin: 10px 0 40px 0;
+    letter-spacing: 1px;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+.inputBox{
+    margin-bottom: 15px;
+}
+.input{
+    border: 1px solid #bbb;
+    display: block;
+    border-radius: 4px;
+    width: 400px;
+    padding: 5px;
+}
+
+.inputError{
+    color: red;
+}
+.actions{
+    display: flex;
+    margin-top: 10px;
+    position: relative
+}
+
+.continueButton{
+    color: green;    
+    border: 1px solid green;
+}
+.cancelButton{
+    border: 1px solid $primary;
+    margin-right: 20px;
+    position: relative;
+}
+.confirmCancel{
+    border: 1px solid #bbb;
+    padding: 10px;
+    z-index: 2;
+    position: absolute;
+    background-color: white;
+    top: -120px;
+    left: -5px;
+    width: 300px;
+    height: max-content;
+    border: 1px solid #bbb;
+}
+

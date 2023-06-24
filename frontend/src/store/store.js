@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import rentalsReducer from '../features/rentals/RentalsSlice';
-import jobsReducer from '../features/jobs/JobsSlice';
-import jobReducer from '../features/jobs/job/JobSlice';
-import createAdReducer from '../features/myAds/createAd/createAdSlice';
-import loggedInUserReducer from '../features/layout/navBarLayout/LoggedInUserSlice';
-import myAdsReducer from '../features/myAds/MyAdsSlice';
+import rentalsReducer from '../pages/rentals/RentalsSlice';
+import jobsReducer from '../pages/jobs/JobsSlice';
+import jobReducer from '../pages/jobs/job/JobSlice';
+import createAdReducer from '../pages/myAds/createAd/createAdSlice';
+import loggedInUserReducer from '../layout/navBarLayout/LoggedInUserSlice';
+import myAdsReducer from '../pages/myAds/MyAdsSlice';
+import DashboardReducer  from '../pages/dashboard/DashboardSlice';
 
 // export const store = configureStore({
 //   reducer: {
@@ -20,7 +21,8 @@ const store = configureStore({
     job: jobReducer,
     loggedInUser: loggedInUserReducer,
     createAd: createAdReducer,
-    myAds: myAdsReducer
+    myAds: myAdsReducer,
+    dashboard: DashboardReducer,
   }
 });
 
