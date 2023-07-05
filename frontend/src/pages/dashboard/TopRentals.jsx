@@ -20,8 +20,6 @@ export default function TopRentals({rentals}) {
     )
 }
 
-
-
 function RentalBox({title, rent, image}) {
     return (
         <Paper className={styles.rentalBox}>

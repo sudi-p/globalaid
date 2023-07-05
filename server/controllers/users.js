@@ -1,6 +1,6 @@
 import User from "../models/User.js";
 import Ad, { Job, Rental } from "../models/Ad.js";
-import Conversation from "../models/Chat.js";
+import Conversation, { Message } from "../models/Chat.js";
 
 //getUser ✅
 //getJobs ✅
@@ -31,14 +31,6 @@ export const getJobs = async (req, res) => {
   }
 };
 
-export const getChats = async (req, res) => {
-  try {
-    const chats = await Conversation.find();
-    console.log(chats);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
 
 //getMyAds
 export const getMyAds = async (req, res) => {
@@ -140,7 +132,7 @@ export const createJob = async (req, res) => {
       isOwner,
     } = req.body;
     const jobs = await Job.find({ ad: adId });
-    if (jobs.lnegth > 0) {
+    if (jobs.length > 0) {
       res.status(404).json({ message: "Unauthorized Access" });
     } else {
       const ad = await Ad.findByIdAndUpdate(
@@ -187,27 +179,27 @@ export const getRentals = async (req, res) => {
           "https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/8e3e4e55-83e1-4e03-b2f9-89c86b0bdcb9.webp",
         ],
         priceNegotiable: false,
-        hydroIncluded: false,
-        heatInclude: false,
-        waterIncluded: false,
-        wifiIncluded: false,
+        hydroIncluded: true,
+        heatInclude: true,
+        waterIncluded: true,
+        wifiIncluded: true,
         location: "7 Aragon Ave",
         city: "Toronto",
         postedDate: "2022-12-27",
         type: "Basement",
         bedrooms: 2,
         bathrooms: 1,
-        parking: false,
+        parking: true,
         agreementType: "1 Year",
         moveInDate: "2023-01-01",
         petFriendly: true,
         size: "800sq ft",
-        furnished: false,
-        laundry: false,
-        dishwasher: false,
-        fridge: false,
-        airConditioning: false,
-        smoking: false,
+        furnished: true,
+        laundry: true,
+        dishwasher: true,
+        fridge: true,
+        airConditioning: true,
+        smoking: true,
         description:
           "A perfect 2 bedroom apartment for students studying in Loyalist College",
       },
@@ -252,3 +244,69 @@ export const getRentals = async (req, res) => {
     return res.status(500).json({ msg: err.message });
   }
 };
+
+export const getChats = async (req, res) => {
+  try {
+    const conversations = await Conversation.find({ participants: { $in: [req.user.id] } })
+      .populate('ad')
+      .populate('participants')
+      .populate('lastMessage')
+      .populate('lastMessage.sender')
+      .populate('lastMessage.receipient')
+    const chatsPromise = conversations.map(async (conversation) => {
+      let { lastMessage, ad, _id:chatId } = conversation;
+      lastMessage = await lastMessage.populate(['sender', 'recipient'])
+      const { sender, recipient} = lastMessage;
+      let client;
+      if (lastMessage.sender._id.toString() === req.user.id){
+        client = `${recipient.firstName} ${recipient.lastName}`;
+      } else {
+        client = `${sender.firstName} ${sender.lastName}`
+      }
+      return {
+        'title': ad.title,
+        'lastMessage': lastMessage.content,
+        'client':  client,
+        chatId,
+      }
+      
+    })
+    const chats = await Promise.all(chatsPromise)
+    return res.status(201).json(chats)
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+}
+
+export const getIndividualChat = async (req, res) => {
+  try {
+    const conversation = await Conversation.findOne({ id: req.params.id }).populate('ad').populate('participants');
+    const messages = await Message.find({ conversation: conversation._id })
+      .populate('sender')
+      .populate('recipient')
+      .sort({ createdAt: 1 });
+    let messageList = [];
+    const client = conversation.participants.find(
+      participant => participant._id.toString() !== req.user.id
+    )
+    messages.map(message => {
+      const content = message.content;
+      const createdAt = message.createdAt;
+      const sender = req.user.id === message.sender._id.toString();
+      const senderName = `${message.sender.firstName} ${message.sender.lastName}`;
+      messageList.push({
+        content, createdAt, senderName, sender
+      });
+    })
+    const data = {
+      'ad': conversation.ad.title,
+      'location': conversation.ad.location,
+      client,
+      messageList
+    }
+    return res.status(201).json({ ...data })
+  } catch (error) {
+    console.log(error.message)
+    return res.status(500).json({ msg: error.message })
+  }
+}

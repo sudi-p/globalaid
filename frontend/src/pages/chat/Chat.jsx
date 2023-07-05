@@ -1,75 +1,45 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
 import { Stack, TextField, Button } from '@mui/material';
-import { Send as SendIcon} from '@mui/icons-material';
-import io from "socket.io-client";
+import { Send as SendIcon } from '@mui/icons-material';
+// import io from "socket.io-client";
+import { useQuery } from "@tanstack/react-query";
 
 import styles from './styles/Chats.module.scss';
+import getClient from "../../lib/api";
+import PageNotFound from "../pagenotfound/PageNotFound";
 
-let sampleData = [
-	{
-		chatId: "12342",
-		userName: "Sudip Paudel",
-		lastMessage: "Hello",
-		time: "2022-12-27"
-	},
-	{
-		chatId: "12423",
-		userName: "Anjna",
-		lastMessage: "Hi",
-		time: "2022-12-27"
-	}
-]
-const ENDPOINT = "http://localhost:3001";
-var socket, selectedChatCompare;
 
 export default function Chats() {
-	const [ activeChat, setActiveChat] = useState(null);
-	const [ socketConnected, setSocketConnected] = useState(false);
-	const user = useSelector(state => state.loggedInUser)
-	console.log(user)
-	useEffect(() => {
-		socket = io(ENDPOINT);
-		socket.emit("setup", user);
-		socket.on("connection", () => setSocketConnected(true));
-	}, [activeChat]);
-	return(
-		<div>
+	const chatQuery = useQuery({
+		queryKey: ["chat"],
+		queryFn: async () => {
+			const res = await getClient().get('/user/getchats')
+			return res.data
+		}
+	});
+	const { isLoading, error, data} = chatQuery;
+	if (isLoading) return (<>Loading</>)
+	if (error) return <PageNotFound/>
+	return (
+		<div className={styles.chatsContainer}>
 			Chat
-			<Stack spacing={2} direction="row">
-				<div>
-					{sampleData.map(chat => (
-						<ChatList chat={chat} setActiveChat={setActiveChat}/>
-					))}
-				</div>
-				<div>
-					{activeChat ? <ActiveChat activeChat={activeChat} /> : "Click on chat to see the full chat"}
-				</div>
-			</Stack>
+			{data.map(chat => (
+				<ChatList chat={chat} key={chat.chatId}/>
+			))}
 		</div>
 	)
 }
 
-const ActiveChat = (props) => {
-	const { message } = props;
-	const [ chatText, setChatText] = useState('');
+const ChatList = ({chat}) => {
+	const { chatId, title, client, lastMessage, time } = chat;
+	const navigate = useNavigate();
 	return (
-		<div className={styles.chat}>
-			Chats will be shown here.
-			<Stack spacing={2} direction="row" alignItems="center">
-				<TextField value={chatText} size="small" label="Enter your message" fullWidth variant="outlined"/>
-				<SendIcon color="primary"/>
-			</Stack>
+		<>
+		<div onClick={() => navigate(`/chat/${chatId}`)} className={styles.chat}>
+			<div className={styles.title}>{title}</div>
+			<div>{client}: {lastMessage}</div>
 		</div>
-	)
-}
-
-const ChatList = (props) => {
-	const { chat, setActiveChat} = props;
-	const { chatId, userName, lastMessage, time} = chat;
-	return (
-		<div onClick ={() => setActiveChat(chat)} className={styles.chat}>
-			{userName}: {lastMessage}
-		</div>
+		</>
 	)
 }
