@@ -1,7 +1,40 @@
+@import '../../../styles/base.module.scss';
 .postRental{
     border: 1px solid #bbb;
     padding: 5px;
     width: max-content;
     border-radius: 4px;
     cursor: pointer;
+}
+.rentals{
+    flex: 1;
+    padding: 20px;
+}
+.rentalBox{
+    cursor: pointer;
+    filter: brightness(95%);
+    flex: 1;
+    &:hover{
+        filter: brightness(100%);
+    }
+}
+.rentalBoxImage{
+    height: 250px;
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-bottom: 15px 0;
+}
+.rentalBoxText{
+    padding: 15px;
+}
+.rentalBoxTitle{
+    width: 230px;
+    line-height: 1.2;
+}
+.rentalBoxRent{
+    font-weight: 600;
+    color: $primary;
 }

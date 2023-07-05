@@ -1,5 +1,14 @@
+.chatsContainer{
+    width: 60%;
+    margin: auto;
+}
 .chat{
     border: 1px solid #bbb;
-    padding: 20px;
-    
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
+.title{
+    font-size: 20px;
 }

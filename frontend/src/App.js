@@ -1,6 +1,8 @@
 import { lazy } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+
 import './App.css';
 import NavbarLayout from './layout/navBarLayout/NavbarLayout';
 import AuthLayout from './layout/authLayout/AuthLayout';
@@ -12,6 +14,7 @@ const RegisterContainer = lazy(() => import('./pages/register/Register'));
 const Rentals = lazy(() => import('./pages/rentals/RentalsContainer'));
 const CompleteAd = lazy(() => import('./pages/myAds/createAd/CreateAd'));
 const Chat = lazy(() => import('./pages/chat/Chat'));
+const IndividualChat = lazy(() => import('./pages/chat/IndividualChat'));
 const MyAd = lazy(() => import("./pages/myAds/myAd/MyAd"));
 const PageNotFound = lazy(() => import('./pages/pagenotfound/PageNotFound'));
 const DashboardContainer = lazy(() => import('./pages/dashboard/DashboardContainer'));
@@ -57,7 +60,10 @@ function App() {
               <Route path='/myads/:id' element={<MyAd />} />
               <Route path='/myads/create-ad/:adId' element={<CompleteAd />} />
             </Route>
-            <Route path='/chat' element={<Chat />} />
+            <Route path='/chat'>
+              <Route index element={<Chat />} />
+              <Route path='/chat/:chatId' element={<IndividualChat />} />
+            </Route>
           </Route>
           <Route path='/' element={<AuthLayout />}>
             <Route path='/login' element={<LoginContainer />} />

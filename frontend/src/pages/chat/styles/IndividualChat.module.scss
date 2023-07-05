@@ -1,0 +1,35 @@
+.messagesContainer{
+    width: 500px;
+    margin: auto;
+}
+.ad{
+    margin: 20px auto;
+    font-size: 20px;
+
+}
+.location{
+    margin: 10px auto;
+}
+.messages{
+    padding: 20px;
+    border: 1px solid #bbb;
+}
+.message{
+    width: 200px;
+    background-color: white;
+    border-radius: 7px;
+    border: 1px solid #bbb;
+    padding: 10px;
+    margin: 5px 0 10px 0;
+}
+.messageWrapper{
+    display: flex;
+    flex-direction: column;
+}
+.messageLeft{
+    align-items: flex-start;
+}
+.messageRight{
+    align-items: flex-end;
+
+}

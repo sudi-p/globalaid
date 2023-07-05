@@ -38,7 +38,6 @@ function JobCard({ title, location, jobType, salary, description }) {
             <Stack justifyContent={"flex-end"}>
                 <Button size="small" variant="outlined"> Learn More</Button>
             </Stack>
-
         </Paper>
     )
 }

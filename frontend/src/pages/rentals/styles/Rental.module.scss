@@ -1,23 +1,51 @@
+@import '../../../styles/base.module.scss';
 .rental{
 	padding: 20px;
-	border: 1px solid #bbb;
-	border-bottom: none;
 	width: 80%;
-	margin: auto;
-	
-	&:last-child{
-		border-bottom: 1px solid #bbb;
+	margin: 0 auto 40px auto;
+	.top{
+		margin-bottom: 10px;
 	}
 }
 .rentalDetails{
 	display: flex;
 }
+.title{
+	letter-spacing: 0.7px;
+	font-weight: 500;
+}
+.subTitle{
+	color: $gray;
+	margin-bottom: 20px;
+}
 .description{
-	margin-left: 20px;
-	.title{
-		font-weight: bold;
+	flex: 3;
+	div{
+		margin-bottom: 10px;
 	}
+	.chips{
+		border-top: 1px solid $gray-light;
+		padding-top: 10px;
+		flex-wrap: wrap;
+	}
+	.chip{
+		margin: 0 15px 15px 0;
+	}
+}
+.rent{
+	text-align: right;
+}
+.keyValue{
+	display: flex;
+	align-items: center;
+	margin: 0 10px;
+	gap: 5px;
 }
 .rentalFooter{
 	padding-top: 10px;
+}
+.map{
+	width: 300px;
+	height: 300px;
+	background-color: $gray-light;
 }

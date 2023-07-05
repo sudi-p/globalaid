@@ -3,7 +3,6 @@ import StoreState from '../../constants/StoreState';
 
 const initialState = {
 	jobs: [],
-	status: StoreState.EMPTY,
 };
 
 
@@ -11,9 +10,6 @@ const JobsSlice = createSlice({
 	name: 'jobs',
 	initialState: initialState,
 	reducers:{
-		fetchJobsStart: (state) => {
-			state.status = StoreState.LOADING;
-		},
 		fetchJobsSuccess: (state, action) => {
 			const { payload } = action;
 			state.status = StoreState.SUCCESS;
@@ -23,4 +19,4 @@ const JobsSlice = createSlice({
 })
 
 export default JobsSlice.reducer;
-export const {fetchJobsStart, fetchJobsSuccess } = JobsSlice.actions;
+export const {fetchJobsSuccess } = JobsSlice.actions;
