@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef} from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import getClient from '../../lib/api';
@@ -8,7 +8,7 @@ import PageNotFound from '../pagenotfound/PageNotFound';
 import styles from './styles/IndividualChat.module.scss';
 
 export default function IndividualChat() {
-    const { chatText, setChatText } = useState('');
+    const inputRef= useRef(null);
     const params = useParams();
     const chatId = params.chatId;
     const { data, isLoading, error } = useQuery({
@@ -20,7 +20,9 @@ export default function IndividualChat() {
             return res.data;
         }
     });
-    console.log("Hello from Individual Chat")
+    const submitText = () => {
+        console.log(inputRef.current.value)
+    }
     if (isLoading) return <h1>Loading...</h1>
     if (error) return <PageNotFound />
     const { ad, messageList, location, client } = data;
@@ -30,9 +32,9 @@ export default function IndividualChat() {
             <div className={styles.location}>{location}</div>
             <div className={styles.messages}>
                 {messageList.map(message => {
-                    const { sender, content, senderName } = message;
+                    const { sender, content, senderName, messageId } = message;
                     return (
-                        <Stack justifyContent={sender?'flex-end': 'flex-start'} spacing={2} direction="row">
+                        <Stack key={messageId} justifyContent={sender?'flex-end': 'flex-start'} spacing={2} direction="row">
                             <div>
                                 <div style={{textAlign: sender? 'right': 'left'}}>{sender? 'Me':senderName}</div>
                                 <div className={styles.message}>{content}</div>
@@ -41,8 +43,8 @@ export default function IndividualChat() {
                     )
                 })}
                 <Stack spacing={2} direction="row" alignItems="center">
-                    <TextField value={chatText} size="small" label="Enter your message" fullWidth variant="outlined" />
-                    <SendIcon color="primary" />
+                    <TextField inputRef={inputRef} size="small" label="Enter your message" fullWidth variant="outlined" />
+                    <SendIcon onClick={submitText} color="primary" />
                 </Stack>
             </div>
 
