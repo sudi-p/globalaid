@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import getClient from '../../lib/api';
 import { Stack, TextField, Button } from '@mui/material';
 import { Send as SendIcon } from '@mui/icons-material';
@@ -9,27 +9,31 @@ import styles from './styles/IndividualChat.module.scss';
 
 export default function IndividualChat() {
     const inputChatRef = useRef(null);
+    const queryClient = useQueryClient();
     const params = useParams();
     const chatId = params.chatId;
     const { data, isLoading, error } = useQuery({
-        queryKey: ['individualchat'],
+        queryKey: ['chats', chatId],
         queryFn: async () => {
+            console.log("Hello from fetching individual chat")
             const res = await getClient().get('/user/getindividualchat', {
                 params: { chatId: chatId }
             });
             return res.data;
-        }
+        },
+        refetchInterval: 5000,
     });
     const chatMutation = useMutation({
-        mutationfn: async () => {
+        mutationFn: () => {
             console.log("Sending message to server from mutation")
-            const res = await getClient().post('/user/sendChatMessage',
-                {
-                    chatId: chatId,
-                    chatText: inputChatRef.current,
-                }
-            );
-            return res.data;
+            return getClient().post('/user/sendChatMessage', {
+                chatId: chatId,
+                chatText: inputChatRef.current.value,
+            });
+        },
+        onSuccess: () =>{
+            queryClient.invalidateQueries(['chats', chatId])
+            inputChatRef.current.value = "";
         }
     })
     if (isLoading) return <h1>Loading...</h1>

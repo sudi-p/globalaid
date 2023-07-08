@@ -14,6 +14,7 @@ import Conversation, { Message } from "../models/Chat.js";
 
 export const getUser = async (req, res) => {
   try {
+    console.log(req.user.id)
     const user = await User.findOne({ id: req.user.id });
     const { firstName, lastName, email } = user;
     res.status(201).json({ firstName, lastName, email });
@@ -314,9 +315,27 @@ export const getIndividualChat = async (req, res) => {
 export const sendChatMessage = async (req, res) => {
   try{
     const { chatId, chatText } = req.body;
+    const conversation = await Conversation.findOne({_id: chatId}).populate('participants')
+    const participants = conversation.participants;
+    
+    const recipient = participants.find((participant) => participant._id.toString() !== req.user.id)
+    const sender = participants.find((participant) => participant._id.toString() === req.user.id)
+    console.log('sender', sender)
+    console.log('recipient', recipient)
+    const message = new Message({
+      conversation,
+      sender,
+      recipient,
+      content: chatText
+    })
+    message.save()
+    conversation.lastMessage = message;
+    conversation.save()
     console.log(chatText)
+    return res.status(201).json({msg: "message sent"})
   }
   catch(err){
+    console.log(err)
     return res.status(500).json({msg: err.message})
   }
 }
