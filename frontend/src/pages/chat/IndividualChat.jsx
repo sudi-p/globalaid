@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import getClient from '../../lib/api';
@@ -8,7 +8,7 @@ import PageNotFound from '../pagenotfound/PageNotFound';
 import styles from './styles/IndividualChat.module.scss';
 
 export default function IndividualChat() {
-    const { chatText, setChatText } = useState('');
+    const inputChatRef = useRef(null);
     const params = useParams();
     const chatId = params.chatId;
     const { data, isLoading, error } = useQuery({
@@ -21,12 +21,12 @@ export default function IndividualChat() {
         }
     });
     const chatMutation = useMutation({
-        mutationfn: async() => {
+        mutationfn: async () => {
             console.log("Sending message to server from mutation")
-            const res = await getClient().post('/user/sendChatMessage', 
+            const res = await getClient().post('/user/sendChatMessage',
                 {
                     chatId: chatId,
-                    chatText,
+                    chatText: inputChatRef.current,
                 }
             );
             return res.data;
@@ -41,11 +41,11 @@ export default function IndividualChat() {
             <div className={styles.location}>{location}</div>
             <div className={styles.messages}>
                 {messageList.map(message => {
-                    const { sender, content, senderName } = message;
+                    const { sender, content, senderName, messageId } = message;
                     return (
-                        <Stack justifyContent={sender?'flex-end': 'flex-start'} spacing={2} direction="row">
+                        <Stack key={messageId} justifyContent={sender ? 'flex-end' : 'flex-start'} spacing={2} direction="row">
                             <div>
-                                <div style={{textAlign: sender? 'right': 'left'}}>{sender? 'Me':senderName}</div>
+                                <div style={{ textAlign: sender ? 'right' : 'left' }}>{sender ? 'Me' : senderName}</div>
                                 <div className={styles.message}>{content}</div>
                             </div>
                         </Stack>
@@ -53,13 +53,13 @@ export default function IndividualChat() {
                 })}
                 <Stack spacing={2} direction="row" alignItems="center">
                     <TextField
-                        value={chatText}
+                        inputRef={inputChatRef}
                         size="small"
                         label="Enter your message"
                         fullWidth
                         variant="outlined"
                     />
-                    <SendIcon onClick={()=> chatMutation.mutate()} color="primary" />
+                    <SendIcon onClick={() => chatMutation.mutate()} color="primary" />
                 </Stack>
             </div>
 

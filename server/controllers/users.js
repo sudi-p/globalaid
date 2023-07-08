@@ -295,7 +295,7 @@ export const getIndividualChat = async (req, res) => {
       const sender = req.user.id === message.sender._id.toString();
       const senderName = `${message.sender.firstName} ${message.sender.lastName}`;
       messageList.push({
-        content, createdAt, senderName, sender
+        content, createdAt, senderName, sender, messageId: message._id
       });
     })
     const data = {
