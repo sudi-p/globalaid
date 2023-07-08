@@ -310,3 +310,13 @@ export const getIndividualChat = async (req, res) => {
     return res.status(500).json({ msg: error.message })
   }
 }
+
+export const sendChatMessage = async (req, res) => {
+  try{
+    const { chatId, chatText } = req.body;
+    console.log(chatText)
+  }
+  catch(err){
+    return res.status(500).json({msg: err.message})
+  }
+}

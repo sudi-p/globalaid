@@ -1,5 +1,5 @@
 import React, { useEffect, lazy } from 'react';
-import { Link } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import getClient from '../../lib/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMyAdsSuccess, fetchMyAdsError } from './MyAdsSlice';

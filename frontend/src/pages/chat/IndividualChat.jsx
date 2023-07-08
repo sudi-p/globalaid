@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import getClient from '../../lib/api';
 import { Stack, TextField, Button } from '@mui/material';
 import { Send as SendIcon } from '@mui/icons-material';
@@ -20,7 +20,18 @@ export default function IndividualChat() {
             return res.data;
         }
     });
-    console.log("Hello from Individual Chat")
+    const chatMutation = useMutation({
+        mutationfn: async() => {
+            console.log("Sending message to server from mutation")
+            const res = await getClient().post('/user/sendChatMessage', 
+                {
+                    chatId: chatId,
+                    chatText,
+                }
+            );
+            return res.data;
+        }
+    })
     if (isLoading) return <h1>Loading...</h1>
     if (error) return <PageNotFound />
     const { ad, messageList, location, client } = data;
@@ -41,8 +52,14 @@ export default function IndividualChat() {
                     )
                 })}
                 <Stack spacing={2} direction="row" alignItems="center">
-                    <TextField value={chatText} size="small" label="Enter your message" fullWidth variant="outlined" />
-                    <SendIcon color="primary" />
+                    <TextField
+                        value={chatText}
+                        size="small"
+                        label="Enter your message"
+                        fullWidth
+                        variant="outlined"
+                    />
+                    <SendIcon onClick={()=> chatMutation.mutate()} color="primary" />
                 </Stack>
             </div>
 

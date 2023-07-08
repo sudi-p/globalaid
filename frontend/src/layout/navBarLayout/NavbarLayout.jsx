@@ -22,11 +22,8 @@ const NavBar = (props) => {
   const navigate = useNavigate();
   const [expandMenu, setExpandMenu] = useState(false);
   const [open, setOpen] = React.useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
+  const handlePostAdButton = () => {
+    setOpen((prevOpen) => !prevOpen);
   };
   useEffect(() => {
     dispatch(fetchUserStart());
@@ -86,11 +83,11 @@ const NavBar = (props) => {
               color="primary"
               sx={{ textTransform: "None", fontWeight: "bold" }}
               size="small"
-              onClick={() => handleClickOpen()}
+              onClick={() => handlePostAdButton()}
             >
               Post Ad
             </Button>
-            {open && <PostAd handleClose={handleClose} />}
+            {open && <PostAd handleClose={handlePostAdButton} />}
             <span className={styles.extraMenuArrow}>
               {email}
               {expandMenu ? (
