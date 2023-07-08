@@ -1,6 +1,6 @@
-import React, { useRef} from 'react';
+import React, { useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import getClient from '../../lib/api';
 import { Stack, TextField, Button } from '@mui/material';
 import { Send as SendIcon } from '@mui/icons-material';
@@ -8,21 +8,34 @@ import PageNotFound from '../pagenotfound/PageNotFound';
 import styles from './styles/IndividualChat.module.scss';
 
 export default function IndividualChat() {
-    const inputRef= useRef(null);
+    const inputChatRef = useRef(null);
+    const queryClient = useQueryClient();
     const params = useParams();
     const chatId = params.chatId;
     const { data, isLoading, error } = useQuery({
-        queryKey: ['individualchat'],
+        queryKey: ['chats', chatId],
         queryFn: async () => {
+            console.log("Hello from fetching individual chat")
             const res = await getClient().get('/user/getindividualchat', {
                 params: { chatId: chatId }
             });
             return res.data;
-        }
+        },
+        refetchInterval: 5000,
     });
-    const submitText = () => {
-        console.log(inputRef.current.value)
-    }
+    const chatMutation = useMutation({
+        mutationFn: () => {
+            console.log("Sending message to server from mutation")
+            return getClient().post('/user/sendChatMessage', {
+                chatId: chatId,
+                chatText: inputChatRef.current.value,
+            });
+        },
+        onSuccess: () =>{
+            queryClient.invalidateQueries(['chats', chatId])
+            inputChatRef.current.value = "";
+        }
+    })
     if (isLoading) return <h1>Loading...</h1>
     if (error) return <PageNotFound />
     const { ad, messageList, location, client } = data;
@@ -34,17 +47,23 @@ export default function IndividualChat() {
                 {messageList.map(message => {
                     const { sender, content, senderName, messageId } = message;
                     return (
-                        <Stack key={messageId} justifyContent={sender?'flex-end': 'flex-start'} spacing={2} direction="row">
+                        <Stack key={messageId} justifyContent={sender ? 'flex-end' : 'flex-start'} spacing={2} direction="row">
                             <div>
-                                <div style={{textAlign: sender? 'right': 'left'}}>{sender? 'Me':senderName}</div>
+                                <div style={{ textAlign: sender ? 'right' : 'left' }}>{sender ? 'Me' : senderName}</div>
                                 <div className={styles.message}>{content}</div>
                             </div>
                         </Stack>
                     )
                 })}
                 <Stack spacing={2} direction="row" alignItems="center">
-                    <TextField inputRef={inputRef} size="small" label="Enter your message" fullWidth variant="outlined" />
-                    <SendIcon onClick={submitText} color="primary" />
+                    <TextField
+                        inputRef={inputChatRef}
+                        size="small"
+                        label="Enter your message"
+                        fullWidth
+                        variant="outlined"
+                    />
+                    <SendIcon onClick={() => chatMutation.mutate()} color="primary" />
                 </Stack>
             </div>
 

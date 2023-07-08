@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 
-import { fetchJobsStart, fetchJobsSuccess } from './JobsSlice';
 import { Email, LocalPhone, LocationOnOutlined } from '@mui/icons-material/';
 import getClient from '../../lib/api';
 import styles from './styles/Jobs.module.scss';
@@ -12,29 +10,22 @@ import SearchBar from './SearchBar';
 import PageNotFound from '../pagenotfound/PageNotFound';
 
 function Jobs() {
-  const jobs = useSelector(state => state.jobs)
-  const dispatch = useDispatch();
   const jobsQuery = useQuery({
     queryKey: ['jobs'],
-    queryFn: async () => {
-      try {
+    queryFn: async() => {
         const res = await getClient().get('/user/getjobs/')
-        dispatch(fetchJobsSuccess(res.data));
         return res.data;
-      }
-      catch (error) {
-        return error
-      }
     }
   });
-  const { isLoading, error } = jobsQuery;
+  const { isLoading, error, data } = jobsQuery;
   if (isLoading) return <h1>Loading...</h1>
   if (error) return <PageNotFound />
+  console.log(data)
   return (
     <div className={styles.jobsContainer}>
       <Stack direction="row" spacing={2}>
         <Filter />
-        <JobsList jobs={jobs.jobs} />
+        <JobsList jobs={data.jobs} />
         {/* <ActiveJob {...activeJob}/> */}
       </Stack>
     </div>
@@ -58,7 +49,7 @@ const JobBox = (props) => {
   const { job } = props;
   const { _id, description, title, company, location, email, phone } = job;
   return (
-    <Paper variant="outlined" className={styles.jobBox}>
+    <Paper key={_id} variant="outlined" className={styles.jobBox}>
       <div className={styles.jobTitle}>{title}</div>
       <Stack sx={{ marginBottom: 2 }} direction="row" spacing={2}>
         <div className={styles.companyName}>{company}</div>
