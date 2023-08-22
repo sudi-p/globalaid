@@ -7,11 +7,10 @@ import { Send as SendIcon } from '@mui/icons-material';
 import PageNotFound from '../pagenotfound/PageNotFound';
 import styles from './styles/IndividualChat.module.scss';
 
-export default function IndividualChat() {
+export default function IndividualChat(props) {
     const inputChatRef = useRef(null);
     const queryClient = useQueryClient();
-    const params = useParams();
-    const chatId = params.chatId;
+    const chatId = props.chatId;
     const { data, isLoading, error } = useQuery({
         queryKey: ['chats', chatId],
         queryFn: async () => {
@@ -25,7 +24,6 @@ export default function IndividualChat() {
     });
     const chatMutation = useMutation({
         mutationFn: () => {
-            console.log("Sending message to server from mutation")
             return getClient().post('/user/sendChatMessage', {
                 chatId: chatId,
                 chatText: inputChatRef.current.value,
