@@ -2,13 +2,13 @@ import { Stack, Button, TextField, Paper } from '@mui/material';
 import { Search } from '@mui/icons-material';
 import styles from './styles/SearchBar.module.scss';
 
-const SearchBar = () =>{
+const SearchBar = () => {
     return (
         <Paper variant="outlined" className={styles.searchSection}>
-            <Stack direction="row"  spacing={2}>
+            <Stack direction="row" spacing={2} className={styles.searchBar}>
                 <TextField
-                label="Search For Jobs"
-                fullWidth
+                    label="Search For Jobs"
+                    fullWidth
                 />
                 <Button
                     color="primary"
@@ -17,8 +17,8 @@ const SearchBar = () =>{
                 >Search</Button>
             </Stack>
         </Paper>
-      
-    );
-  }
 
-  export default SearchBar;
+    );
+}
+
+export default SearchBar;

@@ -12,21 +12,19 @@ import PageNotFound from '../pagenotfound/PageNotFound';
 function Jobs() {
   const jobsQuery = useQuery({
     queryKey: ['jobs'],
-    queryFn: async() => {
-        const res = await getClient().get('/user/getjobs/')
-        return res.data;
+    queryFn: async () => {
+      const res = await getClient().get('/user/getjobs/')
+      return res.data;
     }
   });
   const { isLoading, error, data } = jobsQuery;
   if (isLoading) return <h1>Loading...</h1>
   if (error) return <PageNotFound />
-  console.log(data)
   return (
     <div className={styles.jobsContainer}>
-      <Stack direction="row" spacing={2}>
+      <Stack direction="row" spacing={"20px"}>
         <Filter />
-        <JobsList jobs={data.jobs} />
-        {/* <ActiveJob {...activeJob}/> */}
+        <JobsList jobs={data.ads} />
       </Stack>
     </div>
   );
@@ -34,10 +32,13 @@ function Jobs() {
 
 const JobsList = ({ jobs }) => {
   return (
-    <Stack spacing={2} className={styles.content}>
+    <Stack spacing={"20px"} className={styles.content}>
       <SearchBar />
       <Paper elevation={0} variant="outlined" className={styles.jobsSection}>
-        <Stack spacing={2} >
+        <Stack direction="row" flexWrap={"wrap"} gap="15px">
+          {jobs && jobs.map(job => (<JobBox key={job._id} job={job} />))}
+          {jobs && jobs.map(job => (<JobBox key={job._id} job={job} />))}
+          {jobs && jobs.map(job => (<JobBox key={job._id} job={job} />))}
           {jobs && jobs.map(job => (<JobBox key={job._id} job={job} />))}
         </Stack>
       </Paper>
@@ -49,21 +50,21 @@ const JobBox = (props) => {
   const { job } = props;
   const { _id, description, title, company, location, email, phone } = job;
   return (
-    <Paper key={_id} variant="outlined" className={styles.jobBox}>
-      <div className={styles.jobTitle}>{title}</div>
-      <Stack sx={{ marginBottom: 2 }} direction="row" spacing={2}>
-        <div className={styles.companyName}>{company}</div>
-        {location && (
-          <Chip
-            color="primary"
-            size="small"
-            variant="outlined"
-            label={location}
-            icon={<LocationOnOutlined />}
-          />
-        )}
-      </Stack>
-      <div className={styles.description}>{description}</div>
+    <div key={_id} variant="outlined" className={`w-76 p-5  ${styles.jobBox}`}>
+      <div className="flex items-end mb-3.5">
+        <div className="text-xl font-bold">{title}</div> | 
+        <div className="hover:text-green-400">{company}</div>
+      </div>
+      {location && (
+        <Chip
+          color="primary"
+          size="small"
+          variant="outlined"
+          label={location}
+          icon={<LocationOnOutlined />}
+        />
+      )}
+      <div className="my-2.5 truncate">{description}</div>
       <Stack direction="row" spacing={1}>
         {email && (
           <Chip
@@ -84,7 +85,7 @@ const JobBox = (props) => {
           />
         )}
       </Stack>
-    </Paper>
+    </div>
   )
 }
 
