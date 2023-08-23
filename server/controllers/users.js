@@ -25,8 +25,21 @@ export const getUser = async (req, res) => {
 
 export const getJobs = async (req, res) => {
   try {
-    const jobs = await Ad.find({ available: true, adType: "job" });
-    res.status(201).json({ jobs });
+    const ads = await Ad.find({ available: true, adType: "job" });
+    let data = await Promise.all(ads.map(async(ad) => {
+      try{
+        const job = await Job.findOne({ad: ad})
+        if (!job){
+          throw new Error("Job not found")
+        }
+        const { company } = job;
+        return {...ad.toObject(), company}
+      } catch (error){
+        return null;
+      }
+    }))
+    data = data.filter((job) => job !== null)
+    res.status(201).json({ ads: data });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
