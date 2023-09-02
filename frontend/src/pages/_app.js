@@ -4,7 +4,7 @@ import store from '../store/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import reportWebVitals from '../src/reportWebVitals';
+import reportWebVitals from '../reportWebVitals';
 import '../styles/globals.css';
 
 const theme = createTheme({
