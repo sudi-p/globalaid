@@ -1,6 +1,14 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "baseUrl": "./src",
+    "paths": {
+      "@features/*": ["features/*"],
+      "@pages/*": ["pages/*"],
+      "@shared/*": ["shared/*"],
+      "@store/*": ["store/*"],
+      "@styles/*": ["styles/*"]
+    },
     "module": "commonjs",
     "jsx": "preserve",
     "outDir": "./dist",

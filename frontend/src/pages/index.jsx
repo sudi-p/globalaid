@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import NavbarLayout from '../shared/layout/navBarLayout/';
+import NavbarLayout from '../layout/navBarLayout/';
 import Hero from '../features/dashboard/Hero';
 import TopRentals from '../features/dashboard/TopRentals';
 import TopJobs from '../features/dashboard/TopJobs';

@@ -1,8 +1,7 @@
 import React, { useRef } from 'react';
-import { useParams } from 'react-router-dom';
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import getClient from '../../lib/api';
-import { Stack, TextField, Button } from '@mui/material';
+import { Stack, TextField} from '@mui/material';
 import { Send as SendIcon } from '@mui/icons-material';
 import PageNotFound from '../../pages/pagenotfound/PageNotFound';
 import styles from './styles/IndividualChat.module.scss';

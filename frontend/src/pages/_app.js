@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { Provider } from 'react-redux';
 import store from '../store/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -29,16 +29,18 @@ export default function MyApp({ Component, pageProps }) {
   const getLayout = Component.getLayout ?? ((page) => page);
   return (
     <React.StrictMode>
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider theme={theme}>
-          {getLayout(
-            <Component {...pageProps}/>
-          )}
-          </ThemeProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
-      </Provider>
+      <Suspense>
+        <Provider store={store}>
+          <QueryClientProvider client={queryClient}>
+            <ThemeProvider theme={theme}>
+              {getLayout(
+                <Component {...pageProps} />
+              )}
+            </ThemeProvider>
+            <ReactQueryDevtools initialIsOpen={false} />
+          </QueryClientProvider>
+        </Provider>
+      </Suspense>
     </React.StrictMode>
   )
 };

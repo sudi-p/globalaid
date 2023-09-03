@@ -3,12 +3,12 @@ import { useQuery } from '@tanstack/react-query';
 
 import { Email, LocalPhone, LocationOnOutlined } from '@mui/icons-material/';
 import getClient from '../../lib/api';
-import styles from './styles/Jobs.module.scss';
 import { Chip, Stack, Paper } from '@mui/material';
-import NavbarLayout from '../../shared/layout/navBarLayout/';
+import NavbarLayout from '../../layout/navBarLayout/';
 import Filter from '../../features/jobs/Filter';
 import SearchBar from '../../features/jobs/SearchBar';
 import PageNotFound from '../pagenotfound/PageNotFound';
+import styles from './Jobs.module.scss';
 
 function Jobs() {
   const jobsQuery = useQuery({

@@ -22,11 +22,9 @@ import {
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-
-
 import getClient from '../../lib/api';
+import AuthLayout from '../../layout/authLayout/AuthLayout';
 import styles from './styles/Register.module.scss';
-import AuthLayout from '../../shared/layout/authLayout/AuthLayout';
 
 const UserSchema = yup.object().shape({
     firstName: yup

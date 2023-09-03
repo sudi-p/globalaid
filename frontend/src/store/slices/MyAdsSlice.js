@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import StoreState from '../../shared/constants/StoreState';
+import StoreState from '../../constants/StoreState';
 
 const initialState = {
     'ads': [],

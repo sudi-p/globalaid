@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
-import styles from './styles/Job.module.scss';
+import styles from './Job.module.scss';
 import { fetchJobStart } from './JobSlice';
 
 const Job = (props) => {

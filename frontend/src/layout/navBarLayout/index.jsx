@@ -2,19 +2,19 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from "react-redux";
-import getClient from "../../../lib/api";
+import getClient from "../../lib/api";
 import {
   fetchUserStart,
   fetchUserSuccess,
   clearLoggedInUser,
-} from "../../../store/slices/LoggedInUserSlice";
+} from "../../store/slices/LoggedInUserSlice";
 import { Paper, Button, Stack, Divider, ClickAwayListener } from "@mui/material";
 import {
   ExpandMore as ExpandMoreIcon,
   ExpandLess as ExpandLessIcon,
   ChatBubbleOutline
 } from "@mui/icons-material";
-import PostAd from '../../../features/postAdModal/PostAd';
+import PostAd from '@features/postAdModal/PostAd';
 import Footer from './Footer';
 import styles from "./styles/NavBar.module.scss";
 

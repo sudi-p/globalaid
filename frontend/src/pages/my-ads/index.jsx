@@ -2,7 +2,7 @@ import React, { useEffect, lazy } from 'react';
 import getClient from '../../lib/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMyAdsSuccess, fetchMyAdsError } from '../../store/slices/MyAdsSlice';
-import storeState from '../../shared/constants/StoreState';
+import storeState from '../../constants/StoreState';
 const PageNotFound = lazy(() => import('../pagenotfound/PageNotFound'));
 const MyAds = lazy(()=> import('./MyAds'));
 

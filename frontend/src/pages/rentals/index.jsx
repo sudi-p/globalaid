@@ -7,7 +7,7 @@ import Rental from './Rental';
 import {
   Stack
 } from "@mui/material";
-import NavbarLayout from '../../shared/layout/navBarLayout/';
+import NavbarLayout from '../../layout/navBarLayout/';
 
 function Rentals() {
   const rentalsQuery = useQuery({
@@ -20,7 +20,6 @@ function Rentals() {
   const { isLoading, error, data } = rentalsQuery;
   if (isLoading) return (<div>Loading..</div>)
   if (error) return <PageNotFound />
-  console.log(data)
   return (
     <div className={styles.rentalsContainer}>
       <Stack direction="row" spacing={2}>

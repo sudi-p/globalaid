@@ -6,10 +6,11 @@ import { Send as SendIcon } from '@mui/icons-material';
 import { useQuery } from "@tanstack/react-query";
 
 import styles from './styles/Chats.module.scss';
-import getClient from "../lib/api";
-import PageNotFound from "./pagenotfound/PageNotFound";
-const IndividualChat = lazy(() => import("./chat/IndividualChat"));
-
+import getClient from "../../lib/api";
+import PageNotFound from "../pagenotfound/PageNotFound";
+import NavbarLayout from "../../layout/navBarLayout";
+// import IndividualChat from "./IndividualChat";
+const IndividualChat = lazy(() => import("../../features/chat/IndividualChat"));
 
 export default function Chats() {
 	const [chatId, setChatId] = useState('');
@@ -22,9 +23,6 @@ export default function Chats() {
 		refetchInterval: 5000,
 	});
 	const { isLoading, error, data} = chatQuery;
-	useEffect(()=> {
-		console.log(data)
-	}, [data])
 	if (isLoading) return (<>Loading</>)
 	if (error) return <PageNotFound/>
 	return (
@@ -32,12 +30,7 @@ export default function Chats() {
 			<div>
 			Chats
 			{data.map(chat => (
-				<>
-					<ChatList chat={chat} key={chat.chatId}/>
-					<ChatList chat={chat} key={chat.chatId}/>
-					<ChatList chat={chat} key={chat.chatId}/>
-					<ChatList chat={chat} key={chat.chatId}/>
-				</>
+				<ChatList chat={chat} key={chat.chatId}/>
 			))}
 			</div>
 			<IndividualChat chatId={chatId}/>
@@ -47,11 +40,16 @@ export default function Chats() {
 
 const ChatList = ({chat, setChatId}) => {
 	const { chatId, title, client, lastMessage, time } = chat;
-	const navigate = useNavigate();
 	return (
 		<div onClick={() => setChatId(chatId)} className={styles.chat}>
 			<div className={styles.title}>{title}</div>
 			<div>{client}: {lastMessage}</div>
 		</div>
+	)
+}
+
+Chats.getLayout = function getLayout(page){
+	return(
+		<NavbarLayout>{page}</NavbarLayout>
 	)
 }

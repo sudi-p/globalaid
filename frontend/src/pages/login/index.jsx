@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import getClient from '../../lib/api';
-import styles from './styles/LoginContainer.module.scss';
 import { fetchUserSuccess } from '../../store/slices/LoggedInUserSlice';
 import {
     TextField,
@@ -24,7 +23,8 @@ import {
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import AuthLayout from '../../shared/layout/authLayout/AuthLayout';
+import AuthLayout from '../../layout/authLayout/AuthLayout';
+import styles from './LoginContainer.module.scss';
 
 const LoginSchema = yup.object().shape({
     email: yup
