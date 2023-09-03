@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import jobReducer from '../pages/jobs/job/JobSlice';
-import createAdReducer from '../pages/myAds/createAd/createAdSlice';
-import loggedInUserReducer from '../layout/navBarLayout/LoggedInUserSlice';
-import myAdsReducer from '../pages/myAds/MyAdsSlice';
-import DashboardReducer  from '../pages/dashboard/DashboardSlice';
+import jobReducer from './slices/JobSlice';
+import createAdReducer from './slices/createAdSlice';
+import loggedInUserReducer from './slices/LoggedInUserSlice';
+import myAdsReducer from './slices/MyAdsSlice';
+import DashboardReducer  from './slices/DashboardSlice';
 
 // export const store = configureStore({
 //   reducer: {
@@ -12,14 +12,25 @@ import DashboardReducer  from '../pages/dashboard/DashboardSlice';
 // });
 
 
+// const store = configureStore({
+//   reducer: {
+//     job: jobReducer,
+//     loggedInUser: loggedInUserReducer,
+//     createAd: createAdReducer,
+//     myAds: myAdsReducer,
+//     dashboard: DashboardReducer,
+//   }
+// });
+
 const store = configureStore({
-  reducer: {
-    job: jobReducer,
-    loggedInUser: loggedInUserReducer,
-    createAd: createAdReducer,
-    myAds: myAdsReducer,
-    dashboard: DashboardReducer,
-  }
-});
+    reducer: {
+      loggedInUser: loggedInUserReducer,
+      dashboard: DashboardReducer,
+      job: jobReducer,
+      createAd: createAdReducer,
+      myAds: myAdsReducer,
+    }
+  });
+
 
 export default store;

@@ -1,27 +1,5 @@
 @import '../../../styles/base.module.scss';
-.navbarLayout{
-	display: flex;
-	flex-direction: column;
-}
-.navBarContainer{
-	padding: 0 30px;
-	position: relative;
-	height: 60px;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	font-weight: 600;
-	color: #73767a;
-	border-bottom: 1px solid #bbb;
-}
-.navBarLogo{
-	background: url('https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674412883/GlobalAid/GlobalAid_Logo.png');
-	background-size: cover;
-	background-repeat: no-repeat;
-	background-position: center;
-	height: 60px;
-	width: 60px;
-}
+
 .navBarLinks{
 	display: flex;
 	width: 400px;
@@ -31,7 +9,6 @@
 	}
 }
 .extraMenuArrow{
-	display: flex;
 	align-items: center;
 	position: relative;
 }
@@ -53,31 +30,5 @@
 		}
 	}
 }
-.link{
-	margin: 0 20px;
-	text-decoration: none;
-	text-align: center;
-	color: inherit;
-	transition: all 0.3s ease 0s;
-	&:hover{
-		color: $primary;
-	}&:first-child{
-		margin: 0 20px 0 0;
-	}
-}
-.link:first-child{
-	margin: 0 20px 0 0;
-}
-.link:last-child{
-	margin: 0 0 0 20px;
-}
-.activeLink{
-	color: $primary;
-	font-weight: bold;
-}
-.outlet{
-	background-color: $gray-lightest;
-	min-height: calc(100vh - 280px);
-	height: 100%;
-	flex-grow: 1;
-}
+
+

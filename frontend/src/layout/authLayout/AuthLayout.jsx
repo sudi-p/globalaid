@@ -1,16 +1,19 @@
 import React, { Suspense } from 'react';
-import { Outlet, Link } from 'react-router-dom';
+import Link from 'next/link';
 import styles from './styles/AuthLayout.module.scss';
 
-export default function AuthLayout() {
+export default function AuthLayout({ children }) {
   return (
     <>
       <div className={styles.wrapper}>
         <div className={styles.common}>
           <div className={styles.link}>
-            <Link to='/'><div className={styles.logo} />
-              <div className={styles.title}>GlobalAid</div>
-              <div className={styles.subTitle}>Simplifying Student Life</div>
+            <Link href='/'>
+              <a>
+                <div className={styles.logo} />
+                <div className={styles.title}>GlobalAid</div>
+                <div className={styles.subTitle}>Simplifying Student Life</div>
+              </a>
             </Link>
           </div>
           <div className={styles.image} />
@@ -18,7 +21,7 @@ export default function AuthLayout() {
         <div className={styles.contentWrapper}>
           <div className={styles.content}>
             <Suspense fallback="loading">
-              <Outlet />
+              {children}
             </Suspense>
           </div>
         </div>
