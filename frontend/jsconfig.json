@@ -5,17 +5,20 @@
             "@features/*": [
                 "features/*"
             ],
+            "@components/*": [
+                "components/*"
+            ],
             "@pages/*": [
                 "pages/*"
             ],
-            "@shared/*": [
-                "shared/*"
+            "@constants/*": [
+                "constants/*"
             ],
             "@store/*": [
                 "store/*"
             ],
-            "@styles/*": [
-                "styles/*"
+            "@lib/*": [
+                "lib/*"
             ]
         },
     }

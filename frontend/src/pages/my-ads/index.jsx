@@ -2,8 +2,9 @@ import React, { useEffect, lazy } from 'react';
 import getClient from '../../lib/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMyAdsSuccess, fetchMyAdsError } from '../../store/slices/MyAdsSlice';
-import storeState from '../../constants/StoreState';
+import storeState from '@constants/StoreState.js';
 const PageNotFound = lazy(() => import('../pagenotfound/PageNotFound'));
+import NavbarLayout from 'layout/navBarLayout';
 const MyAds = lazy(()=> import('./MyAds'));
 
 export default function MyAdsContainer() {
@@ -13,10 +14,13 @@ export default function MyAdsContainer() {
         getClient()
             .get('/user/getmyads')
             .then(res => dispatch(fetchMyAdsSuccess(res.data)))
-            .catch(err => dispatch(fetchMyAdsError()))
+            .catch(err => dispatch(fetchMyAdsError(err)))
     }, [])    
     const { ads, status } = myAds;
     if (status === storeState.READY) return <MyAds ads={ads} />
     else if (status === storeState.ERROR) return <PageNotFound />
     return "Loading.."
+}
+MyAdsContainer.getLayout = function getLayout(page){
+    return <NavbarLayout>{page}</NavbarLayout>
 }
