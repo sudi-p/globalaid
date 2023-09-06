@@ -6,7 +6,7 @@ interface RentalImageProps {
 	images: string[];
 }
 
-const RentalImage: FC<RentalImageProps> = ({ images }) => {
+const RentalImage = ({ images }: RentalImageProps) => {
 	const [image, setImage] = useState<number>(0);
 	return (
 		<div className={styles.imageWrapper}>

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import StoreState from '../../constants/StoreState';
+import StoreState from '../../utils/constants/StoreState';
 
 const initialState = {
     rentals : [],

@@ -9,11 +9,11 @@ import styles from './styles/TopRentals.module.scss';
 export default function TopRentals({rentals}) {
     return (
         <div className={styles.topBox}>
-            <Stack className={styles.topBoxTitle} direction="row" justifyContent="space-between">
+            <Stack className={styles.topBoxTitle} direction="row"  justifyContent="space-between">
                 <div>Top Rentals</div>
                 <Link href="/rentals/" className={styles.topBoxViewMore}>View More</Link>
             </Stack>
-            <Stack spacing={3} direction="row" justifyContent="center">
+            <Stack spacing={3} flexWrap="wrap" direction="row" justifyContent="center">
                 {rentals.map(rental => (<RentalBox key={rental.id} {...rental}/>))}
             </Stack>
         </div>

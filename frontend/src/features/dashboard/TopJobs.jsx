@@ -15,7 +15,7 @@ export default function TopJobs({jobs}) {
                     <div>Top Jobs</div>
                     <Link href="/jobs/" className={styles.topBoxViewMore}>View More</Link>
                 </Stack>
-                <Stack spacing={3} direction="row" justifyContent="center">
+                <Stack spacing={3} flexWrap="wrap" direction="row" justifyContent="center">
                     {jobs.map(job => (<JobCard key={job.id} {...job} />))}
                 </Stack>
             </div>

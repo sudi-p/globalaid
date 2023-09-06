@@ -4,12 +4,23 @@ import getClient from '../../lib/api';
 import { Stack, TextField} from '@mui/material';
 import { Send as SendIcon } from '@mui/icons-material';
 import PageNotFound from '../../pages/pagenotfound/PageNotFound';
-import styles from './styles/IndividualChat.module.scss';
 
-export default function IndividualChat(props) {
-    const inputChatRef = useRef(null);
+type IndividualChatProps = {
+    chatId: string,
+}
+
+type MessageProps ={
+    index: number,
+    content: string,
+    createdAt: TimeRanges,
+    senderName: string,
+    sender: boolean,
+    messageId: string,
+}
+
+export default function IndividualChat({chatId}: IndividualChatProps) {
+    const inputChatRef = useRef<HTMLInputElement | null>(null);
     const queryClient = useQueryClient();
-    const chatId = props.chatId;
     const { data, isLoading, error } = useQuery({
         queryKey: ['chats', chatId],
         queryFn: async () => {
@@ -25,29 +36,32 @@ export default function IndividualChat(props) {
         mutationFn: () => {
             return getClient().post('/user/sendChatMessage', {
                 chatId: chatId,
-                chatText: inputChatRef.current.value,
+                chatText: inputChatRef.current?.value,
             });
         },
         onSuccess: () =>{
             queryClient.invalidateQueries(['chats', chatId])
-            inputChatRef.current.value = "";
+            if (inputChatRef.current){
+                inputChatRef.current.value = "";
+            }
         }
     })
     if (isLoading) return <h1>Loading...</h1>
     if (error) return <PageNotFound />
     const { ad, messageList, location, client } = data;
+    console.table(messageList);
     return (
-        <div className={styles.messagesContainer}>
-            <div className={styles.ad}>{ad} | {client.firstName}</div>
-            <div className={styles.location}>{location}</div>
-            <div className={styles.messages}>
-                {messageList.map(message => {
+        <div>
+            <div className="text-xl">{ad} | {client.firstName}</div>
+            <div className={"my-3 mx-auto"}>{location}</div>
+            <div className="p-5 border border-solid border-gray-400">
+                {messageList.map((message: MessageProps)=> {
                     const { sender, content, senderName, messageId } = message;
                     return (
                         <Stack key={messageId} justifyContent={sender ? 'flex-end' : 'flex-start'} spacing={2} direction="row">
                             <div>
                                 <div style={{ textAlign: sender ? 'right' : 'left' }}>{sender ? 'Me' : senderName}</div>
-                                <div className={styles.message}>{content}</div>
+                                <div className="w-52 bg-white border border-solid border-gray-300 rounded p-2 mt-1 mb-2">{content}</div>
                             </div>
                         </Stack>
                     )
@@ -63,7 +77,6 @@ export default function IndividualChat(props) {
                     <SendIcon onClick={() => chatMutation.mutate()} color="primary" />
                 </Stack>
             </div>
-
         </div>
     )
 }

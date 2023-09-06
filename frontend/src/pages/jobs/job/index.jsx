@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import styles from './Job.module.scss';
-import { fetchJobStart } from './JobSlice';
+import { fetchJobStart } from '@store/slices/JobSlice';
 
 const Job = (props) => {
 	const params = useParams();

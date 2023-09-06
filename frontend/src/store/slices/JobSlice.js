@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import StoreState from '../../constants/StoreState.js';
+import StoreState from '../../utils/constants/StoreState.js';
 
 const initialState = {
 	status: StoreState.Empty,

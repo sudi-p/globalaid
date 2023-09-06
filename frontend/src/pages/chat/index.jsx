@@ -5,10 +5,10 @@ import { Send as SendIcon } from '@mui/icons-material';
 // import io from "socket.io-client";
 import { useQuery } from "@tanstack/react-query";
 
-import styles from './styles/Chats.module.scss';
-import getClient from "../../lib/api";
+import styles from './Chats.module.scss';
+import getClient from "@lib/api";
 import PageNotFound from "../pagenotfound/PageNotFound";
-import NavbarLayout from "../../layout/navBarLayout";
+import NavbarLayout from "@layout/navBarLayout";
 // import IndividualChat from "./IndividualChat";
 const IndividualChat = lazy(() => import("../../features/chat/IndividualChat"));
 

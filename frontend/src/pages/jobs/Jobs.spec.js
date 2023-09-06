@@ -1,4 +1,4 @@
-import Jobs from './Jobs';
+import Jobs from './';
 import { render, screen } from '@testing-library/react';
 
 describe("whole page testing", ()=>{

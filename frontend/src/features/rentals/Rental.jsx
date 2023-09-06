@@ -4,17 +4,12 @@ import styles from './styles/Rental.module.scss';
 import { Stack, Chip, Typography, Paper } from '@mui/material/';
 import {
 	ElectricBolt as ElectricBoltIcon, LocalShipping as LocalShippingIcon,
-	AttachMoney as AttachMoneyIcon, Apartment as ApartmentIcon,
-	Done as DoneIcon, NetworkWifi as NetworkWifiIcon,
-	SmokeFree as SmokeFreeIcon, AcUnit as AcUnitIcon,
-	Chair as ChairIcon, Kitchen as KitchenIcon,
-	Dining as DiningIcon, LocalLaundryService as LocalLaundryServiceIcon,
-	Pets as PetIcon, AirportShuttle as AirportShuttleIcon, Bed as BedIcon,
-	Bathtub as BathtubIcon, AspectRatio as AspectRatioIcon,
+	Apartment as ApartmentIcon,	NetworkWifi as NetworkWifiIcon,
+	SmokeFree as SmokeFreeIcon, AcUnit as AcUnitIcon, Chair as ChairIcon,
+	Kitchen as KitchenIcon,	Dining as DiningIcon, LocalLaundryService as LocalLaundryServiceIcon, 	Pets as PetIcon, AirportShuttle as AirportShuttleIcon, Bed as BedIcon, Bathtub as BathtubIcon, AspectRatio as AspectRatioIcon,
 } from '@mui/icons-material/';
 
 const Rental = (props) => {
-	console.log(props);
 	const { title, price, priceNegotiable, description,
 		hydroIncluded, heatIncluded, waterIncluded,
 		wifiIncluded, postedDate, bedrooms,

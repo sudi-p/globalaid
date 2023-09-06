@@ -8,25 +8,24 @@ import {
   fetchUserSuccess,
   clearLoggedInUser,
 } from "../../store/slices/LoggedInUserSlice";
-import { Paper, Button, Stack, Divider, ClickAwayListener } from "@mui/material";
+import { Paper, Button, Stack, Divider } from "@mui/material";
 import {
-  ExpandMore as ExpandMoreIcon,
-  ExpandLess as ExpandLessIcon,
+  Menu as MenuIcon,
+  Close as CloseIcon,
   ChatBubbleOutline
 } from "@mui/icons-material";
 import PostAd from '@features/postAdModal/PostAd';
 import Footer from './Footer';
-import styles from "./styles/NavBar.module.scss";
 
 function NavBar(props) {
-  const [expandMenu, setExpandMenu] = useState(false);
-  const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
+  const [expandMenu, setExpandMenu] = useState(false);
+  const [openPostAdModal, setOpenPostAdModal] = useState(false);
   const loggedInUser = useSelector((state) => state.loggedInUser);
   const { isLoggedIn, email } = loggedInUser;
   const handlePostAdButton = () => {
-    setOpen((prevOpen) => !prevOpen);
+    setOpenPostAdModal((prevOpenPostAdModal) => !prevOpenPostAdModal);
   };
   useEffect(() => {
     dispatch(fetchUserStart());
@@ -81,10 +80,14 @@ function NavBar(props) {
       link: "/signup"
     }
   ]
+  isLoggedIn ? navLinks.push(...extraNavLinks) : navLinks.push(...authLinks)
   return (
     <>
-      <div className={`px-4 h-16 relative flex justify-between items-center font-semibold`}>
-        <div className={`hidden md:flex ${styles.navBarLinks}`}>
+      <div className={`px-4 h-16 relative flex justify-between items-center font-semibold max-w-screen-xl m-auto w-11/12`}>
+        <span className={"flex text-lg mr-2 tracking-wide"}>
+          global<span className="font-extrabold">Aid</span>
+        </span>
+        <div className={`${expandMenu ? 'top-16 ' : 'top-[-490px]'} absolute block -left-6 -right-6 z-10 border border-solid border-gray-300 lg:border-0 bg-white lg:bg-transparent lg:static lg:flex items-center transition-all duration-500 ease-in`}>
           {navLinks.map((navLink) => (
             <LinkBox
               key={navLink.name}
@@ -93,10 +96,10 @@ function NavBar(props) {
               link={navLink.link}
             />
           ))}
+          <div className="lg:hidden mx-4 p-4 text-left text-gray-600 cursor-pointer hover:text-green-600" onClick={() => logout()}>Log Out</div>
         </div>
-        <div style={{ backgroundImage: "url('https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674412883/GlobalAid/GlobalAid_Logo.png')" }} className={`w-14 h-14 bg-cover bg-no-repeat bg-center ${styles.navBarLogo} `} />
-        <div className={`${styles.navBarLinks}`}>
-          {isLoggedIn ? (
+        <div className={`${!isLoggedIn && "lg:absolute"} flex items-center`}>
+          {isLoggedIn && (
             <Stack direction="row" spacing={2} alignItems={"center"}>
               <Link href='/chat'><ChatBubbleOutline color="primary" /></Link>
               <Button
@@ -107,55 +110,17 @@ function NavBar(props) {
               >
                 Post Ad
               </Button>
-              {open && <PostAd handleClose={handlePostAdButton} />}
-              <div>{email}</div>
-              <span className={styles.extraMenuArrow}>
-                {expandMenu ? (
-                  <>
-                    <ExpandLessIcon
-                      onClick={() => setExpandMenu(false)}
-                      color="primary"
-                    />
-                    <ClickAwayListener
-                      onClickAway={() => setExpandMenu(false)}
-                    >
-                      <Paper
-                        onClick={() => setExpandMenu(false)}
-                        sx={{ zIndex: 10 }}
-                        variant="outlined"
-                        className={styles.extraNav}
-                      >
-                        <Stack justifyContent="flex-start">
-                          {extraNavLinks.map(extraNavLink => (
-                            <>
-                              <LinkBox key={extraNavLink.name} title={extraNavLink.name} link={extraNavLink.link} isActive={router.route === extraNavLink.link} />
-                              <Divider />
-                            </>
-                          ))}
-                          <div className="mr-4 p-4 text-left text-gray-600 cursor-pointer hover:text-green-600" onClick={() => logout()}>Log Out</div>
-                        </Stack>
-                      </Paper>
-                    </ClickAwayListener>
-
-                  </>
-                ) : (
-                  <ExpandMoreIcon
-                    onClick={() => setExpandMenu(true)}
-                    color="primary"
-                  />
-                )}
-              </span>
+              <span className="text-lg text-gray-500">{email}</span>
+              <div className="hidden lg:block pl-4 text-left text-gray-600 cursor-pointer hover:text-green-600" onClick={() => logout()}>Log Out</div>
             </Stack>
-          ) : (
-            <>
-              {authLinks.map((navLink) => (
-                <LinkBox key={navLink.name} title={navLink.name} link={navLink.link} />
-              ))}
-            </>
           )}
+          <div className="lg:hidden ml-1" onClick={() => setExpandMenu((prevExpandMenu) => !prevExpandMenu)}>
+            {expandMenu ? <CloseIcon /> : <MenuIcon />}
+          </div>
         </div>
       </div>
       <Divider />
+      {openPostAdModal && <PostAd handleClose={handlePostAdButton} />}
     </>
   );
 };
@@ -165,7 +130,7 @@ function LinkBox({ title, link, isActive }) {
     <Link
       href={link}
     >
-      <a className={`mr-4 p-4 text-left text-gray-600 cursor-pointer hover:text-green-600 no-underline  ${isActive && "text-green-400 font-bold"}`}>{title}</a>
+      <a className={`block mx-4 p-4 text-left text-gray-600 cursor-pointer hover:text-green-600 no-underline  ${isActive && "text-green-400 font-bold"}`}>{title}</a>
     </Link>
   )
 }
