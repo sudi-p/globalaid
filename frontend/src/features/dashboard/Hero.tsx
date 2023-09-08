@@ -6,11 +6,11 @@ import {
 } from '@mui/material';
 
 type HeroBoxProps = {
-    heading1: String,
-    heading2: String,
+    heading1: string,
+    heading2: string,
     link: string,
-    linkText: String,
-    imageUrl: String
+    linkText: string,
+    imageUrl: string
 }
 
 export default function Hero() {
@@ -22,7 +22,7 @@ export default function Hero() {
         return clearTimeout(intervalId)
     }, [])
     return (
-        <Paper className="p-4">
+        <Paper className="p-4 lg:p-8">
             <div className="max-w-screen-xl m-auto w-full">
                 {showRentalHero ? (
                     <HeroBox

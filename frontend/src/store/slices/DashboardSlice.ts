@@ -1,12 +1,34 @@
 import { createSlice } from '@reduxjs/toolkit';
 import StoreState from '../../utils/constants/StoreState';
 
-const initialState = {
+type RentalProps = {
+    id: string,
+    title: string,
+    rent: number,
+    image: string
+}
+
+type JobProps = {
+    id: string,
+    title: string,
+    salary: number,
+    location: string,
+    description: string,
+    jobType: string
+}
+
+type DashboardProps = {
+    rentals: RentalProps[],
+    jobs: JobProps[],
+    status: number
+}
+
+const initialState: DashboardProps = {
     rentals : [],
     jobs: [],
     status: StoreState.EMPTY
 }
-const rentals = [
+const rentals: RentalProps[] = [
     {
         id: "63f45ba2631adf1b0a35b94f",
         title: "2 Bedroom Hall Kitchen Apartment for rent",
@@ -32,7 +54,7 @@ const rentals = [
         image: "https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/8e3e4e55-83e1-4e03-b2f9-89c86b0bdcb9.webp",
     }
 ];
-const jobs = [
+const jobs: JobProps[] = [
     {
         id: "63f45ba2631adf1b0a35b94f",
         title: "Cleaner",
@@ -71,7 +93,7 @@ const DashboardSlice = createSlice({
     name: 'Dashboard',
     initialState: initialState,
     reducers : {
-        'fetchDashboardStart': (state, action) => {
+        'fetchDashboardStart': (state) => {
             // const { data } = action.payload;
             state.rentals = rentals;
             state.jobs = jobs;

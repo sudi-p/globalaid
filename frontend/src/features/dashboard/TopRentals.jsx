@@ -1,37 +1,37 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-    Stack,
     Paper
 } from "@mui/material";
-import styles from './styles/TopRentals.module.scss';
 
-export default function TopRentals({rentals}) {
+export default function TopRentals({ rentals }) {
     return (
-        <div className={styles.topBox}>
-            <Stack className={styles.topBoxTitle} direction="row"  justifyContent="space-between">
+        <div className="p-5 w-11/12 m-auto max-w-screen-xl">
+            <div className="text-2xl mb-5 flex justify-between">
                 <div>Top Rentals</div>
-                <Link href="/rentals/" className={styles.topBoxViewMore}>View More</Link>
-            </Stack>
-            <Stack spacing={3} flexWrap="wrap" direction="row" justifyContent="center">
-                {rentals.map(rental => (<RentalBox key={rental.id} {...rental}/>))}
-            </Stack>
+                <Link href="/rentals/"><a className="text-green-400 text-lg no-underline">View More</a></Link>
+            </div>
+            <div className="flex flex-wrap justify-center m-auto box-border sm:gap-5">
+                {rentals.map(rental => (<RentalBox key={rental.id} {...rental} />))}
+            </div>
         </div>
     )
 }
 
-function RentalBox({title, rent, image}) {
+function RentalBox({ title, rent, image }) {
     return (
-        <Paper className={styles.rentalBox}>
-            <div
-                className={styles.rentalBoxImage}
-                style={{backgroundImage: `url('${image}')`}}
-            />
-            <Stack className={styles.rentalBoxText} direction="row" justifyContent="space-between">
-                <div className={styles.rentalBoxTitle}>{title}</div>
-                <div className={styles.rentalBoxRent}>${rent}</div>
-            </Stack>
-        </Paper>
+        <div className='w-full sm:w-[calc(50%-10px)] xl:w-[calc(25%-15px)] mb-4 sm:mb-0'>
+            <Paper className="cursor-pointer brightness-95 hover:brightness-100">
+                <div
+                    className="h-60 rounded-t-lg overflow-hidden bg-center bg-cover bg-no-repeat"
+                    style={{ backgroundImage: `url('${image}')` }}
+                />
+                <div className="p-4 flex justify-between">
+                    <div className="w-[230px] leading-tight">{title}</div>
+                    <div className="font-semibold text-green-400">${rent}</div>
+                </div>
+            </Paper>
+        </div>
     )
 }
 

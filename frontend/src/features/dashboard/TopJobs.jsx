@@ -1,23 +1,21 @@
 import React from 'react';
 import {
     Paper,
-    Stack,
     Button
 } from '@mui/material';
 import Link from 'next/link';
-import styles from './styles/TopJobs.module.scss';
 
-export default function TopJobs({jobs}) {
+export default function TopJobs({ jobs }) {
     return (
-        <Paper className={styles.topBoxContainer}>
-            <div className={styles.topBox}>
-                <Stack className={styles.topBoxTitle} direction="row" justifyContent="space-between">
+        <Paper>
+            <div className="p-5 w-11/12 m-auto max-w-screen-xl">
+                <div className="text-2xl mb-5 flex justify-between">
                     <div>Top Jobs</div>
-                    <Link href="/jobs/" className={styles.topBoxViewMore}>View More</Link>
-                </Stack>
-                <Stack spacing={3} flexWrap="wrap" direction="row" justifyContent="center">
+                    <Link href="/jobs/"><a className="text-green-400 text-lg no-underline">View More</a></Link>
+                </div>
+                <div className="flex flex-wrap justify-center m-auto box-border sm:gap-5">
                     {jobs.map(job => (<JobCard key={job.id} {...job} />))}
-                </Stack>
+                </div>
             </div>
         </Paper>
     )
@@ -25,18 +23,18 @@ export default function TopJobs({jobs}) {
 
 function JobCard({ title, location, jobType, salary, description }) {
     return (
-        <Paper elevation={3} className={styles.jobCard}>
-            <Stack spacing={3} direction="row">
-                <div className={styles.titleLocation}>
-                    <span className={styles.title}>{title}</span>
-                    <span className={styles.location}>{location} | {jobType}</span>
+        <div className='w-full sm:w-[calc(50%-10px)] xl:w-[calc(25%-15px)] mb-4 sm:mb-0'>
+            <Paper className="p-5 cursor-pointer brightness-95 hover:brightness-100">
+                <div className="flex justify-between">
+                    <div className="w-44">
+                        <span className="block text-lg font-bold">{title}</span>
+                        <span className="text-gray-400">{location} | {jobType}</span>
+                    </div>
+                    <div className="font-bold">${salary}/Hour</div>
                 </div>
-                <div className={styles.salary}>${salary}/Hour</div>
-            </Stack>
-            <p className={styles.description}>{description}</p>
-            <Stack justifyContent={"flex-end"}>
-                <Button size="small" variant="outlined"> Learn More</Button>
-            </Stack>
-        </Paper>
+                <p className="h-[4.1rem] overflow-hidden w-full leading-snug">{description}</p>
+                <Button fullWidth size="small" variant="outlined"> Learn More</Button>
+            </Paper>
+        </div >
     )
 }

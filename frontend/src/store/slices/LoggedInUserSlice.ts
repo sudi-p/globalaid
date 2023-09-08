@@ -1,7 +1,14 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import StoreState from '../../utils/constants/StoreState.js';
 
-const initialState = {
+export type LoggedInUserProps ={
+    isLoggedIn: boolean,
+    email: string,
+    _id: string,
+    status: number
+  }
+
+const initialState: LoggedInUserProps = {
     isLoggedIn: false,
     email: '',
     _id: '',
@@ -11,25 +18,25 @@ const LoggedInUserSlice = createSlice({
     'name': "LoggedInUser",
     'initialState': initialState,
     'reducers': {
-        'fetchUserStart': (state, action) => {
+        'fetchUserStart': (state) => {
             state.isLoggedIn = false;
             state.email = '';
             state._id = '';
             state.status = StoreState.LOADING;
         },
-        'fetchUserSuccess': (state, action) => {
+        'fetchUserSuccess': (state, action: PayloadAction<LoggedInUserProps>) => {
             const { payload } = action;
             const { email, _id } = payload;
             state.isLoggedIn = true;
             state.email = email;
             state._id = _id;
-            state.status = StoreState.SUCCESS;
+            state.status = StoreState.READY;
         },
         'clearLoggedInUser': (state, action) => {
             state.isLoggedIn = false;
             state.email = '';
             state._id = '';
-            state.status = StoreState.SUCCESS;
+            state.status = StoreState.READY;
         },
     }
 });
