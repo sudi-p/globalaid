@@ -1,23 +1,35 @@
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
+import { AxiosResponse, AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 import {
-    Stack, TextField, Alert, Button
+    TextField, Alert, Button
 } from '@mui/material';
-import { Home as HomeIcon, Engineering as EngineeringIcon } from '@mui/icons-material';
-import Dialog from '@mui/material/Dialog';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import CloseIcon from '@mui/icons-material/Close';
-import Slide from '@mui/material/Slide';
-import getClient from '../../lib/api';
+import { Home as HomeIcon, Engineering as EngineeringIcon, Close as CloseIcon } from '@mui/icons-material';
+import { Dialog, AppBar, Toolbar, IconButton, Typography, Slide } from '@mui/material/';
+import { TransitionProps } from '@mui/material/transitions';
+import getClient from '@lib/api';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import styles from './styles/PostAd.module.scss';
+import Logo from '@components/Logo';
 
-const Transition = React.forwardRef(function Transition(props, ref) {
+type PostAdProps = {
+    handleClose: () => void;
+}
+
+type AdTypeButtonProps = {
+    icon: ReactNode,
+    text: string,
+    isActive: boolean,
+    handleClick: () => void;
+}
+
+const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+        children: React.ReactElement;
+    },
+    ref: React.Ref<unknown>,
+) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
@@ -30,15 +42,14 @@ const PostAdSchema = yup.object().shape({
         .required("Please enter the description for the ad."),
 });
 
-export default function PostAd(props) {
+export default function PostAd({ handleClose }: PostAdProps) {
+    const [adType, setAdType] = useState('rent');
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
     const router = useRouter();
     const { register, handleSubmit, formState: { errors }, } = useForm({
         resolver: yupResolver(PostAdSchema),
     });
-    const [adType, setAdType] = useState('rent');
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const { open, handleClose } = props;
     const postAd = () => {
         getClient()
             .post('/user/createad/', {
@@ -46,15 +57,15 @@ export default function PostAd(props) {
                 description,
                 adType
             })
-            .then(res => {
+            .then((res: AxiosResponse) => {
                 console.log(res.data.ad)
                 const { _id } = res.data.ad;
                 router.push(`/myads/create-ad/${_id}`);
                 handleClose();
             })
-            .catch(err => console.log(err))
+            .catch((err: AxiosError) => console.log(err))
     }
-    useEffect(()=> {
+    useEffect(() => {
         return () => {
             setTitle('');
             setDescription('');
@@ -69,7 +80,7 @@ export default function PostAd(props) {
         >
             <AppBar sx={{ position: 'relative' }}>
                 <Toolbar>
-                    <div className={styles.navBarLogo} />
+                    <Logo color="white"/>
                     <Typography
                         sx={{ ml: 2, flex: 1, textAlign: "center" }}
                         variant="h6"
@@ -87,52 +98,66 @@ export default function PostAd(props) {
                     </IconButton>
                 </Toolbar>
             </AppBar>
-            <div className={styles.postAd}>
+            <div className="mx-auto my-12 lg:w-1/2 p-4">
                 <form onSubmit={(handleSubmit(postAd))}>
-                    <Stack spacing={5}>
-                        <TextField                            
+                    <div className='flex flex-col gap-8'>
+                        <TextField
                             value={title}
                             variant="outlined"
-                            size="large"
+                            size="medium"
                             label="Title"
                             {...register("title")}
                             onChange={(e) => setTitle(e.target.value)}
                             error={Boolean(errors.title)}
-                            helperText={errors.title?.message}
+                            helperText={errors.title?.message?.toString()}
                         />
                         <Alert severity="info">
                             Please add a title for your ad to help users relate to it more easily.
                         </Alert>
-                        <TextField                            
+                        <TextField
                             value={description}
                             variant="outlined"
-                            size="large"
                             label="Description"
                             multiline
                             rows={4}
                             {...register("description")}
                             onChange={(e) => setDescription(e.target.value)}
                             error={Boolean(errors.description)}
-                            helperText={errors.description?.message}
+                            helperText={errors.description?.message?.toString()}
                         />
-                        <Stack direction="row" spacing={6} justifyContent={"center"}>
-                            <div
-                                onClick={() => setAdType('rent')}
-                                className={`${adType === "rent" && styles.activeAdType} ${styles.adType}`}
-                            ><HomeIcon /><span>Rent a Property</span> </div>
-                            <div
-                                onClick={() => setAdType('job')}
-                                className={`${adType === "job" && styles.activeAdType} ${styles.adType}`}
-                            ><EngineeringIcon /> <span>Job Vacancy</span> </div>
-                        </Stack>
+                        <div className='sm:flex justify-center gap-10'>
+                            <AdTypeButton
+                                handleClick={() => setAdType('rent')}
+                                isActive={adType === "rent"}
+                                text="Rent a Property"
+                                icon={<HomeIcon />}
+                            />
+                            <AdTypeButton
+                                handleClick={() => setAdType('job')}
+                                isActive={adType === "job"}
+                                text="Job Vacancy"
+                                icon={<EngineeringIcon />}
+                            />
+                        </div>
                         <Button
                             type="submit"
                             variant="contained"
                             size="large"
                         >Next</Button>
-                    </Stack>
+                    </div>
                 </form>
             </div>
         </Dialog>
+    )
+}
+
+function AdTypeButton({ icon, text, isActive, handleClick }: AdTypeButtonProps) {
+    return (
+        <div
+            onClick={handleClick}
+            className={`border border-solid border-gray-300 flex items-center p-6 cursor-pointer text-md ${isActive && "border-green-300 text-green-300"}`}
+        >
+            {icon} <span className="ml-1">{text}</span>
+        </div>
     )
 }

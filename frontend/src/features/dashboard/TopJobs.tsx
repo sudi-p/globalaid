@@ -5,7 +5,19 @@ import {
 } from '@mui/material';
 import Link from 'next/link';
 
-export default function TopJobs({ jobs }) {
+type JobCardProps = {
+    title: string,
+    location: string,
+    jobType: string,
+    salary: number,
+    description: string,
+}
+
+type TopJobsProps = {
+    jobs: ({id: number} & JobCardProps)[]
+}
+
+export default function TopJobs({ jobs }: TopJobsProps) {
     return (
         <Paper>
             <div className="p-5 w-11/12 m-auto max-w-screen-xl">
@@ -21,7 +33,7 @@ export default function TopJobs({ jobs }) {
     )
 }
 
-function JobCard({ title, location, jobType, salary, description }) {
+function JobCard({ title, location, jobType, salary, description }: JobCardProps) {
     return (
         <div className='w-full sm:w-[calc(50%-10px)] xl:w-[calc(25%-15px)] mb-4 sm:mb-0'>
             <Paper className="p-5 cursor-pointer brightness-95 hover:brightness-100">

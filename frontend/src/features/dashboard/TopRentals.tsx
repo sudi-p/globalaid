@@ -4,7 +4,17 @@ import {
     Paper
 } from "@mui/material";
 
-export default function TopRentals({ rentals }) {
+type RentalBoxProps = {
+    title: string,
+    rent: number,
+    image: string,
+}
+
+type TopRentalsProps ={
+    rentals: ({id: number} & RentalBoxProps)[]
+}
+
+export default function TopRentals({ rentals }: TopRentalsProps) {
     return (
         <div className="p-5 w-11/12 m-auto max-w-screen-xl">
             <div className="text-2xl mb-5 flex justify-between">
@@ -12,13 +22,13 @@ export default function TopRentals({ rentals }) {
                 <Link href="/rentals/"><a className="text-green-400 text-lg no-underline">View More</a></Link>
             </div>
             <div className="flex flex-wrap justify-center m-auto box-border sm:gap-5">
-                {rentals.map(rental => (<RentalBox key={rental.id} {...rental} />))}
+                {rentals.map((rental) => (<RentalBox key={rental.id} {...rental} />))}
             </div>
         </div>
     )
 }
 
-function RentalBox({ title, rent, image }) {
+function RentalBox({ title, rent, image }: RentalBoxProps) {
     return (
         <div className='w-full sm:w-[calc(50%-10px)] xl:w-[calc(25%-15px)] mb-4 sm:mb-0'>
             <Paper className="cursor-pointer brightness-95 hover:brightness-100">
@@ -34,4 +44,3 @@ function RentalBox({ title, rent, image }) {
         </div>
     )
 }
-

@@ -16,6 +16,7 @@ import {
 } from "@mui/icons-material";
 import PostAd from '@features/postAdModal/PostAd';
 import Footer from './Footer';
+import Logo from "@components/Logo";
 
 
 function NavBar() {
@@ -85,19 +86,19 @@ function NavBar() {
   return (
     <>
       <div className={`px-2 md:px-10 lg:px-4 h-16 relative flex justify-between items-center font-semibold max-w-screen-xl md:m-auto md:w-11/12`}>
-        <span className={"flex text-lg xl:mr-2 tracking-wide"}>
-          global<span className="font-extrabold">Aid</span>
-        </span>
+        <Logo color="black" />
         <div className={`${expandMenu ? 'top-16 ' : 'top-[-490px]'} absolute block -left-1 -right-6 z-10 border border-solid border-gray-300 md:border-0 bg-white md:bg-transparent md:static md:flex items-center transition-all duration-500 ease-in`}>
           {navLinks.map(({ name, link }) => (
             <Link
               href={link}
+              key={name}
             >
-              <NavText
-                key={name}
-                isActive={router.route === link}
-                title={name}
-              />
+              <a className="no-underline">
+                <NavText
+                  isActive={router.route === link}
+                  title={name}
+                />
+              </a>
             </Link>
           ))}
           <div className="lg:hidden" onClick={() => logout()}>
@@ -142,7 +143,7 @@ type NavTextProps = {
   isActive?: boolean
 }
 
-function NavText({ title, isActive = false }: NavTextProps) {
+function NavText({ title, isActive }: NavTextProps) {
   return (
     <span className={`block md:mx-2 lg:mx-1 xl:mx-4 py-3 px-5 md:p-1 lg:p-2 xl:p-4 text-left text-gray-600 cursor-pointer hover:bg-gray-100 md:hover:bg-transparent no-underline ${isActive && "text-green-400 font-bold"}`}>{title}</span>
   )
