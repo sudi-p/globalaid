@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import {
   Paper,
   FormGroup,
-  FormControl,
   FormControlLabel,
   Checkbox,
   Stack,
@@ -10,11 +9,11 @@ import {
 } from '@mui/material';
 
 export default function Filter() {
-  const [checkbox, setCheckbox] = React.useState({
+  const [checkbox, setCheckbox] = useState({
     'fullTime': false,
     'partTime': false,
     'weekEnds': false,
-    'In-Person': false,
+    'InPerson': false,
     'Remote': false,
     'Hybrid': false,
   });
@@ -23,18 +22,18 @@ export default function Filter() {
       'fullTime': false,
       'partTime': false,
       'weekEnds': false,
-      'morning': false,
-      'afternoon': false,
-      'overnight': false,
+      'InPerson': false,
+      'Remote': false,
+      'Hybrid': false,
     })
   }
-  const handleCheckbox = (event) => {
+  const handleCheckbox = (event: ChangeEvent<HTMLInputElement>) => {
     setCheckbox({
       ...checkbox,
       [event.target.name]: event.target.checked,
     });
   };
-  const { fullTime, partTime, weekEnds, morning, afternoon, overnight } = checkbox;
+  const { fullTime, partTime, weekEnds, InPerson, Remote, Hybrid } = checkbox;
   return (
     <Paper variant="outlined" className="p-7 w-80">
       <div className="flex justify-between items-center mb-2">
@@ -75,24 +74,24 @@ export default function Filter() {
             label="Casual"
           />
         </FormGroup>
-        
+
         <FormGroup>
           <FormLabel component="legend">Job Site</FormLabel>
           <FormControlLabel
             control={
-              <Checkbox checked={morning} onChange={handleCheckbox} name="In-Person" />
+              <Checkbox checked={InPerson} onChange={handleCheckbox} name="In-Person" />
             }
             label="In-Person"
           />
           <FormControlLabel
             control={
-              <Checkbox checked={afternoon} onChange={handleCheckbox} name="Remote" />
+              <Checkbox checked={Remote} onChange={handleCheckbox} name="Remote" />
             }
             label="Remote"
           />
           <FormControlLabel
             control={
-              <Checkbox checked={overnight} onChange={handleCheckbox} name="Hybrid" />
+              <Checkbox checked={Hybrid} onChange={handleCheckbox} name="Hybrid" />
             }
             label="Hybrid"
           />

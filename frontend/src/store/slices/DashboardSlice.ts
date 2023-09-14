@@ -17,7 +17,7 @@ type JobProps = {
     jobType: string
 }
 
-type DashboardProps = {
+export type DashboardProps = {
     rentals: RentalProps[],
     jobs: JobProps[],
     status: number

@@ -1,9 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
 import StoreState from '../../utils/constants/StoreState.js';
 
-const initialState = {
-	status: StoreState.Empty,
-	job: {},
+type JobProps = {
+	id: number,
+	position: string,
+	company: string,
+	salary: string
+}
+
+export type JobSliceProps = {
+	status: number,
+	job: JobProps | null
+}
+
+const initialState: JobSliceProps = {
+	status: StoreState.EMPTY,
+	job: null,
 }
 
 const sampleJob = {
@@ -22,7 +34,6 @@ const JobSlice = createSlice({
 			state.job = sampleJob;
 		}
 	}
-
 });
 
 export default JobSlice.reducer;

@@ -1,7 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 import StoreState from '@utils/constants/StoreState';
+import { AdProps } from '../../types';
 
-const initialState = {
+export type MyAdsSliceProps = {
+    status: number;
+    ads: AdProps[]
+}
+
+const initialState: MyAdsSliceProps = {
     'ads': [],
     'status': StoreState.EMPTY,
 }

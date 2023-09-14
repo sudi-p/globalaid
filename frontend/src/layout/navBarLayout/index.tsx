@@ -17,14 +17,15 @@ import {
 import PostAd from '@features/postAdModal/PostAd';
 import Footer from './Footer';
 import Logo from "@components/Logo";
-
+import { RootState } from "@store/store";
+import { AxiosError, AxiosResponse } from "axios";
 
 function NavBar() {
   const dispatch = useDispatch();
   const router = useRouter();
   const [expandMenu, setExpandMenu] = useState(false);
   const [openPostAdModal, setOpenPostAdModal] = useState(false);
-  const loggedInUser = useSelector((state) => state.loggedInUser);
+  const loggedInUser = useSelector((state: RootState) => state.loggedInUser);
   const { isLoggedIn, email } = loggedInUser;
   const handlePostAdButton = () => {
     setOpenPostAdModal((prevOpenPostAdModal) => !prevOpenPostAdModal);
@@ -33,10 +34,10 @@ function NavBar() {
     dispatch(fetchUserStart());
     getClient()
       .get("/user/getuser/")
-      .then((res) => {
+      .then((res: AxiosResponse) => {
         dispatch(fetchUserSuccess(res.data));
       })
-      .catch((err) => {
+      .catch((err: AxiosError) => {
         console.log(err);
         dispatch(clearLoggedInUser());
       });

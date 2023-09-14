@@ -1,14 +1,13 @@
-import React from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import { Email, LocalPhone, LocationOnOutlined } from '@mui/icons-material/';
-import getClient from '../../lib/api';
 import { Chip, Stack, Paper } from '@mui/material';
-import NavbarLayout from '../../layout/navBarLayout/';
-import Filter from '../../features/jobs/Filter';
-import SearchBar from '../../features/jobs/SearchBar';
+import getClient from '@lib/api';
+import NavbarLayout from '@layout/navBarLayout/';
+import Filter from '@features/jobs/Filter';
+import SearchBar from '@features/jobs/SearchBar';
 import PageNotFound from '../pagenotfound/PageNotFound';
-import styles from './Jobs.module.scss';
 
 function Jobs() {
   const jobsQuery = useQuery({
@@ -22,7 +21,7 @@ function Jobs() {
   if (isLoading) return <h1>Loading...</h1>
   if (error) return <PageNotFound />
   return (
-    <div className={styles.jobsContainer}>
+    <div className="m-5">
       <Stack direction="row" spacing={"20px"}>
         <Filter />
         <JobsList jobs={data.ads} />
@@ -31,27 +30,38 @@ function Jobs() {
   );
 }
 
-const JobsList = ({ jobs }) => {
+type JobsListProps ={
+  jobs: JobProps[];
+}
+
+const JobsList = ({ jobs }: JobsListProps) => {
   return (
-    <Stack spacing={"20px"} className={styles.content}>
+    <Stack spacing={"20px"} className="flex-1">
       <SearchBar />
-      <Paper elevation={0} variant="outlined" className={styles.jobsSection}>
+      <Paper elevation={0} variant="outlined" className="flex-1 p-5">
         <Stack direction="row" flexWrap={"wrap"} gap="15px">
-          {jobs && jobs.map(job => (<JobBox key={job._id} job={job} />))}
-          {jobs && jobs.map(job => (<JobBox key={job._id} job={job} />))}
-          {jobs && jobs.map(job => (<JobBox key={job._id} job={job} />))}
-          {jobs && jobs.map(job => (<JobBox key={job._id} job={job} />))}
+          {jobs && jobs.map(job => (<JobBox key={job._id} {...job} />))}
+          {jobs && jobs.map(job => (<JobBox key={job._id} {...job} />))}
+          {jobs && jobs.map(job => (<JobBox key={job._id} {...job} />))}
+          {jobs && jobs.map(job => (<JobBox key={job._id} {...job} />))}
         </Stack>
       </Paper>
     </Stack>
   );
 }
+type JobProps = {
+  _id: string;
+  description: string;
+  title: string;
+  company: string;
+  location: string;
+  email: string;
+  phone: string
+}
 
-const JobBox = (props) => {
-  const { job } = props;
-  const { _id, description, title, company, location, email, phone } = job;
+const JobBox = ({ _id, description, title, company, location, email, phone }: JobProps) => {
   return (
-    <div key={_id} variant="outlined" className={`w-76 p-5  ${styles.jobBox}`}>
+    <div key={_id} className={`w-76 p-5 rounded-lg bg-gray-100 text-gray-600`}>
       <div className="flex items-end mb-3.5">
         <div className="text-xl font-bold">{title}</div> |
         <div className="hover:text-green-400">{company}</div>
@@ -92,6 +102,6 @@ const JobBox = (props) => {
 
 export default Jobs;
 
-Jobs.getLayout = function getLayout(page){
+Jobs.getLayout = function getLayout(page: ReactElement){
   return <NavbarLayout>{page}</NavbarLayout>
 }

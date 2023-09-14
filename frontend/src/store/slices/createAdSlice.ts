@@ -1,22 +1,28 @@
 import { createSlice } from '@reduxjs/toolkit';
 import StoreState from '../../utils/constants/StoreState';
 
+export type CreateAdSliceProps = {
+    adTitle: string;
+    status: number;
+    adType: string;
+}
+const initialState: CreateAdSliceProps = {
+    adTitle: '',
+    status: StoreState.EMPTY,
+    adType: '',
+}
+
 const CreateAdSlice = createSlice({
     name: 'CreateAdSlice',
-    initialState: {
-        adTitle: '',
-        status: StoreState.EMPTY,
-        adType: '',
-    },
+    initialState,
     reducers: {
         'fetchAdStart': (state) => {
             state.status = StoreState.LOADING;
         },
         'fetchAdSuccess': (state, action) => {
             const { adType, title } = action.payload;
-            console.log(action.payload)
             state.adType = adType;
-            state.adTitle = title
+            state.adTitle = title;
         },
         'clearFetchAd': (state) => {
             state.adTitle = '';
@@ -27,4 +33,4 @@ const CreateAdSlice = createSlice({
 })
 
 export default CreateAdSlice.reducer;
-export const { fetchAdStart, fetchAdSuccess, clearFetchAd} = CreateAdSlice.actions;
+export const { fetchAdStart, fetchAdSuccess, clearFetchAd } = CreateAdSlice.actions;
