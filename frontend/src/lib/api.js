@@ -24,16 +24,6 @@ const getToken = (tokenkey) => {
     return token
   }
   
-// const config = () => {
-//   const headers = {'Authorization': getToken()}
-//   const csrf = getToken("csrftoken");
-//   if (csrf) {
-//     headers['X-CSRFToken'] = csrf; 
-//   }
-//   return { headers };
-// }
-
-
 let client;
 
 let url = 'https://www.onlineglobalaid.com/api'

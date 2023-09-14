@@ -3,24 +3,27 @@
     "target": "es5",
     "baseUrl": "./src",
     "paths": {
+      "@components/*": [
+        "components/*"
+      ],
       "@features/*": [
         "features/*"
       ],
-      "@components/*": [
-        "components/*"
+      "@lib/*": [
+        "lib/*"
+      ],
+      "@layout/*": [
+        "layout/*"
       ],
       "@pages/*": [
         "pages/*"
       ],
-      "@constants/*": [
-        "constants/*"
-      ],
       "@store/*": [
         "store/*"
       ],
-      "@lib/*": [
-        "lib/*"
-      ]
+      "@utils/*": [
+        "utils/*"
+      ],
     },
     "module": "commonjs",
     "jsx": "preserve",
@@ -38,6 +41,7 @@
     "noEmit": true,
     "incremental": true,
     "moduleResolution": "node",
+    "types": ["node", "jest", "@testing-library/jest-dom"],
     "plugins": [
       {
         "name": "typescript-plugin-css-modules"
@@ -48,7 +52,7 @@
   },
   "include": [
     "./pages/**/*",
-    "./src/**/*"
+    "./src/**/*",
   ],
   "exclude": [
     "node_modules"
