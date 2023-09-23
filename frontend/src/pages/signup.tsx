@@ -1,30 +1,20 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import  Link from "next/link";
 import { useRouter } from "next/router";
 import {
-    TextField,
-    InputLabel ,
-    OutlinedInput,
-    FormControl,
-    InputAdornment ,
-    IconButton,
-    Button,
-    Stack,
-    FormHelperText,
-    CircularProgress,
-    Grid,
-    Alert
+    TextField,InputLabel, OutlinedInput, FormControl, InputAdornment,
+    IconButton,Button,Stack,FormHelperText,CircularProgress,
+    Grid,Alert
 } from "@mui/material/";
 import {
-    Visibility,
-    VisibilityOff
+    Visibility, VisibilityOff
 } from '@mui/icons-material/';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import getClient from '../../lib/api';
-import AuthLayout from '../../layout/authLayout/AuthLayout';
-import styles from './styles/Register.module.scss';
+import getClient from '../lib/api';
+import AuthLayout from '../layout/authLayout/AuthLayout';
+import { AxiosError } from 'axios';
 
 const UserSchema = yup.object().shape({
     firstName: yup
@@ -38,8 +28,8 @@ const UserSchema = yup.object().shape({
         .required("Please enter the email"),
     password: yup
         .string()
-        .min(4)
-        .max(15)
+        .min(4, "Password must be at least 4 characters.")
+        .max(15, "Password must not be more than 15 characters.")
         .required("Please enter the password"),
     confirmPassword: yup
         .string()
@@ -47,7 +37,7 @@ const UserSchema = yup.object().shape({
         .required("Please enter the confirm password"),
 })
 
-const SignUp = (props) => {
+const SignUp = () => {
     const router = useRouter();
     const [error, setError] = useState('');
     const { register, handleSubmit, formState: { errors}} = useForm({
@@ -70,19 +60,19 @@ const SignUp = (props) => {
             password,
             email
         })
-        .then(res => router.push('/login/'))
-        .catch(err =>{
-            setError(err.response.data.msg);
+        .then(() => router.push('/login/'))
+        .catch((err: AxiosError) =>{
+            setError(err.response?.data.msg);
             setLoading(false)
         });
     }
     return(
         <>
-            <div className={styles.title}>Welcome to GlobalAid</div>
+            <div className="text-3xl mb-7">Welcome to GlobalAid</div>
             <form onSubmit={handleSubmit(registerSubmit)}>
                 {error && (<Alert severity="error">{error}</Alert>)}
                 <Stack spacing={2} direction="row">
-                    <div className={styles.inputWrapper}>
+                    <div className="py-5">
                         <TextField
                             {...register("firstName")}
                             label="First Name"
@@ -90,10 +80,10 @@ const SignUp = (props) => {
                             onChange={(e) => setFirstName(e.target.value)}
                             value={firstName}
                             error={Boolean(errors.firstName)}
-                            helperText={errors.firstName?.message}
+                            helperText={errors.firstName?.message?.toString()}
                         />
                     </div>
-                    <div className={styles.inputWrapper}>
+                    <div className="py-5">
                         <TextField
                             {...register("lastName")}
                             label="Last Name"
@@ -101,11 +91,11 @@ const SignUp = (props) => {
                             onChange={(e) => setLastName(e.target.value)}
                             value={lastName}
                             error={Boolean(errors.lastName)}
-                            helperText={errors.lastName?.message}
+                            helperText={errors.lastName?.message?.toString()}
                         />                   
                     </div>
                 </Stack>
-                <div className={styles.inputWrapper}>
+                <div className="py-5">
                     <TextField
                         fullWidth
                         {...register("email")}
@@ -113,10 +103,10 @@ const SignUp = (props) => {
                         onChange={(e) => setEmail(e.target.value)}
                         value={email}
                         error={Boolean(errors.email)}
-                        helperText={errors.email?.message}
+                        helperText={errors.email?.message?.toString()}
                     />
                 </div>
-                <div className={styles.inputWrapper}>
+                <div className="my-5">
                     <FormControl
                         fullWidth
                         variant="outlined"
@@ -141,10 +131,10 @@ const SignUp = (props) => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                        <FormHelperText>{errors.password?.message}</FormHelperText>
+                        <FormHelperText>{errors.password?.message?.toString()}</FormHelperText>
                     </FormControl>
                 </div>
-                <div className={styles.inputWrapper}>
+                <div className="my-5">
                     <FormControl
                         fullWidth
                         variant="outlined"
@@ -168,7 +158,7 @@ const SignUp = (props) => {
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
                         />
-                        <FormHelperText>{errors.confirmPassword?.message}</FormHelperText>
+                        <FormHelperText>{errors.confirmPassword?.message?.toString()}</FormHelperText>
                     </FormControl>
                 </div>
                 <Grid
@@ -176,15 +166,13 @@ const SignUp = (props) => {
                     flexDirection="column"
                     justifyContent="flex-end"
                 >
-                    <div className={styles.login}>Already have an account? <Link className={styles.link} href="/login/">Sign In </Link> to continue</div>
+                    <div className="mt-2 mb-7">Already have an account? <Link href="/login/"><a className="no-underline text-green-400 font-bold">Sign In </a></Link> to continue</div>
                     <Button
                         variant='contained'
                         color="secondary"
                         type="submit"
                     >{loading ? (<CircularProgress color="success" />) : "Submit"}</Button>
-                    
                 </Grid>
-                
             </form>
         </>
     );
@@ -192,8 +180,6 @@ const SignUp = (props) => {
 
 export default SignUp;
 
-SignUp.getLayout = function getLayout(page) {
-    return (
-        <AuthLayout>{page}</AuthLayout>
-    )
+SignUp.getLayout = function getLayout(page: ReactNode) {
+    return <AuthLayout>{page}</AuthLayout>
 }

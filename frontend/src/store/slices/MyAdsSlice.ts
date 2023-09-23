@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import StoreState from '@utils/constants/StoreState';
 import { AdProps } from '../../types';
 
@@ -19,7 +19,7 @@ const MyAdsSlice = createSlice({
         'fetchMyAdsStart': (state) => {
             state.status = StoreState.LOADING;
         },
-        'fetchMyAdsSuccess': (state, action) => {
+        'fetchMyAdsSuccess': (state, action: PayloadAction<{ads: AdProps[]}>) => {
             const { ads } = action.payload;
             state.ads = ads;
             state.status = StoreState.READY;

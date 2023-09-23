@@ -1,4 +1,4 @@
-import React, { useState, FC } from 'react';
+import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from '@mui/icons-material/';
 import styles from './styles/RentalImages.module.scss';
 

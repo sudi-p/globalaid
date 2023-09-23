@@ -20,9 +20,7 @@ export default function AuthLayout({ children }) {
         </div>
         <div className={styles.contentWrapper}>
           <div className={styles.content}>
-            <Suspense fallback="loading">
               {children}
-            </Suspense>
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
 import getClient from '../../lib/api';
 import { Stack, TextField} from '@mui/material';
 import { Send as SendIcon } from '@mui/icons-material';
-import PageNotFound from '../../pages/pagenotfound/PageNotFound';
+import PageNotFound from '../404';
 
 type IndividualChatProps = {
     chatId: string,

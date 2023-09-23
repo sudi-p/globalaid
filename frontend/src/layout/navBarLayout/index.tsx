@@ -14,13 +14,29 @@ import {
   Close as CloseIcon,
   ChatBubbleOutline
 } from "@mui/icons-material";
-import PostAd from '@features/postAdModal/PostAd';
+import PostAd from './PostAd';
 import Footer from './Footer';
 import Logo from "@components/Logo";
 import { RootState } from "@store/store";
 import { AxiosError, AxiosResponse } from "axios";
 
-function NavBar() {
+type NavbarLayoutProps = {
+  children: ReactNode
+}
+
+export default function NavbarLayout({ children }: NavbarLayoutProps) {
+  return (
+    <div className="flex flex-col overflow-hidden">
+      <NavBar />
+      <div className="flex-1 bg-gray-100">
+        {children}
+      </div>
+      <Footer />
+    </div>
+  );
+}
+
+export function NavBar() {
   const dispatch = useDispatch();
   const router = useRouter();
   const [expandMenu, setExpandMenu] = useState(false);
@@ -38,10 +54,10 @@ function NavBar() {
         dispatch(fetchUserSuccess(res.data));
       })
       .catch((err: AxiosError) => {
-        console.log(err);
         dispatch(clearLoggedInUser());
       });
   }, []);
+
   const logout = async () => {
     document.cookie =
       "token= 0k;expires=Thu, 01 Aug 2018 00:00:00 UTC; path=/;";
@@ -139,6 +155,8 @@ function NavBar() {
   );
 };
 
+
+
 type NavTextProps = {
   title: string,
   isActive?: boolean
@@ -148,19 +166,4 @@ function NavText({ title, isActive }: NavTextProps) {
   return (
     <span className={`block md:mx-2 lg:mx-1 xl:mx-4 py-3 px-5 md:p-1 lg:p-2 xl:p-4 text-left text-gray-600 cursor-pointer hover:bg-gray-100 md:hover:bg-transparent no-underline ${isActive && "text-green-400 font-bold"}`}>{title}</span>
   )
-}
-type NavbarLayoutProps = {
-  children: ReactNode
-}
-
-export default function NavbarLayout({ children }: NavbarLayoutProps) {
-  return (
-    <div className="flex flex-col overflow-hidden">
-      <NavBar />
-      <div className="flex-1 bg-gray-100">
-        {children}
-      </div>
-      <Footer />
-    </div>
-  );
 }

@@ -9,17 +9,20 @@
       "@features/*": [
         "features/*"
       ],
-      "@lib/*": [
-        "lib/*"
-      ],
       "@layout/*": [
         "layout/*"
+      ],
+      "@lib/*": [
+        "lib/*"
       ],
       "@pages/*": [
         "pages/*"
       ],
       "@store/*": [
         "store/*"
+      ],
+      "@styles/*": [
+        "styles/*"
       ],
       "@utils/*": [
         "utils/*"

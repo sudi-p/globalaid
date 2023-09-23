@@ -2,7 +2,7 @@ import React, { useState, useEffect, ReactNode } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import getClient from '../../lib/api';
+import getClient from '../lib/api';
 import { fetchUserSuccess } from '@store/slices/LoggedInUserSlice';
 import {
     TextField,
@@ -23,7 +23,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import AuthLayout from '../../layout/authLayout/AuthLayout';
+import AuthLayout from '../layout/authLayout/AuthLayout';
 import { RootState } from "@store/store";
 import { AxiosError, AxiosResponse } from 'axios';
 
@@ -71,10 +71,9 @@ const Login = () => {
             <div className="text-3xl mb-8">Welcome to GlobalAid</div>
             <div className="tracking-wide leading-tight text-lg">
                 <p>Sign In to Continue.</p>
-
-                <p>Don't have an account? 
-                    <Link href="/signup/">
-                        <a className='no-underline text-green-300 font-semibold'>
+                <p>Don&apos;t have an account? 
+                    <Link href="/signup">
+                        <a className='no-underline text-green-300 font-semibold ml-2'>
                             Create an account
                         </a>
                     </Link>
@@ -141,5 +140,4 @@ export default Login;
 
 Login.getLayout = function getLayout(page: ReactNode) {
     return <AuthLayout>{page}</AuthLayout>
-
 }

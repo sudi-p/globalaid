@@ -1,19 +1,22 @@
 import { render, fireEvent, screen, act, waitFor } from '@testing-library/react';
-import Login from '.';
+import Login from '../login';
 import { Provider } from 'react-redux';
-import store from '@store/store'
-import '@testing-library/jest-dom/';
+import { createMockRouter } from '@utils/test-utils/createMockRouter';
+import store from '@store/store';
+import { RouterContext } from 'next/dist/shared/lib/router-context';
 
-describe("whole page testing", () => {
+describe("Login", () => {
+  const router = createMockRouter();
   function renderLogin() {
     return render(
-      <Provider store={store}>
-        <Login />
-      </Provider>
+      <RouterContext.Provider value={router}>
+        <Provider store={store}>
+          <Login />
+        </Provider>
+      </RouterContext.Provider>
     );
   }
-
-  test("should render initial component", async () => {
+  it("should render initial component", () => {
     renderLogin();
     const mainElement = screen.getByText("Sign In to Continue.");
     const emailInput = screen.getByLabelText('Email');
@@ -27,7 +30,7 @@ describe("whole page testing", () => {
     expect(signupLink).toBeInTheDocument();
   });
 
-  test("it allows user to input the email and password", () => {
+  it("should allow user to input the email and password", () => {
     renderLogin()
     const emailInput = screen.getByLabelText("Email")
     const passwordInput = screen.getByLabelText("Password")
@@ -37,19 +40,11 @@ describe("whole page testing", () => {
     expect(passwordInput).toHaveValue("password")
   })
 
-  // test("submits the form with correct data", () => {
-  //   renderLogin();
-  //   const handleSubmit = jest.fn();
-  //   const emailInput = screen.getByLabelText('Email');
-  //   const passwordInput = screen.getByLabelText('Password');
-  //   const loginButton = screen.getByTestId('sign-in-button');
-  //   act(() => {
-  //     fireEvent.change(emailInput, { target: { value: 'testuser' } });
-  //     fireEvent.change(passwordInput, { target: { value: 'password123' } });
-  //     fireEvent.click(loginButton);
-  //   })
-  // })
-
-  // test if the link Create an account redirects to signup page o rnot
-
+  test("if the link Create an account redirects to signup page or not", () => {
+    renderLogin();
+    const signupLink = screen.getByRole('link', {name: "Create an account"});
+    fireEvent.click(signupLink);
+    expect(router.push).toHaveBeenCalledWith("/signup", expect.anything(), expect.anything())
+  })
+  
 });
