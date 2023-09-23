@@ -71,7 +71,7 @@ const Login = () => {
             <div className="text-3xl mb-8">Welcome to GlobalAid</div>
             <div className="tracking-wide leading-tight text-lg">
                 <p>Sign In to Continue.</p>
-                <p>Don't have an account? 
+                <p>Don&apos;t have an account? 
                     <Link href="/signup">
                         <a className='no-underline text-green-300 font-semibold ml-2'>
                             Create an account
