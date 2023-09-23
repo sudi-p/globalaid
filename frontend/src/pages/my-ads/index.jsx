@@ -3,7 +3,7 @@ import getClient from '../../lib/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMyAdsSuccess, fetchMyAdsError } from '../../store/slices/MyAdsSlice';
 import storeState from 'utils/constants/StoreState.js';
-const PageNotFound = lazy(() => import('../pagenotfound/PageNotFound'));
+const PageNotFound = lazy(() => import('../404'));
 import NavbarLayout from 'layout/navBarLayout';
 const MyAds = lazy(()=> import('./MyAds'));
 

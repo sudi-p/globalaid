@@ -15,11 +15,14 @@ const config = {
   moduleDirectories: ['node_modules', '<rootDir>/'],
   preset: 'ts-jest',
   moduleNameMapper: {
+    '^@components/(.*)$': '<rootDir>/src/components/$1',
+    '^@features/(.*)$': '<rootDir>/src/features/$1',
+    '^@layout/(.*)$': '<rootDir>/src/layout/$1',
+    '^@lib/(.*)$': '<rootDir>/src/lib/$1',
     '^@pages/(.*)$': '<rootDir>/src/pages/$1',
     '^@shared/(.*)$': '<rootDir>/src/shared/$1',
-    '^@features/(.*)$': '<rootDir>/src/features/$1',
-    '^@styles/(.*)$': '<rootDir>/styles/$1',
     '^@store/(.*)$': '<rootDir>/src/store/$1',
+    '^@styles/(.*)$': '<rootDir>/styles/$1',
     '^@utils/(.*)$': '<rootDir>/src/utils/$1',
   },
 }

@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import getClient from '../../lib/api';
-import PageNotFound from '../pagenotfound/PageNotFound';
-import Rental from '@features/rentals/Rental';
+import PageNotFound from '../404';
+import Rental from './Rental';
 import {
   Stack
 } from "@mui/material";
 import NavbarLayout from '../../layout/navBarLayout/';
-import styles from './RentalsContainer.module.scss';
+import styles from './styles/RentalsContainer.module.scss';
 
 function Rentals() {
   const rentalsQuery = useQuery({

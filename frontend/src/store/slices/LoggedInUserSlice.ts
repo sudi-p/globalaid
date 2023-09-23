@@ -32,7 +32,7 @@ const LoggedInUserSlice = createSlice({
             state._id = _id;
             state.status = StoreState.READY;
         },
-        'clearLoggedInUser': (state, action) => {
+        'clearLoggedInUser': (state) => {
             state.isLoggedIn = false;
             state.email = '';
             state._id = '';

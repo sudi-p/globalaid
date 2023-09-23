@@ -5,9 +5,9 @@ import { Email, LocalPhone, LocationOnOutlined } from '@mui/icons-material/';
 import { Chip, Stack, Paper } from '@mui/material';
 import getClient from '@lib/api';
 import NavbarLayout from '@layout/navBarLayout/';
-import Filter from '@features/jobs/Filter';
-import SearchBar from '@features/jobs/SearchBar';
-import PageNotFound from '../pagenotfound/PageNotFound';
+import Filter from './Filter';
+import SearchBar from './SearchBar';
+import PageNotFound from '../404';
 
 function Jobs() {
   const jobsQuery = useQuery({

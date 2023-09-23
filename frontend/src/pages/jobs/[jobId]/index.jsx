@@ -9,8 +9,6 @@ const Job = (props) => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const jobData = useSelector((state) => state.job)
-
-	console.log(jobData);
 	useEffect(
 		() => {
 			dispatch(fetchJobStart());
@@ -22,11 +20,11 @@ const Job = (props) => {
 	const { id, position, company, salary } = job;
 	return(
 		<div className={styles.job}>
-			<div onClick={() => goBack()} className={styles.goBack}>
+			<div onClick={() => goBack()} className="cursor-pointer width-max p-2 text-white">
 				Back
 			</div>
 			Job Page
-			<div className={styles.position}>
+			<div className="font-bold">
 				{position}
 			</div>
 		</div>

@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import StoreState from '@utils/constants/StoreState';
 
 type RentalProps = {
@@ -35,7 +35,11 @@ export type RentalSliceProps = {
 	rentals: RentalProps[]
 }
 
-const initialState = {
+type FetchRentalsSuccessAction = {
+	rentals: RentalProps[];
+  };
+
+const initialState:RentalSliceProps = {
 	rentals: [],
 	status: StoreState.EMPTY,
 }
@@ -47,10 +51,10 @@ const rentalsSlice = createSlice({
 		fetchRentalsStart: (state) => {
 			state.status = StoreState.LOADING;
 		},
-		fetchRentalsSuccess: (state, action) => {
+		fetchRentalsSuccess: (state, action: PayloadAction<FetchRentalsSuccessAction>) => {
 			const { payload } = action;
-			console.log(payload);
-			state.rentals = payload.rentals;
+			const { rentals } = payload;
+			state.rentals = rentals;
 			state.status = StoreState.READY;
 		},
 		fetchRentalsError: (state) => {
