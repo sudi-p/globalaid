@@ -1,5 +1,5 @@
 import { Provider } from 'react-redux';
-import Jobs from '..';
+import Jobs from '../jobs';
 import store from '@store/store';
 import { render, screen } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

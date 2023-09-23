@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import NavbarLayout from '../layout/navBarLayout/';
-import Hero from './components/Hero';
-import TopRentals from './components/TopRentals';
-import TopJobs from './components/TopJobs';
+import NavbarLayout from '@components/layout/navBarLayout/';
+import Hero from '../components/dashboard/Hero';
+import TopRentals from '../components/dashboard/TopRentals';
+import TopJobs from '../components/dashboard/TopJobs';
 import { fetchDashboardStart } from '../store/slices/DashboardSlice';
 import { useDispatch, useSelector } from 'react-redux';
 

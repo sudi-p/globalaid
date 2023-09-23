@@ -7,10 +7,10 @@ import { useQuery } from "@tanstack/react-query";
 
 import styles from './Chats.module.scss';
 import getClient from "@lib/api";
-import PageNotFound from "../404";
-import NavbarLayout from "@layout/navBarLayout";
+import PageNotFound from "./404";
+import NavbarLayout from "@components/layout/navBarLayout";
 // import IndividualChat from "./IndividualChat";
-const IndividualChat = lazy(() => import("./IndividualChat"));
+const IndividualChat = lazy(() => import("../components/chat/IndividualChat"));
 
 export default function Chats() {
 	const [chatId, setChatId] = useState('');

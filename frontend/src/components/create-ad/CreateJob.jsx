@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import getClient from '../../../lib/api';
+import { useRouter } from 'next/router';
+import getClient from '../../lib/api';
 // import { fetchJobsSuccess } from '../JobsSlice';
 import {
     Button, Stack, TextField, Box,
@@ -37,8 +37,7 @@ const CreateJob = (props) => {
     const { register, handleSubmit, formState: { errors }, } = useForm({
         resolver: yupResolver(CreateJobSchema),
     });
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+    const router = useRouter();
     const [company, setCompany] = useState('');
     const [jobType, setJobType] = useState('');
     const [location, setLocation] = useState('');
@@ -64,7 +63,7 @@ const CreateJob = (props) => {
             .then(res => {
                 console.log(res.data)
                 const jobId = res.data.jobId;
-                navigate(`/myads/${jobId}`)
+                router.push(`/myads/${jobId}`)
             })
             .catch(err => console.log(err))
     }

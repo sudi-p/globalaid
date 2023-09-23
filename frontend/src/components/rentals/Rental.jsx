@@ -1,6 +1,5 @@
 import React from 'react';
 import RentalImages from './RentalImages';
-import styles from './styles/Rental.module.scss';
 import { Stack, Chip, Typography, Paper } from '@mui/material/';
 import {
 	ElectricBolt as ElectricBoltIcon, LocalShipping as LocalShippingIcon,
@@ -8,6 +7,7 @@ import {
 	SmokeFree as SmokeFreeIcon, AcUnit as AcUnitIcon, Chair as ChairIcon,
 	Kitchen as KitchenIcon,	Dining as DiningIcon, LocalLaundryService as LocalLaundryServiceIcon, 	Pets as PetIcon, AirportShuttle as AirportShuttleIcon, Bed as BedIcon, Bathtub as BathtubIcon, AspectRatio as AspectRatioIcon,
 } from '@mui/icons-material/';
+import styles from './styles/Rental.module.scss';
 
 const Rental = (props) => {
 	const { title, price, priceNegotiable, description,

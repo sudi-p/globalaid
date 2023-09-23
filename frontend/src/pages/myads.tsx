@@ -1,8 +1,34 @@
-import React, { ReactElement } from 'react';
+import React, { useEffect, lazy, ReactElement } from 'react';
 import Link from 'next/link';
 import { Stack } from '@mui/material';
 import { Home as HomeIcon, Engineering as EngineeringIcon } from '@mui/icons-material';
-import styles from './styles/MyAds.module.scss';
+import styles from '@styles/MyAds.module.scss';
+import getClient from '../lib/api';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchMyAdsSuccess, fetchMyAdsError } from '../store/slices/MyAdsSlice';
+import storeState from 'utils/constants/StoreState.js';
+import NavbarLayout from 'layout/navBarLayout';
+import { AxiosResponse, AxiosError } from 'axios';
+import { RootState } from '@store/store';
+const PageNotFound = lazy(() => import('./404'));
+
+export default function MyAdsContainer() {
+    const myAds = useSelector((state: RootState) => state.myAds)
+    const dispatch = useDispatch();
+    useEffect(() => {
+        getClient()
+            .get('/user/getmyads')
+            .then((res: AxiosResponse) => dispatch(fetchMyAdsSuccess(res.data)))
+            .catch((err: AxiosError) => dispatch(fetchMyAdsError(err)))
+    }, [])    
+    const { ads, status } = myAds;
+    if (status === storeState.READY) return <MyAds ads={ads} />
+    else if (status === storeState.ERROR) return <PageNotFound />
+    return "Loading.."
+}
+MyAdsContainer.getLayout = function getLayout(page){
+    return <NavbarLayout>{page}</NavbarLayout>
+}
 
 interface Ad {
     _id: string;
@@ -19,7 +45,7 @@ interface MyAdsProps {
     ads: Ad[];
   }
 
-export default function MyAds({ ads }: MyAdsProps) {
+function MyAds({ ads }: MyAdsProps) {
     return (
         <div className={styles.myAds}>
             MyAds
@@ -51,7 +77,7 @@ function MyAd({ad}: {ad: Ad}){
                     </div>
                 </div>
             </Stack>
-            {!isComplete && <Link className={styles.completePostingAd} href={`/myads/create-ad/${adId}`}>Complete Ad</Link>}
+            {!isComplete && <Link className={styles.completePostingAd} href={`/myads/createad/${adId}`}>Complete Ad</Link>}
         </div>
     )
 }

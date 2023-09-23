@@ -12,8 +12,8 @@ import {
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import getClient from '../lib/api';
-import AuthLayout from '../layout/authLayout/AuthLayout';
+import getClient from '@lib/api';
+import AuthLayout from '@components/layout/authLayout/AuthLayout';
 import { AxiosError } from 'axios';
 
 const UserSchema = yup.object().shape({

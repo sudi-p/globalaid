@@ -1,6 +1,6 @@
 import React, { useEffect} from 'react';
 import { useParams } from 'react-router-dom';
-import getClient from "../../../lib/api";
+import getClient from "../../lib/api";
 
 export default function MyAd() {
     const params = useParams();

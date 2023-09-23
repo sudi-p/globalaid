@@ -4,10 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { Email, LocalPhone, LocationOnOutlined } from '@mui/icons-material/';
 import { Chip, Stack, Paper } from '@mui/material';
 import getClient from '@lib/api';
-import NavbarLayout from '@layout/navBarLayout/';
-import Filter from './Filter';
-import SearchBar from './SearchBar';
-import PageNotFound from '../404';
+import NavbarLayout from '@components/layout/navBarLayout/';
+import Filter from '../components/jobs/Filter';
+import SearchBar from '../components/jobs/SearchBar';
+import PageNotFound from './404';
 
 function Jobs() {
   const jobsQuery = useQuery({
@@ -21,7 +21,7 @@ function Jobs() {
   if (isLoading) return <h1>Loading...</h1>
   if (error) return <PageNotFound />
   return (
-    <div className="m-5">
+    <div className="my-5 mx-auto max-w-screen-xl">
       <Stack direction="row" spacing={"20px"}>
         <Filter />
         <JobsList jobs={data.ads} />

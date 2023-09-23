@@ -23,7 +23,7 @@ import {
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import AuthLayout from '../layout/authLayout/AuthLayout';
+import AuthLayout from '@components/layout/authLayout/AuthLayout';
 import { RootState } from "@store/store";
 import { AxiosError, AxiosResponse } from 'axios';
 

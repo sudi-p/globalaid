@@ -82,11 +82,11 @@ export function NavBar() {
   const extraNavLinks = [
     {
       name: "My Account",
-      link: "/my-ads"
+      link: "/myads"
     },
     {
       name: "My Ads",
-      link: "/my-ads"
+      link: "/myads"
     }
   ]
   const authLinks = [
