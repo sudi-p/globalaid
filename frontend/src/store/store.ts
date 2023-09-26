@@ -7,7 +7,7 @@ import DashboardReducer, { DashboardProps } from './slices/DashboardSlice';
 
 export type RootState = {
   loggedInUser: LoggedInUserProps,
-  dashoard: DashboardProps,
+  dashboard: DashboardProps,
   job: JobSliceProps,
   createAd: CreateAdSliceProps,
   myAds: MyAdsSliceProps

@@ -1,14 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 import StoreState from '../../utils/constants/StoreState';
 
-type RentalProps = {
+export type TopRentalProps = {
     id: string,
     title: string,
     rent: number,
     image: string
 }
 
-type JobProps = {
+export type TopJobProps = {
     id: string,
     title: string,
     salary: number,
@@ -18,8 +18,8 @@ type JobProps = {
 }
 
 export type DashboardProps = {
-    rentals: RentalProps[],
-    jobs: JobProps[],
+    rentals: TopRentalProps[],
+    jobs: TopJobProps[],
     status: number
 }
 
