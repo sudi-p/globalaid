@@ -11,7 +11,7 @@ import getClient from '@lib/api';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import Logo from '@components/Logo';
+import Logo from '@components/common/Logo';
 
 type PostAdProps = {
     handleClose: () => void;

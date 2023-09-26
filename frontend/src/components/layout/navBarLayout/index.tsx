@@ -2,12 +2,12 @@ import React, { ReactNode, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from "react-redux";
-import getClient from "../../lib/api";
+import getClient from "@lib/api";
 import {
   fetchUserStart,
   fetchUserSuccess,
   clearLoggedInUser,
-} from "../../store/slices/LoggedInUserSlice";
+} from "@store/slices/LoggedInUserSlice";
 import { Button, Stack, Divider } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -16,7 +16,7 @@ import {
 } from "@mui/icons-material";
 import PostAd from './PostAd';
 import Footer from './Footer';
-import Logo from "@components/Logo";
+import Logo from "@components/common/Logo";
 import { RootState } from "@store/store";
 import { AxiosError, AxiosResponse } from "axios";
 

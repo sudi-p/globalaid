@@ -1,20 +1,15 @@
-import React, { useState, lazy, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { Stack, TextField, Button } from '@mui/material';
-import { Send as SendIcon } from '@mui/icons-material';
-// import io from "socket.io-client";
+import React, { useState, lazy, ReactNode } from "react";
+import { Stack } from '@mui/material';
 import { useQuery } from "@tanstack/react-query";
-
-import styles from './Chats.module.scss';
 import getClient from "@lib/api";
 import PageNotFound from "./404";
 import NavbarLayout from "@components/layout/navBarLayout";
-// import IndividualChat from "./IndividualChat";
 const IndividualChat = lazy(() => import("../components/chat/IndividualChat"));
+import styles from '../styles/Chats.module.scss';
 
 export default function Chats() {
 	const [chatId, setChatId] = useState('');
-	const chatQuery = useQuery({
+	const { isLoading, error, data } = useQuery({
 		queryKey: ["chat"],
 		queryFn: async () => {
 			const res = await getClient().get('/user/getchats')
@@ -22,15 +17,14 @@ export default function Chats() {
 		},
 		refetchInterval: 5000,
 	});
-	const { isLoading, error, data} = chatQuery;
 	if (isLoading) return (<>Loading</>)
 	if (error) return <PageNotFound/>
 	return (
 		<Stack spacing={4} direction="row" className={styles.chatsContainer}>
 			<div>
 			Chats
-			{data.map(chat => (
-				<ChatList chat={chat} key={chat.chatId}/>
+			{data.map((chat: ChatProps) => (
+				<ChatList chat={chat} key={chat.chatId} setChatId={setChatId} />
 			))}
 			</div>
 			<IndividualChat chatId={chatId}/>
@@ -38,8 +32,20 @@ export default function Chats() {
 	)
 }
 
-const ChatList = ({chat, setChatId}) => {
-	const { chatId, title, client, lastMessage, time } = chat;
+type ChatProps = {
+	chatId: string,
+	title: string,
+	client: string,
+	lastMessage: string,
+}
+
+type ChatListProps = {
+	chat: ChatProps,
+	setChatId: React.Dispatch<React.SetStateAction<string>>
+}
+
+const ChatList = ({chat, setChatId}: ChatListProps) => {
+	const { chatId, title, client, lastMessage } = chat;
 	return (
 		<div onClick={() => setChatId(chatId)} className={styles.chat}>
 			<div className={styles.title}>{title}</div>
@@ -48,7 +54,7 @@ const ChatList = ({chat, setChatId}) => {
 	)
 }
 
-Chats.getLayout = function getLayout(page){
+Chats.getLayout = function getLayout(page: ReactNode){
 	return(
 		<NavbarLayout>{page}</NavbarLayout>
 	)

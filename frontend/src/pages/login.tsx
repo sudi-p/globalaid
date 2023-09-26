@@ -53,10 +53,10 @@ const Login = () => {
             .post('/auth/login/', {
                 'email': email,
                 'password': password
-            }).then(async (res: AxiosResponse) => {
+            }).then((res: AxiosResponse) => {
                 console.log(res)
                 document.cookie = "token=" + res.data.token + ";expires=Thu, 01 Aug 2030 00:00:00 UTC; path=/;";
-                await fetchUserSuccess(res.data.user)
+                fetchUserSuccess(res.data.user)
                 router.push("/");
             }).catch((err: AxiosError) => {
                 setError(err.response?.data)

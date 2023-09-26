@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import getClient from '../lib/api';
 import PageNotFound from './404';
@@ -37,6 +37,6 @@ function Rentals() {
 
 export default Rentals;
 
-Rentals.getLayout = function getLayout(page){
+Rentals.getLayout = function getLayout(page: ReactNode){
   return <NavbarLayout>{page}</NavbarLayout>
 }

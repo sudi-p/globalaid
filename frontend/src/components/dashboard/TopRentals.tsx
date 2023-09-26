@@ -3,15 +3,10 @@ import Link from 'next/link';
 import {
     Paper
 } from "@mui/material";
-
-type RentalBoxProps = {
-    title: string,
-    rent: number,
-    image: string,
-}
+import { TopRentalProps } from '@store/slices/DashboardSlice';
 
 type TopRentalsProps ={
-    rentals: ({id: number} & RentalBoxProps)[]
+    rentals: TopRentalProps[]
 }
 
 export default function TopRentals({ rentals }: TopRentalsProps) {
@@ -28,7 +23,7 @@ export default function TopRentals({ rentals }: TopRentalsProps) {
     )
 }
 
-function RentalBox({ title, rent, image }: RentalBoxProps) {
+function RentalBox({ id, title, rent, image }: TopRentalProps) {
     return (
         <div className='w-full sm:w-[calc(50%-10px)] xl:w-[calc(25%-15px)] mb-4 sm:mb-0'>
             <Paper className="cursor-pointer brightness-95 hover:brightness-100">

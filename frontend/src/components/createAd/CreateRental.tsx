@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
     Button, MenuItem, Stack, TextField,
     FormControl, FormHelperText, InputLabel, InputAdornment,
@@ -14,7 +14,6 @@ import {
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import styles from './styles/CreateRental.module.scss';
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
 const PostRentalSchema = yup.object().shape({
@@ -25,13 +24,13 @@ const PostRentalSchema = yup.object().shape({
         .string()
         .required("Please select the type of rental"),
     washRoom: yup
-        .number("Please enter a valid number")
+        .number()
         .typeError("Please enter a valid number")
         .positive("Please enter a valid number")
         .integer()
         .required("Please enter the number of washrooms."),
     bedRoom: yup
-        .number("Please enter a valid number")
+        .number()
         .typeError("Please enter a valid number")
         .positive("Please enter a valid number")
         .integer()
@@ -51,9 +50,8 @@ const steps = [
     'Media',
 ];
 
-const CreateRental = (props) => {
+const CreateRental = () => {
     return (
-
         <Stack spacing={5}>
             <Box sx={{ width: '100%' }}>
                 <Stepper activeStep={1} alternativeLabel>
@@ -70,30 +68,30 @@ const CreateRental = (props) => {
 }
 export default CreateRental;
 
-const FileUpload = (props) => {
-    const [images, setImages] = useState([]);
-    const [imageURLs, setImageURLs] = useState([]);
-    useEffect(() => {
-        if (images.length < 1) return;
-        const newImageUrls = [];
-        images.forEach(image => newImageUrls.push(URL.createObjectURL(image)));
-        setImageURLs(newImageUrls)
-    }, [images])
-    return (
-        <div>
-            File Upload
-            <input type="file" multiple accept="image/*" onChange={(e) => setImages([...e.target.files])} />
-            {imageURLs.map(imageSrc => <img src={imageSrc} alt="rental images" />)}
-            <Button
-                variant="outlined"
-                size="large"
-                onClick={() => console.log(false)}
-            >Save for Later</Button>
-        </div>
-    )
-}
+// const FileUpload = (props) => {
+//     const [images, setImages] = useState([]);
+//     const [imageURLs, setImageURLs] = useState([]);
+//     useEffect(() => {
+//         if (images.length < 1) return;
+//         const newImageUrls = [];
+//         images.forEach(image => newImageUrls.push(URL.createObjectURL(image)));
+//         setImageURLs(newImageUrls)
+//     }, [images])
+//     return (
+//         <div>
+//             File Upload
+//             <input type="file" multiple accept="image/*" onChange={(e) => setImages([...e.target.files])} />
+//             {imageURLs.map(imageSrc => <img src={imageSrc} alt="rental images" />)}
+//             <Button
+//                 variant="outlined"
+//                 size="large"
+//                 onClick={() => console.log(false)}
+//             >Save for Later</Button>
+//         </div>
+//     )
+// }
 
-const DetailedInformation = (props) => {
+const DetailedInformation = () => {
     const { register, handleSubmit, formState: { errors }, } = useForm({
         resolver: yupResolver(PostRentalSchema),
     });
@@ -126,7 +124,7 @@ const DetailedInformation = (props) => {
                     {...register("location")}
                     onChange={(e) => setLocation(e.target.value)}
                     error={Boolean(errors.location)}
-                    helperText={errors.location?.message}
+                    helperText={errors.location?.message?.toString()}
                 />
                 <FormControl
                     fullWidth
@@ -146,7 +144,7 @@ const DetailedInformation = (props) => {
                         <MenuItem value="Town House">Town House</MenuItem>
                         <MenuItem value="Basement">Basement</MenuItem>
                     </Select>
-                    <FormHelperText>{errors.rentalType?.message}</FormHelperText>
+                    <FormHelperText>{errors.rentalType?.message?.toString()}</FormHelperText>
                 </FormControl>
                 <Stack spacing={4} direction="row">
                     <TextField
@@ -154,11 +152,10 @@ const DetailedInformation = (props) => {
                         label="Number of Bedrooms"
                         {...register("bedRoom")}
                         type="number"
-                        className={styles.TextField}
                         onChange={(e) => setBedRoom(e.target.value)}
                         value={bedRoom}
                         error={Boolean(errors.bedRoom)}
-                        helperText={errors.bedRoom?.message}
+                        helperText={errors.bedRoom?.message?.toString()}
                         InputProps={{
                             endAdornment: <InputAdornment position="end"><BedIcon /></InputAdornment>,
                         }}
@@ -168,11 +165,10 @@ const DetailedInformation = (props) => {
                         label="Number of Washrooms"
                         type="number"
                         {...register("washRoom")}
-                        className={styles.TextField}
                         onChange={(e) => setWashRoom(e.target.value)}
                         value={washRoom}
                         error={Boolean(errors.washRoom)}
-                        helperText={errors.washRoom?.message}
+                        helperText={errors.washRoom?.message?.toString()}
                         InputProps={{
                             endAdornment: <InputAdornment position="end"><BathtubIcon /></InputAdornment>,
                         }}
@@ -185,11 +181,10 @@ const DetailedInformation = (props) => {
                         label="Email"
                         type="text"
                         {...register("email")}
-                        className={styles.TextField}
                         onChange={(e) => setEmail(e.target.value)}
                         value={email}
                         error={Boolean(errors.email)}
-                        helperText={errors.email?.message}
+                        helperText={errors.email?.message?.toString()}
                         InputProps={{
                             endAdornment: <InputAdornment position="end"><EmailIcon /></InputAdornment>,
                         }}
@@ -199,11 +194,10 @@ const DetailedInformation = (props) => {
                         label="Mobile Number"
                         type="text"
                         {...register("phone")}
-                        className={styles.TextField}
                         onChange={(e) => setPhone(e.target.value)}
                         value={phone}
                         error={Boolean(errors.phone)}
-                        helperText={errors.phone?.message}
+                        helperText={errors.phone?.message?.toString()}
                         InputProps={{
                             endAdornment: <InputAdornment position="end"><LocalPhoneIcon /></InputAdornment>,
                         }}
@@ -221,7 +215,6 @@ const DetailedInformation = (props) => {
                         size="large"
                         id="submit"
                     >Save and Continue</Button>
-
                 </Stack>
             </Stack>
         </form>

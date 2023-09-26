@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams, useNavigate } from 'react-router-dom';
 import styles from './Job.module.scss';
 import { fetchJobStart } from '@store/slices/JobSlice';
+import { useRouter } from 'next/router';
 
 const Job = (props) => {
-	const params = useParams();
-	const navigate = useNavigate();
+	const router = useRouter();
 	const dispatch = useDispatch();
 	const jobData = useSelector((state) => state.job)
 	useEffect(
@@ -14,7 +13,7 @@ const Job = (props) => {
 			dispatch(fetchJobStart());
 		}, [])
 	const goBack= function(){
-		navigate(-1)
+		router.back();
 	}
 	const {status, job} = jobData;
 	const { id, position, company, salary } = job;

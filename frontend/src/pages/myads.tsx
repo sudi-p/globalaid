@@ -7,7 +7,7 @@ import getClient from '../lib/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMyAdsSuccess, fetchMyAdsError } from '../store/slices/MyAdsSlice';
 import storeState from 'utils/constants/StoreState.js';
-import NavbarLayout from 'layout/navBarLayout';
+import NavbarLayout from '@components/layout/navBarLayout';
 import { AxiosResponse, AxiosError } from 'axios';
 import { RootState } from '@store/store';
 const PageNotFound = lazy(() => import('./404'));

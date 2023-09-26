@@ -4,17 +4,10 @@ import {
     Button
 } from '@mui/material';
 import Link from 'next/link';
-
-type JobCardProps = {
-    title: string,
-    location: string,
-    jobType: string,
-    salary: number,
-    description: string,
-}
+import { TopJobProps } from '@store/slices/DashboardSlice';
 
 type TopJobsProps = {
-    jobs: ({id: number} & JobCardProps)[]
+    jobs: TopJobProps[]
 }
 
 export default function TopJobs({ jobs }: TopJobsProps) {
@@ -44,7 +37,7 @@ function JobCard({ title, location, jobType, salary, description }: JobCardProps
                     </div>
                     <div className="font-bold">${salary}/Hour</div>
                 </div>
-                <p className="h-[4.1rem] overflow-hidden w-full leading-snug">{description}</p>
+                <p className="h-[4.1rem] overflow-hidden w-full leading-snug">{description.slice(0,110)}...</p>
                 <Button fullWidth size="small" variant="outlined"> Learn More</Button>
             </Paper>
         </div >
