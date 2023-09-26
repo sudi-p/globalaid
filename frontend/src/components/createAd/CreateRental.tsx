@@ -50,7 +50,11 @@ const steps = [
     'Media',
 ];
 
-const CreateRental = () => {
+type CreateRentalProps = {
+    adId: string
+  }
+
+const CreateRental = ({ adId}: CreateRentalProps) => {
     return (
         <Stack spacing={5}>
             <Box sx={{ width: '100%' }}>

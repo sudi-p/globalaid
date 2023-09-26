@@ -12,7 +12,7 @@ import { RootState } from '@store/store';
 export default function CreateAd() {
   const router = useRouter();
   const { query } = router;
-  const { adId } = query;
+  let { adId } = query;
   const createAdData = useSelector((state: RootState) => state.createAd)
   const dispatch = useDispatch();
   useEffect(() => {
@@ -30,6 +30,7 @@ export default function CreateAd() {
   }, [adId]);
   const { adType, adTitle } = createAdData;
   let display = <div>Loading</div>;
+  adId = Array.isArray(adId) ? adId[0] : adId || '';
   if (adType === "rent") display = <CreateRental adId={adId} />
   if (adType === "job") display = <CreateJob adId={adId} />
   return (
