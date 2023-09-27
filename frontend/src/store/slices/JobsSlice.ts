@@ -2,9 +2,9 @@ import { createSlice } from '@reduxjs/toolkit';
 import StoreState from '../../utils/constants/StoreState.js';
 
 const initialState = {
+	status: StoreState.EMPTY,
 	jobs: [],
 };
-
 
 const JobsSlice = createSlice({
 	name: 'jobs',
@@ -12,7 +12,7 @@ const JobsSlice = createSlice({
 	reducers:{
 		fetchJobsSuccess: (state, action) => {
 			const { payload } = action;
-			state.status = StoreState.SUCCESS;
+			state.status = StoreState.READY;
 			state.jobs = payload.jobs;
 		}
 	}

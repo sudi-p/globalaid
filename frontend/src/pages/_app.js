@@ -33,9 +33,9 @@ export default function MyApp({ Component, pageProps }) {
         <Provider store={store}>
           <QueryClientProvider client={queryClient}>
             <ThemeProvider theme={theme}>
-              {getLayout(
-                <Component {...pageProps} />
-              )}
+                {getLayout(
+                  <Component {...pageProps} />
+                )}
             </ThemeProvider>
             <ReactQueryDevtools initialIsOpen={false} />
           </QueryClientProvider>
@@ -45,4 +45,4 @@ export default function MyApp({ Component, pageProps }) {
   )
 };
 
-reportWebVitals();
+// reportWebVitals();

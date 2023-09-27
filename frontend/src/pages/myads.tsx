@@ -19,7 +19,7 @@ export default function MyAdsContainer() {
         getClient()
             .get('/user/getmyads')
             .then((res: AxiosResponse) => dispatch(fetchMyAdsSuccess(res.data)))
-            .catch((err: AxiosError) => dispatch(fetchMyAdsError(err)))
+            .catch(() => dispatch(fetchMyAdsError()))
     }, [])    
     const { ads, status } = myAds;
     if (status === storeState.READY) return <MyAds ads={ads} />
