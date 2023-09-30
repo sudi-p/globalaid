@@ -17,7 +17,7 @@ export const register = async(req, res) => {
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
         const user = await User.findOne({ email: email});
-        if (user) return res.status(400).json({msg: "User already exists"});
+        if (user) return res.status(409).json({msg: "User already exists"});
         const newUser = new User({
             firstName,
             lastName,
@@ -30,7 +30,7 @@ export const register = async(req, res) => {
         res.status(201).json(savedUser);
     } catch (err) {
         console.log(err)
-        res.status(500).json({ error: err.message});
+        res.status(500).json({ msg: "Internal Server Error"});
     }
 }
 
@@ -38,12 +38,20 @@ export const register = async(req, res) => {
 export const login = async(req, res) => {
     try{
         const { email, password } = req.body;
-        const user = await User.findOne({ email: email});
+        console.log(email, password)
+        const user = await User.findOne({ email: email}).lean();
         if (!user) return res.status(400).json({msg: "User doesn't exist"});
         const isMatch = await bcrypt.compare(password, user.password)
         if (!isMatch) return res.status(400).json({msg: "Oops! Password wrong"})
         const token = jwt.sign({ id: user._id}, process.env.JWT_SECRET);
-        delete user.password;
+        res.cookie('jwt', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV !== 'development',
+            sameSite: 'strict',
+            maxAge: 30*24*60*60,
+            path: "/"
+        })
+        delete user.password
         res.status(200).json({token, user});
     } catch(err){
         res.status(500).json({error: err.message});

@@ -55,11 +55,11 @@ const Login = () => {
       }).then((res: AxiosResponse) => {
         console.log(res)
         document.cookie = "token=" + res.data.token + ";expires=Thu, 01 Aug 2030 00:00:00 UTC; path=/;";
-        cookie.set('token', res.data.token, { expires: "Thu, 01 Aug 2030 00:00:00 UTC"});
         fetchUserSuccess(res.data.user)
+        console.log("Hello")
         router.push("/");
       }).catch((err: AxiosError) => {
-        setError(err.response?.data)
+        setError(err.response?.data?.error)
       })
   }
   useEffect(() => {

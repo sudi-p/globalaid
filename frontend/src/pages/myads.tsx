@@ -2,29 +2,35 @@ import React, { useEffect, lazy, ReactElement } from 'react';
 import Link from 'next/link';
 import { Stack } from '@mui/material';
 import { Home as HomeIcon, Engineering as EngineeringIcon } from '@mui/icons-material';
-import styles from '@styles/MyAds.module.scss';
+import NavbarLayout from '@components/layout/navBarLayout';
+import useAxiosFetch from 'hooks/useAxiosFetch';
+const PageNotFound = lazy(() => import('./404'));
 import getClient from '../lib/api';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMyAdsSuccess, fetchMyAdsError } from '../store/slices/MyAdsSlice';
 import storeState from 'utils/constants/StoreState.js';
-import NavbarLayout from '@components/layout/navBarLayout';
 import { AxiosResponse, AxiosError } from 'axios';
 import { RootState } from '@store/store';
-const PageNotFound = lazy(() => import('./404'));
+import styles from '@styles/MyAds.module.scss';
 
 export default function MyAdsContainer() {
-    const myAds = useSelector((state: RootState) => state.myAds)
-    const dispatch = useDispatch();
-    useEffect(() => {
-        getClient()
-            .get('/user/getmyads')
-            .then((res: AxiosResponse) => dispatch(fetchMyAdsSuccess(res.data)))
-            .catch(() => dispatch(fetchMyAdsError()))
-    }, [])    
-    const { ads, status } = myAds;
-    if (status === storeState.READY) return <MyAds ads={ads} />
-    else if (status === storeState.ERROR) return <PageNotFound />
-    return "Loading.."
+    // const myAds = useSelector((state: RootState) => state.myAds)
+    // const dispatch = useDispatch();
+    // useEffect(() => {
+    //     getClient()
+    //         .get('/user/getmyads')
+    //         .then((res: AxiosResponse) => dispatch(fetchMyAdsSuccess(res.data)))
+    //         .catch(() => dispatch(fetchMyAdsError()))
+    // }, [])    
+    // const { ads, status } = myAds;
+    // if (status === storeState.READY) return <MyAds ads={ads} />
+    // else if (status === storeState.ERROR) return <PageNotFound />
+    // return "Loading.."
+    const { data, isLoading, error } = useAxiosFetch('/user/getmyads');
+    if (isLoading) return "Loading.." 
+    if (error) return <PageNotFound />
+    const { ads } = data;
+    return <MyAds ads={ads} />
 }
 MyAdsContainer.getLayout = function getLayout(page){
     return <NavbarLayout>{page}</NavbarLayout>
@@ -49,7 +55,7 @@ function MyAds({ ads }: MyAdsProps) {
     return (
         <div className={styles.myAds}>
             MyAds
-            {ads.map(ad => (<MyAd key={ad._id} ad={ad}/>))}
+            {ads?.map(ad => (<MyAd key={ad._id} ad={ad}/>))}
         </div>
     )
 }

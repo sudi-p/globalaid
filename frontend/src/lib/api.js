@@ -24,24 +24,17 @@ const getToken = (tokenkey) => {
   return token
 }
 
-let client;
-
-let url = 'https://www.onlineglobalaid.com/api'
-if (process.env.NODE_ENV !== 'production') {
-  url = 'http://localhost:3001/api'
-}
-function getClient() {
-  if (!client) {
-    client = axios.create({
-      baseURL: url,
-      timeout: 35000,
-      headers: {
-        Accept: 'application/json',
-        Authorization: getToken()
-      },
-    });
+export default function getClient() {
+  let url = 'https://www.onlineglobalaid.com/api'
+  if (process.env.NODE_ENV !== 'production') {
+    url = 'http://localhost:3001/api'
   }
-  return client;
+  return axios.create({
+    baseURL: url,
+    timeout: 35000,
+    headers: {
+      Accept: 'application/json',
+      Authorization: getToken()
+    },
+  });
 }
-
-export default getClient;
