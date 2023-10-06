@@ -1,8 +1,8 @@
-import React, { useState, useEffect, ReactNode } from 'react';
+import React, { useState, useEffect, ReactNode, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import getClient from '../lib/api';
+import axios from '@lib/api';
 import { fetchUserSuccess } from '@store/slices/LoggedInUserSlice';
 import {
   TextField,
@@ -25,8 +25,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import AuthLayout from '@components/layout/authLayout/AuthLayout';
 import { RootState } from "@store/store";
-import cookie from 'js-cookie';
-import { AxiosError, AxiosResponse } from 'axios';
+import AuthContext from '@context/AuthProvider';
+import { addAuthToStorage } from '@utils/cookie-utils';
 
 const LoginSchema = yup.object().shape({
   email: yup
@@ -39,6 +39,7 @@ const LoginSchema = yup.object().shape({
 
 const Login = () => {
   const router = useRouter();
+  const { setAuth } = useContext(AuthContext);
   const [showPassword, setShowPassword] = React.useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(LoginSchema),
@@ -47,20 +48,23 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const loggedInUser = useSelector((state: RootState) => state.loggedInUser);
-  const login = () => {
-    getClient()
-      .post('/auth/login/', {
-        'email': email,
-        'password': password
-      }).then((res: AxiosResponse) => {
-        console.log(res)
-        document.cookie = "token=" + res.data.token + ";expires=Thu, 01 Aug 2030 00:00:00 UTC; path=/;";
-        fetchUserSuccess(res.data.user)
-        console.log("Hello")
-        router.push("/");
-      }).catch((err: AxiosError) => {
-        setError(err.response?.data?.error)
-      })
+  const login = async () => {
+    try {
+      const res = await axios.post('/auth/login/', {
+          'email': email,
+          'password': password
+        }, {
+          withCredentials: true
+        })
+      const accessToken = res?.data?.accessToken;
+      const user = res?.data?.user;
+      await addAuthToStorage(res?.data?.user)
+      setAuth({ user, accessToken})
+      fetchUserSuccess(user)
+      router.push("/");
+    } catch (err: unknown) {
+      setError(err?.response?.data?.msg)
+    }
   }
   useEffect(() => {
     if (loggedInUser.isLoggedIn) router.push("/")

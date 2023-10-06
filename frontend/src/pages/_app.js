@@ -4,7 +4,7 @@ import store from '../store/store';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import reportWebVitals from '../reportWebVitals';
+import { AuthProvider } from '@context/AuthProvider';
 import '../styles/globals.css';
 
 const theme = createTheme({
@@ -32,12 +32,14 @@ export default function MyApp({ Component, pageProps }) {
       <Suspense>
         <Provider store={store}>
           <QueryClientProvider client={queryClient}>
-            <ThemeProvider theme={theme}>
+            <AuthProvider>
+              <ThemeProvider theme={theme}>
                 {getLayout(
                   <Component {...pageProps} />
                 )}
-            </ThemeProvider>
-            <ReactQueryDevtools initialIsOpen={false} />
+              </ThemeProvider>
+              <ReactQueryDevtools initialIsOpen={false} />
+            </AuthProvider>
           </QueryClientProvider>
         </Provider>
       </Suspense>
@@ -45,4 +47,3 @@ export default function MyApp({ Component, pageProps }) {
   )
 };
 
-// reportWebVitals();

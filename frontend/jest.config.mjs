@@ -16,12 +16,13 @@ const config = {
   preset: 'ts-jest',
   moduleNameMapper: {
     '^@components/(.*)$': '<rootDir>/src/components/$1',
-    '^@features/(.*)$': '<rootDir>/src/features/$1',
+    '^@context/(.*)$': '<rootDir>/src/context/$1',
+    '^@hooks/(.*)$': '<rootDir>/hooks/$1',
     '^@lib/(.*)$': '<rootDir>/src/lib/$1',
     '^@pages/(.*)$': '<rootDir>/src/pages/$1',
-    '^@shared/(.*)$': '<rootDir>/src/shared/$1',
     '^@store/(.*)$': '<rootDir>/src/store/$1',
     '^@styles/(.*)$': '<rootDir>/styles/$1',
+    '^@types/(.*)$': '<rootDir>/src/types/$1',
     '^@utils/(.*)$': '<rootDir>/src/utils/$1',
   },
 }

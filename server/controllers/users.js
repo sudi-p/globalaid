@@ -14,7 +14,6 @@ import Conversation, { Message } from "../models/Chat.js";
 
 export const getUser = async (req, res) => {
   try {
-    console.log(req.user.id)
     const user = await User.findOne({ id: req.user.id });
     const { firstName, lastName, email } = user;
     res.status(201).json({ firstName, lastName, email });
@@ -23,7 +22,7 @@ export const getUser = async (req, res) => {
   }
 };
 
-export const getTopRentalJobs = async(req, res) => {
+export const getTopRentalsJobs = async(req, res) => {
   try{
     const topRentals = [
       {
@@ -93,7 +92,11 @@ export const getTopRentalJobs = async(req, res) => {
 
 export const getJobs = async (req, res) => {
   try {
-    const ads = await Ad.find({ available: true, adType: "job" });
+    let filter = { available: true, adType: "job" };
+    if (req.isAuthenticated){
+      filter.user = req.user;
+    }
+    const ads = await Ad.find(filter);
     let data = await Promise.all(ads.map(async(ad) => {
       try{
         const job = await Job.findOne({ad: ad})
@@ -112,139 +115,6 @@ export const getJobs = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-
-//getMyAds
-export const getMyAds = async (req, res) => {
-  try {
-    let ads = await Ad.find({ user: req.user.id }).lean();
-    // let ads = await Ad.find().lean();
-    const newAdsPromise = ads.map(async (ad) => {
-      try {
-        const { _id: adId, title, adType, description } = ad;
-        let isComplete;
-        if (adType == "rent") {
-          const rents = await Rental.find({ ad: adId });
-          isComplete = rents.length > 0;
-        } else {
-          const jobs = await Job.find({ ad: adId });
-          isComplete = jobs.length > 0;
-        }
-        return {
-          ...ad,
-          isComplete,
-        };
-      } catch (err) {
-        console.log(err.message);
-        res.status(500).json({ message: err.message });
-      }
-    });
-    const newAds = await Promise.all(newAdsPromise)
-    res.status(201).json({ ads: newAds });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ message: err.message });
-  }
-};
-
-//getMyAd
-export const getMyAd = async (req, res) => {
-  try {
-    const ad = await Ad.findOne({ id: req.params.adId });
-    res.status(201).json({ ad });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-//createAd
-export const createAd = async (req, res) => {
-  try {
-    let requestMethod = req.method;
-    if (requestMethod === "GET") {
-      const ad = await Ad.findOne({ _id: req.query.adId }).lean();
-      const adType = ad.adType;
-      let isComplete;
-      if (adType == "rent") {
-        const rent = Rental.findOne({ ad: ad._id });
-        isComplete = rent.length > 0;
-      } else {
-        const job = Job.findOne({ ad: ad._id });
-        isComplete = job.length > 0;
-      }
-      if (ad.available || isComplete)
-        res.status(404).json({ message: "Unautorized Content" });
-      else {
-        let createAdLevel = 2;
-        if (ad.adType === "rent") {
-          const rent = await Rental.findOne({ ad: ad._id });
-          if (rent) createRentalLevel = 3;
-        }
-        ad.createAdLevel = createAdLevel;
-        res.status(201).json({ ad });
-      }
-    } else {
-      const { title, description, adType } = req.body;
-      const ad = new Ad({
-        user: req.user.id,
-        title,
-        description,
-        adType,
-      });
-      await ad.save();
-      res.status(201).json({ ad, message: "Ad Posted" });
-    }
-  } catch (err) {
-    console.log(err.message);
-    res.status(500).json({ message: err.message });
-  }
-};
-
-//Create Job
-export const createJob = async (req, res) => {
-  try {
-    const {
-      adId,
-      company,
-      location,
-      jobType,
-      salary,
-      jobSite,
-      email,
-      phone,
-      isOwner,
-    } = req.body;
-    const jobs = await Job.find({ ad: adId });
-    if (jobs.length > 0) {
-      res.status(404).json({ message: "Unauthorized Access" });
-    } else {
-      const ad = await Ad.findByIdAndUpdate(
-        adId,
-        {
-          location,
-          email,
-          phone,
-          available: true,
-        },
-        { new: false }
-      );
-      const job = new Job({
-        ad,
-        company,
-        isOwner,
-        jobType,
-        salary,
-        jobSite,
-      });
-      await job.save();
-      res.status(201).json({ jobId: job._id, message: "Job Published" });
-    }
-  } catch (err) {
-    console.log(err.message);
-    res.status(500).json({ message: err.message });
-  }
-};
-//Create Rentals
-//Upload Rental Photos
 
 //getRentals
 export const getRentals = async (req, res) => {
@@ -327,6 +197,134 @@ export const getRentals = async (req, res) => {
   }
 };
 
+//getMyAds
+export const getMyAds = async (req, res) => {
+  try {
+    let ads = await Ad.find({ user: req.user }).lean();
+    const newAdsPromise = ads.map(async (ad) => {
+      try {
+        const { _id: adId, adType } = ad;
+        let isComplete;
+        if (adType == "rent") {
+          const rents = await Rental.find({ ad: adId });
+          isComplete = rents.length > 0;
+        } else {
+          const jobs = await Job.find({ ad: adId });
+          isComplete = jobs.length > 0;
+        }
+        return {
+          ...ad,
+          isComplete,
+        };
+      } catch (err) {
+        res.status(500).json({ message: err.message });
+      }
+    });
+    const newAds = await Promise.all(newAdsPromise)
+    res.status(201).json({ ads: newAds });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+//getMyAd
+export const getMyAd = async (req, res) => {
+  try {
+    const ad = await Ad.findOne({ id: req.params.adId });
+    res.status(201).json({ ad });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+//createAd
+export const createAd = async (req, res) => {
+  try {
+    let requestMethod = req.method;
+    if (requestMethod === "GET") {
+      const ad = await Ad.findOne({ _id: req.query.adId }).lean();
+      const adType = ad.adType;
+      let isComplete;
+      if (adType == "rent") {
+        const rent = Rental.findOne({ ad: ad._id });
+        isComplete = rent.length > 0;
+      } else {
+        const job = Job.findOne({ ad: ad._id });
+        isComplete = job.length > 0;
+      }
+      if (ad.available || isComplete)
+        res.status(404).json({ message: "Unautorized Content" });
+      else {
+        let createAdLevel = 2;
+        if (ad.adType === "rent") {
+          const rent = await Rental.findOne({ ad: ad._id });
+          if (rent) createRentalLevel = 3;
+        }
+        ad.createAdLevel = createAdLevel;
+        res.status(201).json({ ad });
+      }
+    } else {
+      const { title, description, adType } = req.body;
+      const ad = new Ad({
+        user: req.user,
+        title,
+        description,
+        adType,
+      });
+      await ad.save();
+      res.status(201).json({ ad, message: "Ad Posted" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+//Create Job
+export const createJob = async (req, res) => {
+  try {
+    const {
+      adId,
+      company,
+      location,
+      jobType,
+      salary,
+      jobSite,
+      email,
+      phone,
+      isOwner,
+    } = req.body;
+    const jobs = await Job.find({ ad: adId });
+    if (jobs.length > 0) {
+      res.status(404).json({ message: "Unauthorized Access" });
+    } else {
+      const ad = await Ad.findByIdAndUpdate(
+        adId,
+        {
+          location,
+          email,
+          phone,
+          available: true,
+        },
+        { new: false }
+      );
+      const job = new Job({
+        ad,
+        company,
+        isOwner,
+        jobType,
+        salary,
+        jobSite,
+      });
+      await job.save();
+      res.status(201).json({ jobId: job._id, message: "Job Published" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+//Create Rentals
+//Upload Rental Photos
+
+
 export const getChats = async (req, res) => {
   try {
     const conversations = await Conversation.find({ participants: { $in: [req.user.id] } })
@@ -388,7 +386,6 @@ export const getIndividualChat = async (req, res) => {
     }
     return res.status(201).json({ ...data })
   } catch (error) {
-    console.log(error.message)
     return res.status(500).json({ msg: error.message })
   }
 }
@@ -401,8 +398,6 @@ export const sendChatMessage = async (req, res) => {
     
     const recipient = participants.find((participant) => participant._id.toString() !== req.user.id)
     const sender = participants.find((participant) => participant._id.toString() === req.user.id)
-    console.log('sender', sender)
-    console.log('recipient', recipient)
     const message = new Message({
       conversation,
       sender,
@@ -412,11 +407,9 @@ export const sendChatMessage = async (req, res) => {
     message.save()
     conversation.lastMessage = message;
     conversation.save()
-    console.log(chatText)
     return res.status(201).json({msg: "message sent"})
   }
   catch(err){
-    console.log(err)
     return res.status(500).json({msg: err.message})
   }
 }

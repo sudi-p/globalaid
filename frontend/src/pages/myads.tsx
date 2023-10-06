@@ -1,38 +1,32 @@
-import React, { useEffect, lazy, ReactElement } from 'react';
+import React, { useContext, lazy, ReactElement } from 'react';
 import Link from 'next/link';
 import { Stack } from '@mui/material';
 import { Home as HomeIcon, Engineering as EngineeringIcon } from '@mui/icons-material';
 import NavbarLayout from '@components/layout/navBarLayout';
-import useAxiosFetch from 'hooks/useAxiosFetch';
 const PageNotFound = lazy(() => import('./404'));
-import getClient from '../lib/api';
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchMyAdsSuccess, fetchMyAdsError } from '../store/slices/MyAdsSlice';
-import storeState from 'utils/constants/StoreState.js';
-import { AxiosResponse, AxiosError } from 'axios';
-import { RootState } from '@store/store';
+import { axiosPrivate } from '../lib/api';
 import styles from '@styles/MyAds.module.scss';
+import { useQuery } from '@tanstack/react-query';
+import AuthContext from '@context/AuthProvider';
 
 export default function MyAdsContainer() {
-    // const myAds = useSelector((state: RootState) => state.myAds)
-    // const dispatch = useDispatch();
-    // useEffect(() => {
-    //     getClient()
-    //         .get('/user/getmyads')
-    //         .then((res: AxiosResponse) => dispatch(fetchMyAdsSuccess(res.data)))
-    //         .catch(() => dispatch(fetchMyAdsError()))
-    // }, [])    
-    // const { ads, status } = myAds;
-    // if (status === storeState.READY) return <MyAds ads={ads} />
-    // else if (status === storeState.ERROR) return <PageNotFound />
-    // return "Loading.."
-    const { data, isLoading, error } = useAxiosFetch('/user/getmyads');
-    if (isLoading) return "Loading.." 
+    const { auth } = useContext(AuthContext);
+    if (!auth?.user?.email) return <PageNotFound />
+    const myAdsQuery = useQuery({
+        queryKey: ['rentals'],
+        queryFn: async () => {
+            const res = await axiosPrivate.get('/user/getmyads')
+            return res.data
+        }
+    });
+    const { isLoading, error, data } = myAdsQuery;
+
+    if (isLoading) return "Loading.."
     if (error) return <PageNotFound />
     const { ads } = data;
     return <MyAds ads={ads} />
 }
-MyAdsContainer.getLayout = function getLayout(page){
+MyAdsContainer.getLayout = function getLayout(page: ReactElement) {
     return <NavbarLayout>{page}</NavbarLayout>
 }
 
@@ -49,21 +43,21 @@ interface Ad {
 
 interface MyAdsProps {
     ads: Ad[];
-  }
+}
 
 function MyAds({ ads }: MyAdsProps) {
     return (
         <div className={styles.myAds}>
             MyAds
-            {ads?.map(ad => (<MyAd key={ad._id} ad={ad}/>))}
+            {ads?.map(ad => (<MyAd key={ad._id} ad={ad} />))}
         </div>
     )
 }
 
-function MyAd({ad}: {ad: Ad}){
+function MyAd({ ad }: { ad: Ad }) {
     const { _id: adId, title, description, adType, isComplete, views, price, replies } = ad;
-    return(
-        <div  className={styles.ad}>
+    return (
+        <div className={styles.ad}>
             <Stack direction={"row"} alignItems="center" spacing={1}>
                 <span className={styles.adIcon}>
                     {adType === "rent" ? <HomeIcon fontSize="inherit" /> : <EngineeringIcon fontSize="inherit" />}

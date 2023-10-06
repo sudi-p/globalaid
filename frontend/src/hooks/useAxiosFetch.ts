@@ -13,7 +13,7 @@ const useAxiosFetch = (dataUrl: string) => {
     const fetchData = async (url: string) => {
       setIsLoading(true);
       try {
-        const res = await getClient().get(url,{
+        const res = await getClient.get(url,{
           cancelToken: source.token
         })
         if (isMounted){

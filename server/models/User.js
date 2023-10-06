@@ -31,7 +31,8 @@ const UserSchema = new mongoose.Schema(
             type: Date,
             required: true,
             default: Date.now,
-        }
+        },
+        refreshToken: String
     }, {
         timeStamps: true,
     }
