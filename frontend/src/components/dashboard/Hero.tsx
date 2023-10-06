@@ -15,11 +15,11 @@ type HeroBoxProps = {
 
 export default function Hero() {
     let [showRentalHero, setShowRentalHero] = useState(false)
-    const intervalId = setTimeout(() => {
-        setShowRentalHero(!showRentalHero)
-    }, 4000)
     useEffect(() => {
-        return clearTimeout(intervalId)
+        const intervalId = setInterval(() => {
+            setShowRentalHero((prevShowRentalHero) => !prevShowRentalHero)
+        }, 5000)
+        return () => clearTimeout(intervalId)
     }, [])
     return (
         <Paper className="p-4 lg:p-8">

@@ -62,7 +62,7 @@ const SignUp = () => {
         })
         .then(() => router.push('/login/'))
         .catch((err: AxiosError) =>{
-            setError(err.response?.data.msg);
+            setError(err?.response?.data?.msg);
             setLoading(false)
         });
     }

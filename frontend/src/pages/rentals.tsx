@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import getClient from '../lib/api';
+import { axiosPrivate } from '../lib/api';
 import PageNotFound from './404';
 import Rental from '../components/rentals/Rental';
 import {
@@ -12,7 +12,7 @@ function Rentals() {
   const rentalsQuery = useQuery({
     queryKey: ['rentals'],
     queryFn: async () => {
-      const res = await getClient().get('/user/getrentals')
+      const res = await axiosPrivate.get('/user/getrentals')
       return res.data
     }
   });
@@ -24,7 +24,7 @@ function Rentals() {
       <Stack direction="row" spacing={2}>
         <div>Section for filter</div>
         <div className="flex-1 p-4">
-          {data.rentals.map((rental,id) => {
+          {data?.rentals?.map((rental, id) => {
             return (
               <Rental key={`rental${id}`} {...rental} />
             )

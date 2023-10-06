@@ -1,8 +1,7 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from "react-redux";
-import getClient from "@lib/api";
+import { useDispatch } from "react-redux";
 import {
   fetchUserStart,
   fetchUserSuccess,
@@ -17,8 +16,10 @@ import {
 import PostAd from './PostAd';
 import Footer from './Footer';
 import Logo from "@components/common/Logo";
-import { RootState } from "@store/store";
 import { AxiosError, AxiosResponse } from "axios";
+import useAxiosPrivate from "@hooks/useAxiosPrivate";
+import AuthContext from "@context/AuthProvider";
+import { clearAuthFromStorage, getUserFromStorage } from "@utils/cookie-utils";
 
 type NavbarLayoutProps = {
   children: ReactNode
@@ -37,34 +38,28 @@ export default function NavbarLayout({ children }: NavbarLayoutProps) {
 }
 
 export function NavBar() {
-  const dispatch = useDispatch();
+  const axiosPrivate = useAxiosPrivate();
+  const [email, setEmail] = useState("")
+  const { setAuth } = useContext(AuthContext)??{};
   const router = useRouter();
+  useEffect(()=> {
+    let user = getUserFromStorage();
+    if (user){
+      setEmail(user.email)
+    }
+  }, []);
   const [expandMenu, setExpandMenu] = useState(false);
   const [openPostAdModal, setOpenPostAdModal] = useState(false);
-  const loggedInUser = useSelector((state: RootState) => state.loggedInUser);
-  const { isLoggedIn, email } = loggedInUser;
   const handlePostAdButton = () => {
     setOpenPostAdModal((prevOpenPostAdModal) => !prevOpenPostAdModal);
   };
-  useEffect(() => {
-    dispatch(fetchUserStart());
-    getClient()
-      .get("/user/getuser/")
-      .then((res: AxiosResponse) => {
-        dispatch(fetchUserSuccess(res.data));
-      })
-      .catch((err: AxiosError) => {
-        dispatch(clearLoggedInUser());
-      });
-  }, []);
-
   const logout = async () => {
-    document.cookie =
-      "token= 0k;expires=Thu, 01 Aug 2018 00:00:00 UTC; path=/;";
-    dispatch(clearLoggedInUser());
-    await router.push("/");
+    setAuth({accessToken:"", user:{email: ""}});
+    setEmail("")
+    clearAuthFromStorage();
+    await axiosPrivate.post("/auth/logout/")
+    router.push("/");
   };
-
   const navLinks = [
     {
       name: "Home",
@@ -99,7 +94,7 @@ export function NavBar() {
       link: "/signup"
     }
   ]
-  isLoggedIn ? navLinks.push(...extraNavLinks) : navLinks.push(...authLinks)
+  email ? navLinks.push(...extraNavLinks) : navLinks.push(...authLinks)
   return (
     <>
       <div className={`px-2 md:px-10 lg:px-4 h-16 relative flex justify-between items-center font-semibold max-w-screen-xl md:m-auto md:w-11/12`}>
@@ -118,14 +113,14 @@ export function NavBar() {
               </a>
             </Link>
           ))}
-          <div className="lg:hidden" onClick={() => logout()}>
+          <div className="lg:hidden" onClick={() => logout}>
             <NavText
               title={"Log Out"}
             />
           </div>
         </div>
-        <div className={`${!isLoggedIn && "lg:absolute"} flex items-center`}>
-          {isLoggedIn && (
+        <div className={`${!email && "lg:absolute"} flex items-center`}>
+          {email && (
             <Stack direction="row" spacing={2} alignItems={"center"}>
               <Link href='/chat'><ChatBubbleOutline color="primary" /></Link>
               <Button
@@ -154,8 +149,6 @@ export function NavBar() {
     </>
   );
 };
-
-
 
 type NavTextProps = {
   title: string,

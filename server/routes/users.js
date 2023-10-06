@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getUser,
+  getTopRentalsJobs,
   createJob,
   createAd,
   getJobs,
@@ -9,15 +10,16 @@ import {
   getMyAd,
   getIndividualChat,
   getChats,
-  sendChatMessage
+  sendChatMessage,
 } from "../controllers/users.js";
-import { verifyToken } from "../middleware/auth.js";
+import { verifyToken, checkIfAuthenticated } from "../middleware/auth.js";
 
 const router = express.Router();
 
 router.get("/getuser/", verifyToken, getUser);
-router.get("/getjobs/", getJobs);
-router.get("/getrentals/", getRentals);
+router.get("/gettoprentalsjobs/", verifyToken, getTopRentalsJobs);
+router.get("/getjobs/",checkIfAuthenticated, getJobs);
+router.get("/getrentals/",checkIfAuthenticated, getRentals);
 router.get("/createad/", verifyToken, createAd);
 router.post("/createad/", verifyToken, createAd);
 router.post("/createjob/", verifyToken, createJob);

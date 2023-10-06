@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { Email, LocalPhone, LocationOnOutlined } from '@mui/icons-material/';
 import { Chip, Stack, Paper } from '@mui/material';
-import getClient from '@lib/api';
+import axios from '@lib/api';
 import NavbarLayout from '@components/layout/navBarLayout/';
 import Filter from '../components/jobs/Filter';
 import SearchBar from '../components/jobs/SearchBar';
@@ -13,7 +13,7 @@ function Jobs() {
   const jobsQuery = useQuery({
     queryKey: ['jobs'],
     queryFn: async () => {
-      const res = await getClient().get('/user/getjobs/')
+      const res = await axios.get('/user/getjobs/')
       return res.data;
     }
   });
