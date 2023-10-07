@@ -24,6 +24,7 @@ export const getUser = async (req, res) => {
 
 export const getTopRentalsJobs = async(req, res) => {
   try{
+    
     const topRentals = [
       {
           id: "63f45ba2631adf1b0a35b94f",
@@ -84,7 +85,7 @@ export const getTopRentalsJobs = async(req, res) => {
           jobType: "part-time"
       }
   ];
-  return res(201).json({topJobs, topRentals})
+  return res.status(201).json({topJobs, topRentals})
   } catch(err){
     res.status(500).json({message: err.message})
   }
