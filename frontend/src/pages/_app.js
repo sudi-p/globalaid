@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { Provider } from 'react-redux';
 import store from '../store/store';
+import NextNProgress from 'nextjs-progressbar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -35,7 +36,15 @@ export default function MyApp({ Component, pageProps }) {
             <AuthProvider>
               <ThemeProvider theme={theme}>
                 {getLayout(
+                  <>
+                  <NextNProgress
+                  color={'#41b3A3'}
+                  options={{ showSpinner: false }}
+                  showOnShallow
+                  height={5}
+                />
                   <Component {...pageProps} />
+                  </>
                 )}
               </ThemeProvider>
               <ReactQueryDevtools initialIsOpen={false} />

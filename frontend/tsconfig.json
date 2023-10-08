@@ -3,15 +3,33 @@
     "target": "es5",
     "baseUrl": "./src",
     "paths": {
-      "@components/*": ["components/*"],
-      "@context/*": ["context/*"],
-      "@hooks/*": ["hooks/*"],
-      "@lib/*": ["lib/*"],
-      "@pages/*": ["pages/*"],
-      "@store/*": ["store/*"],
-      "@styles/*": ["styles/*"],
-      "@types/*": ["types/*"],
-      "@utils/*": ["utils/*"],
+      "@components/*": [
+        "components/*"
+      ],
+      "@context/*": [
+        "context/*"
+      ],
+      "@hooks/*": [
+        "hooks/*"
+      ],
+      "@lib/*": [
+        "lib/*"
+      ],
+      "@pages/*": [
+        "pages/*"
+      ],
+      "@store/*": [
+        "store/*"
+      ],
+      "@styles/*": [
+        "styles/*"
+      ],
+      "@types/*": [
+        "types/*"
+      ],
+      "@utils/*": [
+        "utils/*"
+      ],
     },
     "module": "commonjs",
     "jsx": "preserve",
@@ -29,7 +47,12 @@
     "noEmit": true,
     "incremental": true,
     "moduleResolution": "node",
-    "types": ["node", "jest", "@testing-library/jest-dom"],
+    "types": [
+      "node",
+      "jest",
+      "@testing-library/jest-dom",
+      "cypress"
+    ],
     "plugins": [
       {
         "name": "typescript-plugin-css-modules"
@@ -41,8 +64,11 @@
   "include": [
     "./pages/**/*",
     "./src/**/*",
+    "./cypress/**/*",
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "cypress.config.ts",
+    "cypress",
   ]
 }
