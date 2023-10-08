@@ -3,28 +3,30 @@ import { useQuery } from '@tanstack/react-query';
 
 import { Email, LocalPhone, LocationOnOutlined } from '@mui/icons-material/';
 import { Chip, Stack, Paper } from '@mui/material';
-import axios from '@lib/api';
+import axios, { axiosPrivate } from '@lib/api';
 import NavbarLayout from '@components/layout/navBarLayout/';
 import Filter from '../components/jobs/Filter';
 import SearchBar from '../components/jobs/SearchBar';
 import PageNotFound from './404';
 
-function Jobs() {
-  const jobsQuery = useQuery({
-    queryKey: ['jobs'],
-    queryFn: async () => {
-      const res = await axios.get('/user/getjobs/')
-      return res.data;
-    }
-  });
-  const { isLoading, error, data } = jobsQuery;
-  if (isLoading) return <h1>Loading...</h1>
+function Jobs({ data, error }) {
+  // function Jobs() {
+  // const jobsQuery = useQuery({
+  //   queryKey: ['jobs'],
+  //   queryFn: async () => {
+  //     const res = await axios.get('/user/getjobs/')
+  //     return res.data;
+  //   }
+  // });
+  // const { isLoading, error, data } = jobsQuery;
+  // if (isLoading) return <h1>Loading...</h1>
   if (error) return <PageNotFound />
+  const { ads } = data;
   return (
     <div className="my-5 mx-auto max-w-screen-xl">
       <Stack direction="row" spacing={"20px"}>
         <Filter />
-        <JobsList jobs={data.ads} />
+        <JobsList jobs={ads} />
       </Stack>
     </div>
   );
@@ -101,6 +103,26 @@ const JobBox = ({ _id, description, title, company, location, email, phone }: Jo
 }
 
 export default Jobs;
+
+export const getServerSideProps = async() => {
+  try{
+    const res = await axiosPrivate.get('/user/getjobs')
+    return {
+      props: {
+        data: res?.data,
+        error: false,
+      }
+    }
+  } catch(e){
+    console.log(e)
+    return {
+      props: {
+        data: {},
+        error: true,
+      }
+    }
+  }
+}
 
 Jobs.getLayout = function getLayout(page: ReactElement){
   return <NavbarLayout>{page}</NavbarLayout>
