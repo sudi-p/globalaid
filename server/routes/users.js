@@ -17,7 +17,7 @@ import { verifyToken, checkIfAuthenticated } from "../middleware/auth.js";
 const router = express.Router();
 
 router.get("/getuser/", verifyToken, getUser);
-router.get("/gettoprentalsjobs/", verifyToken, getTopRentalsJobs);
+router.get("/gettoprentalsjobs/", checkIfAuthenticated, getTopRentalsJobs);
 router.get("/getjobs/",checkIfAuthenticated, getJobs);
 router.get("/getrentals/",checkIfAuthenticated, getRentals);
 router.get("/createad/", verifyToken, createAd);

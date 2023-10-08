@@ -84,7 +84,7 @@ export const getTopRentalsJobs = async(req, res) => {
           jobType: "part-time"
       }
   ];
-  return res(201).json({topJobs, topRentals})
+  return res.status(201).json({topJobs, topRentals})
   } catch(err){
     res.status(500).json({message: err.message})
   }
