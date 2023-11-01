@@ -22,91 +22,90 @@ export const getUser = async (req, res) => {
   }
 };
 
-export const getTopRentalsJobs = async(req, res) => {
-  try{
-    
+export const getTopRentalsJobs = async (req, res) => {
+  try {
     const topRentals = [
       {
-          id: "63f45ba2631adf1b0a35b94f",
-          title: "2 Bedroom Hall Kitchen Apartment for rent",
-          rent: 2500,
-          image: "https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/76900a54-e2ed-435e-9dd4-6d9b702149cd.webp",
+        id: "63f45ba2631adf1b0a35b94f",
+        title: "2 Bedroom Hall Kitchen Apartment for rent",
+        rent: 2500,
+        image: "https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/76900a54-e2ed-435e-9dd4-6d9b702149cd.webp",
       },
       {
-          id: "63f45ba2631adfg1b0a35b94f",
-          title: "2 Bedroom Hall Kitchen Apartment for rent",
-          rent: 1000,
-          image: "https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/ae4fa65c-749d-41a7-920f-6956eab4c138.webp",
+        id: "63f45ba2631adfg1b0a35b94f",
+        title: "2 Bedroom Hall Kitchen Apartment for rent",
+        rent: 1000,
+        image: "https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/ae4fa65c-749d-41a7-920f-6956eab4c138.webp",
       },
       {
-          id: "63f45ba2ertv1adf1b0a35b94f",
-          title: "2 Bedroom Hall Kitchen Apartment for rent",
-          rent: 3500,
-          image: "https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/e12e3117-3e56-4f7c-888a-761165979e2d.webp",
+        id: "63f45ba2ertv1adf1b0a35b94f",
+        title: "2 Bedroom Hall Kitchen Apartment for rent",
+        rent: 3500,
+        image: "https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/e12e3117-3e56-4f7c-888a-761165979e2d.webp",
       },
       {
-          id: "63f45ba234rfadf1b0a35b94f",
-          title: "1 Bedroom Hall Kitchen Apartment for rent",
-          rent: 2800,
-          image: "https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/8e3e4e55-83e1-4e03-b2f9-89c86b0bdcb9.webp",
+        id: "63f45ba234rfadf1b0a35b94f",
+        title: "1 Bedroom Hall Kitchen Apartment for rent",
+        rent: 2800,
+        image: "https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/8e3e4e55-83e1-4e03-b2f9-89c86b0bdcb9.webp",
       }
-  ];
-  const topJobs = [
+    ];
+    const topJobs = [
       {
-          id: "63f45ba2631adf1b0a35b94f",
-          title: "Cleaner",
-          salary: 16,
-          location: "Toronto",
-          description: "We are seeking professional Waiter / Waitress with fine dining experience. This is a very important role for us and we rely heavily on our serving staff. They manage the pulse of the dining room and ensure patrons have a memorable dining experience.",
-          jobType: "part-time"
+        id: "63f45ba2631adf1b0a35b94f",
+        title: "Cleaner",
+        salary: 16,
+        location: "Toronto",
+        description: "We are seeking professional Waiter / Waitress with fine dining experience. This is a very important role for us and we rely heavily on our serving staff. They manage the pulse of the dining room and ensure patrons have a memorable dining experience.",
+        jobType: "part-time"
       },
       {
-          id: "63f45ba2631adfg1b0a35b94f",
-          title: "Waiter",
-          salary: 17,
-          location: "Toronto",
-          description: "This position is responsible for cleaning and sanitizing processing equipment in a safe manner.",
-          jobType: "part-time"
+        id: "63f45ba2631adfg1b0a35b94f",
+        title: "Waiter",
+        salary: 17,
+        location: "Toronto",
+        description: "This position is responsible for cleaning and sanitizing processing equipment in a safe manner.",
+        jobType: "part-time"
       },
       {
-          id: "63f45ba2ertv1adf1b0a35b94f",
-          title: "Bairsta",
-          salary: 20,
-          location: "Toronto",
-          description: "We are seeking professional Waiter / Waitress with fine dining experience. This is a very important role for us and we rely heavily on our serving staff. They manage the pulse of the dining room and ensure patrons have a memorable dining experience.",
-          jobType: "part-time"
+        id: "63f45ba2ertv1adf1b0a35b94f",
+        title: "Bairsta",
+        salary: 20,
+        location: "Toronto",
+        description: "We are seeking professional Waiter / Waitress with fine dining experience. This is a very important role for us and we rely heavily on our serving staff. They manage the pulse of the dining room and ensure patrons have a memorable dining experience.",
+        jobType: "part-time"
       },
       {
-          id: "63f45ba234rfadf1b0a35b94f",
-          title: "Host",
-          salary: 25,
-          location: "Toronto",
-          description: "We are seeking professional Waiter / Waitress with fine dining experience. This is a very important role for us and we rely heavily on our serving staff. They manage the pulse of the dining room and ensure patrons have a memorable dining experience.",
-          jobType: "part-time"
+        id: "63f45ba234rfadf1b0a35b94f",
+        title: "Host",
+        salary: 25,
+        location: "Toronto",
+        description: "We are seeking professional Waiter / Waitress with fine dining experience. This is a very important role for us and we rely heavily on our serving staff. They manage the pulse of the dining room and ensure patrons have a memorable dining experience.",
+        jobType: "part-time"
       }
-  ];
-  return res.status(201).json({topJobs, topRentals})
-  } catch(err){
-    res.status(500).json({message: err.message})
+    ];
+    return res.status(201).json({ topJobs, topRentals })
+  } catch (err) {
+    res.status(500).json({ message: err.message })
   }
 }
 
 export const getJobs = async (req, res) => {
   try {
     let filter = { available: true, adType: "job" };
-    if (req.isAuthenticated){
+    if (req.isAuthenticated) {
       filter.user = req.user;
     }
     const ads = await Ad.find(filter);
-    let data = await Promise.all(ads.map(async(ad) => {
-      try{
-        const job = await Job.findOne({ad: ad})
-        if (!job){
+    let data = await Promise.all(ads.map(async (ad) => {
+      try {
+        const job = await Job.findOne({ ad: ad })
+        if (!job) {
           throw new Error("Job not found")
         }
         const { company } = job;
-        return {...ad.toObject(), company}
-      } catch (error){
+        return { ...ad.toObject(), company }
+      } catch (error) {
         return null;
       }
     }))
@@ -238,42 +237,45 @@ export const getMyAd = async (req, res) => {
   }
 };
 //createAd
-export const createAd = async (req, res) => {
+export const getCreateAd = async (req, res) => {
   try {
-    let requestMethod = req.method;
-    if (requestMethod === "GET") {
-      const ad = await Ad.findOne({ _id: req.query.adId }).lean();
-      const adType = ad.adType;
-      let isComplete;
-      if (adType == "rent") {
-        const rent = Rental.findOne({ ad: ad._id });
-        isComplete = rent.length > 0;
-      } else {
-        const job = Job.findOne({ ad: ad._id });
-        isComplete = job.length > 0;
-      }
-      if (ad.available || isComplete)
-        res.status(404).json({ message: "Unautorized Content" });
-      else {
-        let createAdLevel = 2;
-        if (ad.adType === "rent") {
-          const rent = await Rental.findOne({ ad: ad._id });
-          if (rent) createRentalLevel = 3;
-        }
-        ad.createAdLevel = createAdLevel;
-        res.status(201).json({ ad });
-      }
+    const ad = await Ad.findOne({ _id: req.query.adId }).lean();
+    const adType = ad.adType;
+    let isComplete;
+    if (adType == "rent") {
+      const rent = Rental.findOne({ ad: ad._id });
+      isComplete = rent.length > 0;
     } else {
-      const { title, description, adType } = req.body;
-      const ad = new Ad({
-        user: req.user,
-        title,
-        description,
-        adType,
-      });
-      await ad.save();
-      res.status(201).json({ ad, message: "Ad Posted" });
+      const job = Job.findOne({ ad: ad._id });
+      isComplete = job.length > 0;
     }
+    if (ad.available || isComplete)
+      res.status(404).json({ message: "Unautorized Content" });
+    else {
+      let createAdLevel = 2;
+      if (ad.adType === "rent") {
+        const rent = await Rental.findOne({ ad: ad._id });
+        if (rent) createRentalLevel = 3;
+      }
+      ad.createAdLevel = createAdLevel;
+      res.status(201).json({ ad });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const postCreateAd = async (req, res) => {
+  try {
+    const { title, description, adType } = req.body;
+    const ad = new Ad({
+      user: req.user,
+      title,
+      description,
+      adType,
+    });
+    await ad.save();
+    res.status(201).json({ ad, message: "Ad Posted" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -335,11 +337,11 @@ export const getChats = async (req, res) => {
       .populate('lastMessage.sender')
       .populate('lastMessage.receipient')
     const chatsPromise = conversations.map(async (conversation) => {
-      let { lastMessage, ad, _id:chatId } = conversation;
+      let { lastMessage, ad, _id: chatId } = conversation;
       lastMessage = await lastMessage.populate(['sender', 'recipient'])
-      const { sender, recipient} = lastMessage;
+      const { sender, recipient } = lastMessage;
       let client;
-      if (lastMessage.sender._id.toString() === req.user.id){
+      if (lastMessage.sender._id.toString() === req.user.id) {
         client = `${recipient.firstName} ${recipient.lastName}`;
       } else {
         client = `${sender.firstName} ${sender.lastName}`
@@ -347,10 +349,10 @@ export const getChats = async (req, res) => {
       return {
         'title': ad.title,
         'lastMessage': lastMessage.content,
-        'client':  client,
+        'client': client,
         chatId,
       }
-      
+
     })
     const chats = await Promise.all(chatsPromise)
     return res.status(201).json(chats)
@@ -392,11 +394,11 @@ export const getIndividualChat = async (req, res) => {
 }
 
 export const sendChatMessage = async (req, res) => {
-  try{
+  try {
     const { chatId, chatText } = req.body;
-    const conversation = await Conversation.findOne({_id: chatId}).populate('participants')
+    const conversation = await Conversation.findOne({ _id: chatId }).populate('participants')
     const participants = conversation.participants;
-    
+
     const recipient = participants.find((participant) => participant._id.toString() !== req.user.id)
     const sender = participants.find((participant) => participant._id.toString() === req.user.id)
     const message = new Message({
@@ -408,9 +410,9 @@ export const sendChatMessage = async (req, res) => {
     message.save()
     conversation.lastMessage = message;
     conversation.save()
-    return res.status(201).json({msg: "message sent"})
+    return res.status(201).json({ msg: "message sent" })
   }
-  catch(err){
-    return res.status(500).json({msg: err.message})
+  catch (err) {
+    return res.status(500).json({ msg: err.message })
   }
 }

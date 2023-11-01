@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const AdSchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, ref: "User"},
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     title: {
       type: String,
       required: true,
@@ -36,20 +36,15 @@ const AdSchema = new mongoose.Schema(
     timeStamps: true,
   }
 );
-AdSchema.methods.isComplete = async function() {
-  try{
-    const adType = this.adType;
-    if (adType == "rent"){
-      const rents = await Rental.find({ad: this._id});
-      return rents.length>0
-    } else {
-      const jobs = await Job.find({ad: this._id})
-      return jobs.length>0
-    }
-  } catch(err){
-    console.log(err)
+AdSchema.methods.isComplete = async function () {
+  const adType = this.adType;
+  if (adType == "rent") {
+    const rents = await Rental.find({ ad: this._id });
+    return rents.length > 0
+  } else {
+    const jobs = await Job.find({ ad: this._id })
+    return jobs.length > 0
   }
-  
 }
 
 const JobSchema = new mongoose.Schema(
@@ -70,7 +65,7 @@ const JobSchema = new mongoose.Schema(
       required: true,
       min: 2,
       max: 50,
-    },    
+    },
     salary: String,
     jobSite: {
       type: String,

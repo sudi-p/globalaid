@@ -6,7 +6,7 @@ import AuthContext from "@context/AuthProvider";
 const useAxiosPrivate = () => {
     const refresh = useRefreshToken();
     const { auth } = useContext(AuthContext);
-
+    
     useEffect(() => {
         const requestIntercept = axiosPrivate.interceptors.request.use(
             request => {

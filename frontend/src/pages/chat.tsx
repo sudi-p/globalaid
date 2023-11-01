@@ -1,7 +1,7 @@
 import React, { useState, lazy, ReactNode } from "react";
 import { Stack } from '@mui/material';
 import { useQuery } from "@tanstack/react-query";
-import getClient from "@lib/api";
+import { axiosPrivate } from "@lib/api";
 import PageNotFound from "./404";
 import NavbarLayout from "@components/layout/navBarLayout";
 const IndividualChat = lazy(() => import("../components/chat/IndividualChat"));
@@ -10,10 +10,10 @@ import styles from '../styles/Chats.module.scss';
 export default function Chats() {
 	const [chatId, setChatId] = useState('');
 	const { isLoading, error, data } = useQuery({
-		queryKey: ["chat"],
+		queryKey: ["chats"],
 		queryFn: async () => {
-			const res = await getClient().get('/user/getchats')
-			return res.data
+			const res = await axiosPrivate.get('/user/getchats')
+			return res.data;
 		},
 		refetchInterval: 5000,
 	});
@@ -27,7 +27,7 @@ export default function Chats() {
 				<ChatList chat={chat} key={chat.chatId} setChatId={setChatId} />
 			))}
 			</div>
-			<IndividualChat chatId={chatId}/>
+			
 		</Stack>
 	)
 }

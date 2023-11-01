@@ -26,7 +26,4 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         </AuthContext.Provider>
     )
 }
-// console.log(AuthContext)
-// const useAuthContext = useContext(AuthContext)
-
 export default AuthContext;

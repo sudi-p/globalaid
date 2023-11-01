@@ -58,7 +58,7 @@ const Login = () => {
         })
       const accessToken = res?.data?.accessToken;
       const user = res?.data?.user;
-      await addAuthToStorage(res?.data?.user)
+      await addAuthToStorage(res?.data)
       setAuth({ user, accessToken})
       fetchUserSuccess(user)
       router.push("/");

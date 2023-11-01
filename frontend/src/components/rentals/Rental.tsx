@@ -8,7 +8,7 @@ import {
 	Kitchen as KitchenIcon,	Dining as DiningIcon, LocalLaundryService as LocalLaundryServiceIcon, 	Pets as PetIcon, AirportShuttle as AirportShuttleIcon, Bed as BedIcon, Bathtub as BathtubIcon, AspectRatio as AspectRatioIcon,
 } from '@mui/icons-material/';
 
-type RentalProps = {
+export type RentalProps = {
 	title: string,
 	price: string,
 	priceNegotiable: string,
@@ -49,12 +49,12 @@ const Rental = (props: RentalProps) => {
 						className="font-semibold tracking-wide"
 						gutterBottom
 					>{title}</Typography>
-					<Stack alignItems="center" direction="row" className="text-gray-500 mb-5">
+					<div className="flex items-center text-gray-500 mb-5">
 						<KeyValue icon={<ApartmentIcon />} text={type}/>&#8226;
 						<KeyValue icon={<BedIcon />} text={`${bedrooms} beds`}/>&#8226;
 						<KeyValue icon={<BathtubIcon />} text={`${bathrooms} baths`}/>&#8226;
 						<KeyValue icon={<AspectRatioIcon />} text={size}/>
-					</Stack>
+					</div>
 				</div>
 				<div className="text-right">
 					<Typography fontWeight="bold" color="primary" variant="h6" >${price}</Typography>

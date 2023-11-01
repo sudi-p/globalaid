@@ -3,7 +3,8 @@ import {
   getUser,
   getTopRentalsJobs,
   createJob,
-  createAd,
+  getCreateAd,
+  postCreateAd,
   getJobs,
   getRentals,
   getMyAds,
@@ -18,10 +19,10 @@ const router = express.Router();
 
 router.get("/getuser/", verifyToken, getUser);
 router.get("/gettoprentalsjobs/", getTopRentalsJobs);
-router.get("/getjobs/",checkIfAuthenticated, getJobs);
+router.get("/getjobs/",verifyToken, getJobs);
 router.get("/getrentals/",checkIfAuthenticated, getRentals);
-router.get("/createad/", verifyToken, createAd);
-router.post("/createad/", verifyToken, createAd);
+router.get("/createad/", verifyToken, getCreateAd);
+router.post("/createad/", verifyToken, postCreateAd);
 router.post("/createjob/", verifyToken, createJob);
 router.get("/getmyads/", verifyToken, getMyAds);
 router.get("/getmyad/", verifyToken, getMyAd);

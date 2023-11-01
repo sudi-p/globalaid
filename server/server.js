@@ -62,14 +62,12 @@ const io = new Server(httpServer, {
     }
 })
 io.on("connection", (socket) => {
-    console.log("Nice! connected to socket.io")
     socket.on('setup', (userData)=>{
         socket.join(userData._id)
         socket.emit('connected');
     })
     socket.on('join chat', (room) => {
         socket.join(room);
-        console.log("User joined Room: "+room)
     })
 })
 //Mongoose Setup

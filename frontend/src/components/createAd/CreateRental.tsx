@@ -72,29 +72,6 @@ const CreateRental = ({ adId}: CreateRentalProps) => {
 }
 export default CreateRental;
 
-// const FileUpload = (props) => {
-//     const [images, setImages] = useState([]);
-//     const [imageURLs, setImageURLs] = useState([]);
-//     useEffect(() => {
-//         if (images.length < 1) return;
-//         const newImageUrls = [];
-//         images.forEach(image => newImageUrls.push(URL.createObjectURL(image)));
-//         setImageURLs(newImageUrls)
-//     }, [images])
-//     return (
-//         <div>
-//             File Upload
-//             <input type="file" multiple accept="image/*" onChange={(e) => setImages([...e.target.files])} />
-//             {imageURLs.map(imageSrc => <img src={imageSrc} alt="rental images" />)}
-//             <Button
-//                 variant="outlined"
-//                 size="large"
-//                 onClick={() => console.log(false)}
-//             >Save for Later</Button>
-//         </div>
-//     )
-// }
-
 const DetailedInformation = () => {
     const { register, handleSubmit, formState: { errors }, } = useForm({
         resolver: yupResolver(PostRentalSchema),
@@ -108,7 +85,6 @@ const DetailedInformation = () => {
     const [phone, setPhone] = useState('')
     const postRental = (e) => {
         e.preventDefault()
-        console.log("Hello")
     }
     // useEffect(() => {
     //     navigator.geolocation.getCurrentPosition((position) => {
@@ -118,7 +94,6 @@ const DetailedInformation = () => {
     //         });
     //     });
     // }, []);
-    // console.log(location)
     return (
         <form onSubmit={(handleSubmit(postRental))}>
             <Stack spacing={5}>
