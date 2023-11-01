@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useQueryClient, useMutation, useQuery } from '@tanstack/react-query';
-import getClient from '../../lib/api';
+import getClient, { axiosPrivate } from '../../lib/api';
 import { Stack, TextField} from '@mui/material';
 import { Send as SendIcon } from '@mui/icons-material';
 import PageNotFound from '../../pages/404';
@@ -24,8 +24,7 @@ export default function IndividualChat({chatId}: IndividualChatProps) {
     const { data, isLoading, error } = useQuery({
         queryKey: ['chats', chatId],
         queryFn: async () => {
-            console.log("Hello from fetching individual chat")
-            const res = await getClient().get('/user/getindividualchat', {
+            const res = await axiosPrivate.get('/user/getindividualchat', {
                 params: { chatId: chatId }
             });
             return res.data;

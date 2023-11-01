@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import getClient from '@lib/api';
+import getClient, { axiosPrivate} from '@lib/api';
 import axios from 'axios';
 
 const useAxiosFetch = (dataUrl: string) => {
@@ -7,13 +7,12 @@ const useAxiosFetch = (dataUrl: string) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false)
   useEffect(() => {
-    console.log("Hello")
     let isMounted = true;
     const source = axios.CancelToken.source();
     const fetchData = async (url: string) => {
       setIsLoading(true);
       try {
-        const res = await getClient.get(url,{
+        const res = await axiosPrivate.get(url,{
           cancelToken: source.token
         })
         if (isMounted){

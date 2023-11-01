@@ -1,36 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { ReactElement } from 'react';
 import { useRouter } from 'next/router';
-import { useDispatch, useSelector } from 'react-redux';
-import { AxiosError, AxiosResponse } from 'axios';
-import getClient from '../../../lib/api';
-import { fetchAdSuccess, clearFetchAd } from '@store/slices/createAdSlice';
+import { axiosPrivate } from '../../../lib/api';
 import NavbarLayout from '@components/layout/navBarLayout';
 import CreateJob from '../../../components/createAd/CreateJob';
 import CreateRental from '../../../components/createAd/CreateRental';
-import { RootState } from '@store/store';
+import { GetServerSideProps } from 'next';
 
-export default function CreateAd() {
+export default function CreateAd({ createAdData }) {
   const router = useRouter();
   const { query } = router;
   let { adId } = query;
-  const createAdData = useSelector((state: RootState) => state.createAd)
-  const dispatch = useDispatch();
-  useEffect(() => {
-    if (adId) {
-      getClient()
-        .get('/user/createad/', {
-          params: { adId: adId }
-        })
-        .then((res: AxiosResponse) => dispatch(fetchAdSuccess(res.data.ad)))
-        .catch((err: AxiosError) => console.log(err))
-    }
-    return () => {
-      dispatch(clearFetchAd);
-    }
-  }, [adId]);
-  const { adType, adTitle } = createAdData;
   let display = <div>Loading</div>;
   adId = Array.isArray(adId) ? adId[0] : adId || '';
+
+  const { adType, title:adTitle } = createAdData;
   if (adType === "rent") display = <CreateRental adId={adId} />
   if (adType === "job") display = <CreateJob adId={adId} />
   return (
@@ -41,6 +24,25 @@ export default function CreateAd() {
   )
 }
 
-CreateAd.getLayout = function getLayout(page) {
+export const getServerSideProps: GetServerSideProps = async(context) => {
+  try{
+    const { params } = context;
+    const { adId } = params;
+    const response = await axiosPrivate.get('/user/createad/', {
+      params: { adId: adId }
+    })
+    return {
+      props: {
+        createAdData: response?.data?.ad
+      }
+    }
+  } catch(e){
+    return{
+      notFound: true,
+    }
+  }
+}
+
+CreateAd.getLayout = function getLayout(page: ReactElement) {
   return <NavbarLayout>{page}</NavbarLayout>
 }

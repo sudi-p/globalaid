@@ -44,8 +44,9 @@ export function NavBar() {
   const router = useRouter();
   useEffect(()=> {
     let user = getUserFromStorage();
+    console.log(user)
     if (user){
-      setEmail(user.email)
+      setEmail(user?.user?.email)
     }
   }, []);
   const [expandMenu, setExpandMenu] = useState(false);

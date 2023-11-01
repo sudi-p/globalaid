@@ -10,13 +10,21 @@ type UserInterface = {
 
 }
 
-export const addAuthToStorage = (user) => {
-  setCookie(CookieKeys.USER, user);
+export const addAuthToStorage = (data) => {
+  setCookie(CookieKeys.USER, data);
 }
 
 export const getUserFromStorage = () => {
   let user = getCookie(CookieKeys.USER);
   if (user) return JSON.parse(user);
+}
+
+export const getAccessToken = () => {
+  let user = getCookie(CookieKeys.USER);
+  if (user){
+    user = JSON.parse(user);
+    return user;
+  }
 }
 
 export const clearAuthFromStorage = () => {

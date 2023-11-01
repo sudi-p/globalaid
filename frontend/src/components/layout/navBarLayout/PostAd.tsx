@@ -7,7 +7,7 @@ import {
 import { Home as HomeIcon, Engineering as EngineeringIcon, Close as CloseIcon } from '@mui/icons-material';
 import { Dialog, AppBar, Toolbar, IconButton, Typography, Slide } from '@mui/material/';
 import { TransitionProps } from '@mui/material/transitions';
-import getClient from '@lib/api';
+import getClient, { axiosPrivate } from '@lib/api';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -50,20 +50,16 @@ export default function PostAd({ handleClose }: PostAdProps) {
     const { register, handleSubmit, formState: { errors }, } = useForm({
         resolver: yupResolver(PostAdSchema),
     });
-    const postAd = () => {
-        getClient()
-            .post('/user/createad/', {
-                title,
-                description,
-                adType
-            })
-            .then((res: AxiosResponse) => {
-                console.log(res.data.ad)
-                const { _id } = res.data.ad;
-                router.push(`/myads/create-ad/${_id}`);
-                handleClose();
-            })
-            .catch((err: AxiosError) => console.log(err))
+    const postAd = async() => {
+        const res = await axiosPrivate.post('/user/createad/', {
+            title,
+            description,
+            adType
+        })
+        const { _id } = res?.data.ad;
+        router.push(`/myads/create-ad/${_id}`);
+        handleClose();
+
     }
     useEffect(() => {
         return () => {
@@ -80,7 +76,7 @@ export default function PostAd({ handleClose }: PostAdProps) {
         >
             <AppBar sx={{ position: 'relative' }}>
                 <Toolbar>
-                    <Logo color="white"/>
+                    <Logo color="white" />
                     <Typography
                         sx={{ ml: 2, flex: 1, textAlign: "center" }}
                         variant="h6"

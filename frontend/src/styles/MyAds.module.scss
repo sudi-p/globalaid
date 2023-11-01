@@ -1,8 +1,5 @@
 @import './base.module.scss';
-.myAds{
-    width: 700px;
-    margin: auto;
-}
+
 .ad{
     padding: 20px;
     border: 1px solid $gray;
@@ -11,11 +8,4 @@
 }
 .adIcon{
     font-size: 50px;
-}
-.completePostingAd{
-    text-decoration: none;
-    color: $primary;
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
 }

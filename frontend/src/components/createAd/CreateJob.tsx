@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import getClient from '../../lib/api';
+import { axiosPrivate } from '../../lib/api';
 import {
   Button, Stack, TextField, Box,
   Stepper, Step, StepLabel, InputAdornment,
@@ -48,25 +48,20 @@ const CreateJob = ({ adId }: CreateJobProps) => {
   const [phone, setPhone] = useState('');
   const [isOwner, setIsOwner] = useState(false);
 
-  const createJob = () => {
-    getClient()
-      .post('/user/createjob/', {
-        adId: adId,
-        company,
-        location,
-        jobType,
-        salary,
-        jobSite,
-        email,
-        phone,
-        isOwner
-      })
-      .then((res: AxiosResponse) => {
-        console.log(res.data)
-        const jobId = res.data.jobId;
-        router.push(`/myads/${jobId}`)
-      })
-      .catch((err: AxiosError) => console.log(err))
+  const createJob = async () => {
+    const res = await axiosPrivate.post('/user/createjob/', {
+      adId: adId,
+      company,
+      location,
+      jobType,
+      salary,
+      jobSite,
+      email,
+      phone,
+      isOwner
+    })
+    const jobId = res.data.jobId;
+    router.push(`/myads/${jobId}`)
   }
   return (
     <form onSubmit={(handleSubmit(createJob))}>

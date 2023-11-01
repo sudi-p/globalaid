@@ -47,7 +47,7 @@ export const login = async (req, res) => {
         const accessToken = jwt.sign(
             { userId: user._id },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: 60 * 60 * 1000 }
+            { expiresIn: '15s'}
         );
         const refreshToken = jwt.sign(
             { userId: user._id },
@@ -57,7 +57,7 @@ export const login = async (req, res) => {
         // Saving refreshToken
         user.refreshToken = refreshToken;
         await user.save();
-        res.cookie('jwt', refreshToken, {
+        res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV !== 'development',
             sameSite: 'strict',
@@ -72,8 +72,8 @@ export const login = async (req, res) => {
 
 export const refresh = async (req, res) => {
     const cookies = req.cookies;
-    if (!cookies?.jwt) return res.sendStatus(401);
-    const refreshToken = cookies.jwt;
+    if (!cookies?.refreshToken) return res.sendStatus(401);
+    const refreshToken = cookies.refreshToken;
     const foundUser = await User.findOne({ refreshToken }).exec();
     if (!foundUser) return res.sendStatus(403); //Forbidden 
     // evaluate jwt 
