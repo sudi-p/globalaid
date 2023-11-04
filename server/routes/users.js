@@ -2,13 +2,15 @@ import express from "express";
 import {
   getUser,
   getTopRentalsJobs,
-  createJob,
-  getCreateAd,
-  postCreateAd,
   getJobs,
   getRentals,
   getMyAds,
   getMyAd,
+  createJob,
+  createRental,
+  getCreateAd,
+  skipUploadRentalPhotos,
+  postAd,
   getIndividualChat,
   getChats,
   sendChatMessage,
@@ -22,8 +24,10 @@ router.get("/gettoprentalsjobs/", getTopRentalsJobs);
 router.get("/getjobs/",verifyToken, getJobs);
 router.get("/getrentals/",checkIfAuthenticated, getRentals);
 router.get("/createad/", verifyToken, getCreateAd);
-router.post("/createad/", verifyToken, postCreateAd);
+router.post("/postad/", verifyToken, postAd);
 router.post("/createjob/", verifyToken, createJob);
+router.post("/createrental/", verifyToken, createRental);
+router.post("/skipuploadrentalphotos", verifyToken, skipUploadRentalPhotos)
 router.get("/getmyads/", verifyToken, getMyAds);
 router.get("/getmyad/", verifyToken, getMyAd);
 router.get("/getchats", verifyToken, getChats);

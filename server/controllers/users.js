@@ -201,27 +201,7 @@ export const getRentals = async (req, res) => {
 export const getMyAds = async (req, res) => {
   try {
     let ads = await Ad.find({ user: req.user }).lean();
-    const newAdsPromise = ads.map(async (ad) => {
-      try {
-        const { _id: adId, adType } = ad;
-        let isComplete;
-        if (adType == "rent") {
-          const rents = await Rental.find({ ad: adId });
-          isComplete = rents.length > 0;
-        } else {
-          const jobs = await Job.find({ ad: adId });
-          isComplete = jobs.length > 0;
-        }
-        return {
-          ...ad,
-          isComplete,
-        };
-      } catch (err) {
-        res.status(500).json({ message: err.message });
-      }
-    });
-    const newAds = await Promise.all(newAdsPromise)
-    res.status(201).json({ ads: newAds });
+    res.status(201).json({ ads });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -230,8 +210,23 @@ export const getMyAds = async (req, res) => {
 //getMyAd
 export const getMyAd = async (req, res) => {
   try {
-    const ad = await Ad.findOne({ id: req.params.adId });
+    const { adId } = req.query;
+    let ad = await Ad.findOne({ _id: adId }).lean();
+    console.log(adId, ad)
+    if (!ad) res.sendStatus(401)
+    if (!ad.available) return res.sendStatus(401)
+    const adType = ad.adType;
+    if (adType == "job") {
+      const job = await Job.findOne({ ad: ad._id }).lean()
+      if (!job) throw new Error("Job Not Found")
+      ad = { ...ad, ...job }
+    } else {
+      const rental = await Rental.findOne({ ad: ad._id }).lean()
+      if (!rental) throw new Error("Rental Not Found")
+      ad = { ...ad, ...job }
+    }
     res.status(201).json({ ad });
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -240,34 +235,25 @@ export const getMyAd = async (req, res) => {
 export const getCreateAd = async (req, res) => {
   try {
     const ad = await Ad.findOne({ _id: req.query.adId }).lean();
+    if (ad.isComplete) throw new Error("Unauthorized Access")
     const adType = ad.adType;
-    let isComplete;
-    if (adType == "rent") {
-      const rent = Rental.findOne({ ad: ad._id });
-      isComplete = rent.length > 0;
-    } else {
-      const job = Job.findOne({ ad: ad._id });
-      isComplete = job.length > 0;
+    let createAdLevel = 1;
+    if (adType === "rent") {
+      const rental = await Rental.findOne({ ad: ad._id });
+      if (rental) createAdLevel = 2;
     }
-    if (ad.available || isComplete)
-      res.status(404).json({ message: "Unautorized Content" });
-    else {
-      let createAdLevel = 2;
-      if (ad.adType === "rent") {
-        const rent = await Rental.findOne({ ad: ad._id });
-        if (rent) createRentalLevel = 3;
-      }
-      ad.createAdLevel = createAdLevel;
-      res.status(201).json({ ad });
-    }
+    ad.createAdLevel = createAdLevel;
+    res.status(201).json({ ad });
   } catch (err) {
+    console.log(err)
     res.status(500).json({ message: err.message });
   }
 };
 
-export const postCreateAd = async (req, res) => {
+export const postAd = async (req, res) => {
   try {
     const { title, description, adType } = req.body;
+    if (!adType in ['job', 'rental']) res.sendStatus(401)
     const ad = new Ad({
       user: req.user,
       title,
@@ -296,35 +282,81 @@ export const createJob = async (req, res) => {
       isOwner,
     } = req.body;
     const jobs = await Job.find({ ad: adId });
-    if (jobs.length > 0) {
-      res.status(404).json({ message: "Unauthorized Access" });
-    } else {
-      const ad = await Ad.findByIdAndUpdate(
-        adId,
-        {
-          location,
-          email,
-          phone,
-          available: true,
-        },
-        { new: false }
-      );
-      const job = new Job({
-        ad,
-        company,
-        isOwner,
-        jobType,
-        salary,
-        jobSite,
-      });
-      await job.save();
-      res.status(201).json({ jobId: job._id, message: "Job Published" });
-    }
+    if (jobs.length > 0) res.status(401)
+    const ad = await Ad.findByIdAndUpdate(
+      adId,
+      {
+        location,
+        email,
+        phone,
+        complete: true,
+        available: true,
+      },
+      { new: false }
+    );
+    const job = new Job({
+      ad,
+      company,
+      isOwner,
+      jobType,
+      salary,
+      jobSite,
+    });
+    await job.save();
+    res.status(201).json({ jobId: job._id, message: "Job Published" });
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 //Create Rentals
+export const createRental = async (req, res) => {
+  try {
+    const { adId, bedRoom, washRoom, rent, rentalType, isOwner, email, phone, location } = req.body;
+    const rentals = await Rental.find({ ad: adId })
+    if (rentals.length > 0) res.sendStatus(401)
+    const ad = await Ad.findByIdAndUpdate(
+      adId,
+      {
+        location,
+        email,
+        phone,
+      },
+      { new: false }
+    );
+    const rental = new Rental({
+      ad: ad,
+      rent,
+      bedRoom,
+      washRoom,
+      rentalType,
+      isOwner,
+    })
+    await rental.save()
+    res.sendStatus(201)
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
+
+//Skip Upload Rental Photos
+export const skipUploadRentalPhotos = (req, res) => {
+  try {
+    const { adId } = req.body;
+    console.log(adId)
+    const ad = Ad.findByIdAndUpdate(
+      adId,
+      {
+        complete: true
+      },
+      { new: false })
+    if (!ad) res.status(404).json({ message: "Ad not found" })
+  } catch (err) {
+    res.sendStatus(500)
+  }
+}
+
 //Upload Rental Photos
 
 

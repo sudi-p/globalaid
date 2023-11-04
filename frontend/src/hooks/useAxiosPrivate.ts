@@ -1,17 +1,15 @@
 import { axiosPrivate } from "@lib/api";
 import { useContext, useEffect } from "react";
+import { getAccessToken } from "@utils/cookie-utils";
 import useRefreshToken from "./useRefreshToken";
-import AuthContext from "@context/AuthProvider";
 
 const useAxiosPrivate = () => {
-    const refresh = useRefreshToken();
-    const { auth } = useContext(AuthContext);
-    
+    const refresh = useRefreshToken(); 
     useEffect(() => {
         const requestIntercept = axiosPrivate.interceptors.request.use(
             request => {
                 if (!request.headers['Authorization']) {
-                    request.headers['Authorization'] = `Bearer ${auth?.accessToken}`;
+                    request.headers['Authorization'] = `Bearer ${getAccessToken()}`;
                 }
                 return request;
             }, (error) => Promise.reject(error)
@@ -34,7 +32,7 @@ const useAxiosPrivate = () => {
           axiosPrivate.interceptors.request.eject(requestIntercept);
           axiosPrivate.interceptors.response.eject(responseIntercept);
         }
-    }, [auth, refresh])
+    }, [refresh])
 
     return axiosPrivate;
 }

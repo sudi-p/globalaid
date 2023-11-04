@@ -1,22 +1,41 @@
-import React, { useEffect } from 'react';
+import React, { ReactElement, useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { axiosPrivate } from "../../lib/api";
-import { AxiosError, AxiosResponse } from 'axios';
+import PageNotFound from '@pages/404';
+import NavbarLayout from '@components/layout/navBarLayout';
+import { useQuery } from '@tanstack/react-query';
 
 export default function MyAd() {
-    const router = useRouter();
-    const { query } = router;
-    const { adId } = query;
-    useEffect(() => {
-        const res = axiosPrivate.get('/user/getad', {
-            params: {
-                adId: adId
-            }
-        })
-    }, [])
-    return (
-        <div>
-            Hello this is ad
-        </div>
-    )
+  const { query } = useRouter();
+  const { adId } = query;
+  console.log("Hello")
+  console.log("adId is what", adId)
+  const { data, error, isLoading } = useQuery({
+    queryKey: ["myads", "adId"],
+    queryFn: async () => {
+      const res = await axiosPrivate.get('/user/getmyad/', {
+        params: {
+          adId: adId,
+        }
+      })
+      return res.data;
+    },
+    enabled: !!adId
+  })
+
+  if (error) return <PageNotFound />
+  if (isLoading) return <div>Loading...</div>
+  const { ad: { title, description, email, phone, company } } = data;
+  return (
+    <div className="max-w-screen-xl m-auto p-5">
+      <div className="text-3xl">{title}</div>
+      {description}
+      {phone} | {email} | {phone}
+      <div>{company}</div>
+    </div>
+  )
+}
+
+MyAd.getLayout = function getLayout(page: ReactElement) {
+  return <NavbarLayout>{page}</NavbarLayout>
 }

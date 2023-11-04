@@ -25,7 +25,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import AuthLayout from '@components/layout/authLayout/AuthLayout';
 import { RootState } from "@store/store";
-import AuthContext from '@context/AuthProvider';
 import { addAuthToStorage } from '@utils/cookie-utils';
 
 const LoginSchema = yup.object().shape({
@@ -39,7 +38,6 @@ const LoginSchema = yup.object().shape({
 
 const Login = () => {
   const router = useRouter();
-  const { setAuth } = useContext(AuthContext);
   const [showPassword, setShowPassword] = React.useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(LoginSchema),
@@ -56,10 +54,8 @@ const Login = () => {
         }, {
           withCredentials: true
         })
-      const accessToken = res?.data?.accessToken;
       const user = res?.data?.user;
       await addAuthToStorage(res?.data)
-      setAuth({ user, accessToken})
       fetchUserSuccess(user)
       router.push("/");
     } catch (err: unknown) {

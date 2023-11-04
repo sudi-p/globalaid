@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Stack } from '@mui/material';
 import { Home as HomeIcon, Engineering as EngineeringIcon } from '@mui/icons-material';
 import NavbarLayout from '@components/layout/navBarLayout';
-import { axiosPrivate } from '../lib/api';
+import { axiosPrivate } from '../../lib/api';
 import styles from '@styles/MyAds.module.scss';
 import { GetServerSidePropsContext } from 'next';
 
@@ -13,7 +13,7 @@ interface Ad {
     title: string;
     description: string;
     adType: string;
-    isComplete: boolean;
+    complete: boolean;
     views: number;
     price: number;
     replies: number;
@@ -24,16 +24,6 @@ interface MyAdsProps {
 }
 
 export default function MyAds({ ads }: MyAdsProps) {
-    // const { data, isLoading, error } = useQuery({
-    //     queryKey: ["myads"],
-    //     queryFn: async () => {
-    //         const res = await useAxiosPrivate().get("/user/getmyads")
-    //         return res.data;
-    //     }
-    // })
-    // if (isLoading) return (<div>Loading..</div>)
-    // if (error) return <PageNotFound />
-    // const { ads } = data;
     return (
         <div className="max-w-screen-xl m-auto">
             MyAds
@@ -47,7 +37,7 @@ MyAds.getLayout = function getLayout(page: ReactElement) {
 }
 
 function MyAd({ ad }: { ad: Ad }) {
-    const { _id: adId, title, description, adType, isComplete, views, price, replies } = ad;
+    const { _id: adId, title, description, adType, complete, views, price, replies } = ad;
     return (
         <div className="relative p-5 border border-solid border-gray-300 mb-5">
             <Stack direction={"row"} alignItems="center" spacing={1}>
@@ -69,27 +59,28 @@ function MyAd({ ad }: { ad: Ad }) {
                     </div>
                 </div>
             </Stack>
-            {!isComplete && <Link href={`/myads/createad/${adId}`}><a className="no-underline text-green-500 absolute bottom-5 right-5">Complete Ad</a></Link>}
+            <Link href={complete ? `/myads/${adId}` : `/myads/createad/${adId}`}>
+                <a className="no-underline text-green-500 absolute bottom-5 right-5">
+                    {complete ? "View More " : "Complete Ad"}
+                </a>
+            </Link>
         </div>
     )
 }
 
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
     try {
-        // Parse the cookies from the request
+        console.log("getServerSideProps from myads")
         const cookies = parse(context.req.headers.cookie || '');
-
-        // Retrieve the access token from the cookies
         const config = {
             withCredentials: true,
             headers: {
                 Authorization: cookies?.user
                     ? `Bearer ${JSON.parse(cookies.user).accessToken}`
                     : undefined,
-                    Cookie: context?.req?.headers?.cookie
+                Cookie: context?.req?.headers?.cookie
             },
         };
-        // console.log("config",config)
         const res = await axiosPrivate.get('/user/getmyads', config);
         return {
             props: {
