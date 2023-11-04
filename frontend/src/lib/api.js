@@ -32,13 +32,19 @@ axiosPrivate.interceptors.request.use((request) => {
 axiosPrivate.interceptors.response.use(
   response => response,
   async (error) => {
-    const prevRequest = error?.config;
-    if (error?.response?.status === 403 && !prevRequest?._retry) {
-      prevRequest._retry = true;
-      const response = await axiosPrivate.get(`/auth/refresh/`, prevRequest.headers.Cookie && { headers : { cookie: prevRequest.headers.Cookie}});
+    const originalConfig = error.config;
+    if (error.message === 'Network Error') {
+      return new Error('Network Error');
+    }
+    if (error?.response?.status === 306 && !originalConfig._retry) {
+      return axiosInstance;
+    }
+    if (error?.response?.status === 403 && !originalConfig?._retry) {
+      originalConfig._retry = true;
+      const response = await axiosPrivate.get(`/auth/refresh/`, originalConfig.headers.Cookie && { headers : { cookie: originalConfig.headers.Cookie}});
       const newAccessToken = response?.data?.accessToken;
-      prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-      return axiosPrivate(prevRequest);
+      originalConfig.headers['Authorization'] = `Bearer ${newAccessToken}`;
+      return axiosPrivate(originalConfig);
     }
     return Promise.reject(error);
   }

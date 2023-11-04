@@ -5,7 +5,6 @@ import NextNProgress from 'nextjs-progressbar';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { AuthProvider } from '@context/AuthProvider';
 import '../styles/globals.css';
 
 const theme = createTheme({
@@ -29,11 +28,10 @@ const queryClient = new QueryClient()
 export default function MyApp({ Component, pageProps }) {
   const getLayout = Component.getLayout ?? ((page) => page);
   return (
-    <React.StrictMode>
+    // <React.StrictMode>
       <Suspense>
         <Provider store={store}>
           <QueryClientProvider client={queryClient}>
-            <AuthProvider>
               <ThemeProvider theme={theme}>
                 {getLayout(
                   <>
@@ -48,11 +46,10 @@ export default function MyApp({ Component, pageProps }) {
                 )}
               </ThemeProvider>
               <ReactQueryDevtools initialIsOpen={false} />
-            </AuthProvider>
           </QueryClientProvider>
         </Provider>
       </Suspense>
-    </React.StrictMode>
+    // </React.StrictMode>
   )
 };
 

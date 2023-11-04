@@ -59,9 +59,8 @@ const CreateJob = ({ adId }: CreateJobProps) => {
       email,
       phone,
       isOwner
-    })
-    const jobId = res.data.jobId;
-    router.push(`/myads/${jobId}`)
+    });
+    router.push(`/myads/${adId}`);
   }
   return (
     <form onSubmit={(handleSubmit(createJob))}>

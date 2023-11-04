@@ -51,13 +51,13 @@ export default function PostAd({ handleClose }: PostAdProps) {
         resolver: yupResolver(PostAdSchema),
     });
     const postAd = async() => {
-        const res = await axiosPrivate.post('/user/createad/', {
+        const res = await axiosPrivate.post('/user/postad/', {
             title,
             description,
             adType
         })
         const { _id } = res?.data.ad;
-        router.push(`/myads/create-ad/${_id}`);
+        router.push(`/myads/createad/${_id}`);
         handleClose();
 
     }

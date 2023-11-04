@@ -31,21 +31,16 @@ const AdSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    complete: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timeStamps: true,
   }
 );
-AdSchema.methods.isComplete = async function () {
-  const adType = this.adType;
-  if (adType == "rent") {
-    const rents = await Rental.find({ ad: this._id });
-    return rents.length > 0
-  } else {
-    const jobs = await Job.find({ ad: this._id })
-    return jobs.length > 0
-  }
-}
+
 
 const JobSchema = new mongoose.Schema(
   {
@@ -82,19 +77,26 @@ const JobSchema = new mongoose.Schema(
 const RentalSchema = new mongoose.Schema(
   {
     ad: { type: mongoose.Schema.Types.ObjectId, ref: "Ad" },
-    company: {
-      type: String,
+    bedRoom: {
+      type: Number,
       required: true,
-      min: 2,
-      max: 50,
+    },
+    rent: {
+      type: Number,
+      required: true,
+    },
+    washRoom: {
+      type: Number,
+      required: true,
+    },
+    rentalType: {
+      type: String,
+      enum: ['Condo', 'Apartment', 'House', 'Town House', 'Basement'],
+      requierd: true,
     },
     isOwner: {
       type: Boolean,
-      default: false,
-    },
-    available: {
-      type: Boolean,
-      default: true,
+      default: false
     },
   },
   {

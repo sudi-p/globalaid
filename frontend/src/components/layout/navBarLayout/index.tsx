@@ -16,9 +16,7 @@ import {
 import PostAd from './PostAd';
 import Footer from './Footer';
 import Logo from "@components/common/Logo";
-import { AxiosError, AxiosResponse } from "axios";
 import useAxiosPrivate from "@hooks/useAxiosPrivate";
-import AuthContext from "@context/AuthProvider";
 import { clearAuthFromStorage, getUserFromStorage } from "@utils/cookie-utils";
 
 type NavbarLayoutProps = {
@@ -40,11 +38,9 @@ export default function NavbarLayout({ children }: NavbarLayoutProps) {
 export function NavBar() {
   const axiosPrivate = useAxiosPrivate();
   const [email, setEmail] = useState("")
-  const { setAuth } = useContext(AuthContext)??{};
   const router = useRouter();
   useEffect(()=> {
     let user = getUserFromStorage();
-    console.log(user)
     if (user){
       setEmail(user?.user?.email)
     }
@@ -55,8 +51,6 @@ export function NavBar() {
     setOpenPostAdModal((prevOpenPostAdModal) => !prevOpenPostAdModal);
   };
   const logout = async () => {
-    setAuth({accessToken:"", user:{email: ""}});
-    setEmail("")
     clearAuthFromStorage();
     await axiosPrivate.post("/auth/logout/")
     router.push("/");
