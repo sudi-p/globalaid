@@ -71,15 +71,11 @@ function MyAd({ ad }: { ad: Ad }) {
 export const getServerSideProps = async (context: GetServerSidePropsContext) => {
     try {
         console.log("getServerSideProps from myads")
-        const cookies = parse(context.req.headers.cookie || '');
         const config = {
             withCredentials: true,
             headers: {
-                Authorization: cookies?.user
-                    ? `Bearer ${JSON.parse(cookies.user).accessToken}`
-                    : undefined,
                 Cookie: context?.req?.headers?.cookie
-            },
+            }
         };
         const res = await axiosPrivate.get('/user/getmyads', config);
         return {

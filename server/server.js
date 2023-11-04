@@ -44,8 +44,6 @@ const upload = multer({ storage });
 //middleware for cookies
 app.use(cookieParser());
 
-//Routes with files
-// app.post("/auth/register", upload.single("picture"), register);
 
 //Routes
 app.use("/api/auth", authRoutes)
