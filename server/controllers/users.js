@@ -212,9 +212,8 @@ export const getMyAd = async (req, res) => {
   try {
     const { adId } = req.query;
     let ad = await Ad.findOne({ _id: adId }).lean();
-    console.log(adId, ad)
     if (!ad) res.sendStatus(401)
-    if (!ad.available) return res.sendStatus(401)
+    if (!ad.complete) return res.sendStatus(401)
     const adType = ad.adType;
     if (adType == "job") {
       const job = await Job.findOne({ ad: ad._id }).lean()
@@ -223,11 +222,11 @@ export const getMyAd = async (req, res) => {
     } else {
       const rental = await Rental.findOne({ ad: ad._id }).lean()
       if (!rental) throw new Error("Rental Not Found")
-      ad = { ...ad, ...job }
+      ad = { ...ad, ...rental }
     }
     res.status(201).json({ ad });
-
   } catch (err) {
+    console.log(err)
     res.status(500).json({ message: err.message });
   }
 };
@@ -235,7 +234,7 @@ export const getMyAd = async (req, res) => {
 export const getCreateAd = async (req, res) => {
   try {
     const ad = await Ad.findOne({ _id: req.query.adId }).lean();
-    if (ad.isComplete) throw new Error("Unauthorized Access")
+    if (ad.complete) throw new Error("Unauthorized Access")
     const adType = ad.adType;
     let createAdLevel = 1;
     if (adType === "rent") {
@@ -341,18 +340,22 @@ export const createRental = async (req, res) => {
 }
 
 //Skip Upload Rental Photos
-export const skipUploadRentalPhotos = (req, res) => {
+export const skipUploadRentalPhotos = async(req, res) => {
   try {
     const { adId } = req.body;
-    console.log(adId)
-    const ad = Ad.findByIdAndUpdate(
+    console.log("adId", adId)
+    const ad = await Ad.findByIdAndUpdate(
       adId,
       {
         complete: true
       },
-      { new: false })
+      { new: false }
+    );
+    console.log(ad)
     if (!ad) res.status(404).json({ message: "Ad not found" })
+    else res.status(201).json({ message: "Rental Published"})
   } catch (err) {
+    console.log(err)
     res.sendStatus(500)
   }
 }

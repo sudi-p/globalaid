@@ -57,7 +57,7 @@ export default function PostAd({ handleClose }: PostAdProps) {
             adType
         })
         const { _id } = res?.data.ad;
-        router.push(`/myads/createad/${_id}`);
+        await router.push(`/myads/createad/${_id}`);
         handleClose();
 
     }

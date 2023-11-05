@@ -47,13 +47,13 @@ export const login = async (req, res) => {
         const accessToken = jwt.sign(
             { userId: user._id },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: 15}
+            { expiresIn: 15*60}
         );
         res.cookie('accessToken', accessToken,{
             httpOnly: true,
             secure: process.env.NODE_ENV !== 'development',
             sameSite: 'strict',
-            maxAge: 15*1000,
+            maxAge: 15*60*1000,
             path: "/"
         })
         const refreshToken = jwt.sign(
@@ -79,7 +79,6 @@ export const login = async (req, res) => {
 
 export const refresh = async (req, res) => {
     const cookies = req.cookies;
-    console.log("cookies", cookies)
     if (!cookies?.refreshToken) return res.sendStatus(401);
     const refreshToken = cookies.refreshToken;
     const foundUser = await User.findOne({ refreshToken: refreshToken });
@@ -93,12 +92,12 @@ export const refresh = async (req, res) => {
             const accessToken = jwt.sign(
                 { userId: foundUser._id },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: 15 }
+                { expiresIn: 15*60 }
             );
             res.cookie('accessToken', accessToken,{
                 httpOnly: true,
                 sameSite: 'strict',
-                maxAge: 15*1000,
+                maxAge: 15*60*1000,
             })
             res.status(200).json({ user: {email: foundUser.email} })
         }

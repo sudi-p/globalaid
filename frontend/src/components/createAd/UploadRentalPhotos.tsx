@@ -9,6 +9,7 @@ type UploadRentalPhotosProps = {
 
 export default function UploadRentalPhotos({ adId }: UploadRentalPhotosProps) {
   const router = useRouter();
+  console.log(adId)
   const skipUpload = async() => {
     const res = await axiosPrivate.post('/user/skipuploadrentalphotos', {
       adId
