@@ -8,8 +8,6 @@ import { useQuery } from '@tanstack/react-query';
 export default function MyAd() {
   const { query } = useRouter();
   const { adId } = query;
-  console.log("Hello")
-  console.log("adId is what", adId)
   const { data, error, isLoading } = useQuery({
     queryKey: ["myads", "adId"],
     queryFn: async () => {
@@ -26,11 +24,12 @@ export default function MyAd() {
   if (error) return <PageNotFound />
   if (isLoading) return <div>Loading...</div>
   const { ad: { title, description, email, phone, company } } = data;
+  console.log(description)
   return (
     <div className="max-w-screen-xl m-auto p-5">
       <div className="text-3xl">{title}</div>
-      {description}
-      {phone} | {email} | {phone}
+      <div className="whitespace-pre-wrap">{description}</div>
+      {phone} | {email}
       <div>{company}</div>
     </div>
   )

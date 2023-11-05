@@ -2,13 +2,11 @@ import jwt from "jsonwebtoken";
 
 export const verifyToken = async (req, res, next) => {
     try {
-        let token = req.header("Authorization");
-        if (!token) {
-            return res.status(403).json({ msg: "Access Denied" });
-        }
-        token = token.split(' ')[1];
+        const cookies = req.cookies;
+        if (!cookies?.accessToken) return res.sendStatus(403);
+        const accessToken = cookies.accessToken;
         jwt.verify(
-            token,
+            accessToken,
             process.env.ACCESS_TOKEN_SECRET,
             (err, decoded) => {
                 if (err) return res.sendStatus(403);
@@ -23,24 +21,27 @@ export const verifyToken = async (req, res, next) => {
 
 export const checkIfAuthenticated = async (req, res, next) => {
     try {
-        let token = req.header("Authorization");
-        if (!token) {
+        const cookies = req.cookies;
+        if (!cookies?.accessToken){
             req.isAuthenticated = false;
             next();
         } else {
-            token = token.split(' ')[1];
+            const accessToken = cookies.accessToken;
             jwt.verify(
-                token,
+                accessToken,
                 process.env.ACCESS_TOKEN_SECRET,
                 (err, decoded) => {
-                    if (err) return res.sendStatus(403);
-                    req.user = decoded.userId;
-                    req.isAuthenticated = true;
+                    if (err) {
+                        req.isAuthenticated = false;
+                    } else {
+                        req.user = decoded.userId;
+                        req.isAuthenticated = true;
+                    }
                     next();
                 }
             );
         }
     } catch (err) {
-        res.sendStatus(500)
-    }
+    res.sendStatus(500)
+}
 }

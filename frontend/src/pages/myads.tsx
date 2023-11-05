@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Stack } from '@mui/material';
 import { Home as HomeIcon, Engineering as EngineeringIcon } from '@mui/icons-material';
 import NavbarLayout from '@components/layout/navBarLayout';
-import { axiosPrivate } from '../../lib/api';
+import { axiosPrivate } from '../lib/api';
 import PageNotFound from '@pages/404';
 import { GetServerSidePropsContext } from 'next';
 import { useQuery } from '@tanstack/react-query';

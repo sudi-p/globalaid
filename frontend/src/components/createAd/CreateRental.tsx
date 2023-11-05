@@ -15,7 +15,7 @@ type CreateRentalProps = DetailedInformationProps & {
 
 const CreateRental = ({ adId, createAdLevel, refetch }: CreateRentalProps) => {
     let display = <DetailedInformation adId={adId} refetch={refetch} />
-    if (createAdLevel == 2) display = <UploadRentalPhotos />
+    if (createAdLevel == 2) display = <UploadRentalPhotos adId={adId}/>
     return (
         <Stack spacing={5}>
             <Box sx={{ width: '100%' }}>

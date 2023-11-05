@@ -42,7 +42,7 @@ export function NavBar() {
   useEffect(()=> {
     let user = getUserFromStorage();
     if (user){
-      setEmail(user?.user?.email)
+      setEmail(user?.email)
     }
   }, []);
   const [expandMenu, setExpandMenu] = useState(false);
@@ -52,7 +52,8 @@ export function NavBar() {
   };
   const logout = async () => {
     clearAuthFromStorage();
-    await axiosPrivate.post("/auth/logout/")
+    await axiosPrivate.post("/auth/logout/");
+    setEmail("")
     router.push("/");
   };
   const navLinks = [
