@@ -5,10 +5,12 @@ import { Stack } from '@mui/material';
 import { Home as HomeIcon, Engineering as EngineeringIcon } from '@mui/icons-material';
 import NavbarLayout from '@components/layout/navBarLayout';
 import { axiosPrivate } from '../../lib/api';
-import styles from '@styles/MyAds.module.scss';
+import PageNotFound from '@pages/404';
 import { GetServerSidePropsContext } from 'next';
+import { useQuery } from '@tanstack/react-query';
+import styles from '@styles/MyAds.module.scss';
 
-interface Ad {
+interface AdProps {
     _id: string;
     title: string;
     description: string;
@@ -19,15 +21,25 @@ interface Ad {
     replies: number;
 }
 
-interface MyAdsProps {
-    ads: Ad[];
-}
+// interface MyAdsProps {
+//     ads: Ad[];
+// }
 
-export default function MyAds({ ads }: MyAdsProps) {
+export default function MyAds() {
+    const { data, isLoading, error} = useQuery({
+        queryKey: ["myads"],
+        queryFn: async() => {
+            const res = await axiosPrivate('/user/getmyads/')
+            return res.data; 
+        }
+    })
+    if (isLoading) return <div>loading</div>
+    if (error) return <PageNotFound />
+    const { ads } = data;
     return (
         <div className="max-w-screen-xl m-auto">
             MyAds
-            {ads?.map(ad => (<MyAd key={ad._id} ad={ad} />))}
+            {ads?.map((ad: AdProps) => (<MyAd key={ad._id} ad={ad} />))}
         </div>
     )
 }
@@ -68,28 +80,28 @@ function MyAd({ ad }: { ad: Ad }) {
     )
 }
 
-export const getServerSideProps = async (context: GetServerSidePropsContext) => {
-    try {
-        console.log("getServerSideProps from myads")
-        const cookies = parse(context.req.headers.cookie || '');
-        const config = {
-            withCredentials: true,
-            headers: {
-                Authorization: cookies?.user
-                    ? `Bearer ${JSON.parse(cookies.user).accessToken}`
-                    : undefined,
-                Cookie: context?.req?.headers?.cookie
-            },
-        };
-        const res = await axiosPrivate.get('/user/getmyads', config);
-        return {
-            props: {
-                ads: res?.data.ads
-            }
-        }
-    } catch (e) {
-        return {
-            notFound: true,
-        }
-    }
-}
+// export const getServerSideProps = async (context: GetServerSidePropsContext) => {
+//     try {
+//         console.log("getServerSideProps from myads")
+//         const cookies = parse(context.req.headers.cookie || '');
+//         const config = {
+//             withCredentials: true,
+//             headers: {
+//                 Authorization: cookies?.user
+//                     ? `Bearer ${JSON.parse(cookies.user).accessToken}`
+//                     : undefined,
+//                 Cookie: context?.req?.headers?.cookie
+//             },
+//         };
+//         const res = await axiosPrivate.get('/user/getmyads', config);
+//         return {
+//             props: {
+//                 ads: res?.data.ads
+//             }
+//         }
+//     } catch (e) {
+//         return {
+//             notFound: true,
+//         }
+//     }
+// }
