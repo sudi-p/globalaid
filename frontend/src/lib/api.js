@@ -1,13 +1,15 @@
 import axios from 'axios';
-import { getAccessToken } from '@utils/cookie-utils';
+import { addAuthToStorage } from '@utils/cookie-utils';
 
 let BASE_URL = 'https://www.onlineglobalaid.com/api';
 if (process.env.NODE_ENV !== 'production') {
   BASE_URL = 'http://localhost:3001/api';
 }
+axios.defaults.withCredentials = true;
 export default axios.create({
   baseURL: BASE_URL,
   timeout: 35000,
+  withCredentials: true,
   headers: {
     Accept: 'application/json',
   },
@@ -19,16 +21,7 @@ export const axiosPrivate = axios.create({
   withCredentials: true
 });
 
-axiosPrivate.interceptors.request.use((request) => {
-  // console.log("request.headers", request.headers)
-  if (!request.headers.Authorization) {
-    const token = getAccessToken();
-    if (token) {
-      request.headers.Authorization = `Bearer ${getAccessToken()}`;
-    }
-  }
-  return request;
-})
+
 axiosPrivate.interceptors.response.use(
   response => response,
   async (error) => {
@@ -41,9 +34,16 @@ axiosPrivate.interceptors.response.use(
     }
     if (error?.response?.status === 403 && !originalConfig?._retry) {
       originalConfig._retry = true;
-      const response = await axiosPrivate.get(`/auth/refresh/`, originalConfig.headers.Cookie && { headers : { cookie: originalConfig.headers.Cookie}});
-      const newAccessToken = response?.data?.accessToken;
-      originalConfig.headers['Authorization'] = `Bearer ${newAccessToken}`;
+      // the cookie is not being sent just only by setting withCredentials: true
+      // const res = await axiosPrivate.post(`/auth/refresh/`,{}, { withCredentials: true })
+      const res = await axiosPrivate.post(`/auth/refresh/`, {}, originalConfig.headers.Cookie && {
+        headers : { cookie: originalConfig.headers.Cookie},
+        withCredentials: true,
+      });
+      // we 
+      console.log(res.headers)
+      const user = res?.data?.user;
+      addAuthToStorage(user)
       return axiosPrivate(originalConfig);
     }
     return Promise.reject(error);

@@ -55,8 +55,7 @@ const Login = () => {
           withCredentials: true
         })
       const user = res?.data?.user;
-      await addAuthToStorage(res?.data)
-      fetchUserSuccess(user)
+      await addAuthToStorage(user)
       router.push("/");
     } catch (err: unknown) {
       setError(err?.response?.data?.msg)

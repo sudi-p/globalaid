@@ -47,8 +47,15 @@ export const login = async (req, res) => {
         const accessToken = jwt.sign(
             { userId: user._id },
             process.env.ACCESS_TOKEN_SECRET,
-            { expiresIn: 15*60}
+            { expiresIn: 15}
         );
+        res.cookie('accessToken', accessToken,{
+            httpOnly: true,
+            secure: process.env.NODE_ENV !== 'development',
+            sameSite: 'strict',
+            maxAge: 15*1000,
+            path: "/"
+        })
         const refreshToken = jwt.sign(
             { userId: user._id },
             process.env.REFRESH_TOKEN_SECRET,
@@ -64,7 +71,7 @@ export const login = async (req, res) => {
             maxAge: 5* 24 *60 *60 * 1000,
             path: "/"
         })
-        res.status(200).json({ accessToken, user: {email: email} });
+        res.status(200).json({ user: {email: email} });
     } catch (err) {
         res.status(500).json({ msg: "Internal Server Error" });
     }
@@ -72,43 +79,50 @@ export const login = async (req, res) => {
 
 export const refresh = async (req, res) => {
     const cookies = req.cookies;
+    console.log("cookies", cookies)
     if (!cookies?.refreshToken) return res.sendStatus(401);
     const refreshToken = cookies.refreshToken;
-    const foundUser = await User.findOne({ refreshToken }).exec();
-    if (!foundUser) return res.sendStatus(403); //Forbidden 
-    // evaluate jwt 
+    const foundUser = await User.findOne({ refreshToken: refreshToken });
+    if (!foundUser) return res.sendStatus(404);
+    // evaluate jwt
     jwt.verify(
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
         (err, decoded) => {
-            if (err || foundUser._id.toString() !== decoded.userId) return res.sendStatus(403);
+            if (err || foundUser._id.toString() !== decoded.userId) return res.sendStatus(401);
             const accessToken = jwt.sign(
                 { userId: foundUser._id },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: 15*60 }
+                { expiresIn: 15 }
             );
-            res.json({ accessToken, user: {email: foundUser.email} })
+            res.cookie('accessToken', accessToken,{
+                httpOnly: true,
+                sameSite: 'strict',
+                maxAge: 15*1000,
+            })
+            res.status(200).json({ user: {email: foundUser.email} })
         }
     );
 }
 
 export const logout = async (req, res) => {
     // On client, also delete the accessToken
-
     const cookies = req.cookies;
-    if (!cookies?.jwt) return res.sendStatus(204); //No content
-    const refreshToken = cookies.jwt;
+    if (!cookies?.refreshToken) return res.sendStatus(204); //No content
+    const refreshToken = cookies.refreshToken;
 
     // Is refreshToken in db?
     const foundUser = await User.findOne({ refreshToken }).exec();
     if (!foundUser) {
-        res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+        res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: true });
         return res.sendStatus(204);
     }
 
     // Delete refreshToken in db
     foundUser.refreshToken = '';
-    const result = await foundUser.save();
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+    await foundUser.save();
+
+    res.clearCookie('refreshToken', { httpOnly: true, sameSite: 'None', secure: true });
+    res.clearCookie('accessToken', { httpOnly: true, sameSite: 'None', secure: true });
     res.sendStatus(204);
 }
