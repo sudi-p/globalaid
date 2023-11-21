@@ -9,19 +9,19 @@ import Filter from '../components/jobs/Filter';
 import SearchBar from '../components/jobs/SearchBar';
 import PageNotFound from './404';
 
-// function Jobs({ ads }) {
-function Jobs() {
-  const jobsQuery = useQuery({
-    queryKey: ['jobs'],
-    queryFn: async () => {
-      const res = await axiosPrivate.get('/user/getjobs/')
-      return res.data;
-    }
-  });
-  const { isLoading, error, data } = jobsQuery;
-  if (isLoading) return <h1>Loading...</h1>
-  if (error) return <PageNotFound />
-  const { ads } = data;
+function Jobs({ ads }) {
+// function Jobs() {
+  // const jobsQuery = useQuery({
+  //   queryKey: ['jobs'],
+  //   queryFn: async () => {
+  //     const res = await axiosPrivate.get('/user/getjobs/')
+  //     return res.data;
+  //   }
+  // });
+  // const { isLoading, error, data } = jobsQuery;
+  // if (isLoading) return <h1>Loading...</h1>
+  // if (error) return <PageNotFound />
+  // const { ads } = data;
   return (
     <div className="my-5 mx-auto max-w-screen-xl">
       <Stack direction="row" spacing={"20px"}>
@@ -104,20 +104,20 @@ const JobBox = ({ _id, description, title, company, location, email, phone }: Jo
 
 export default Jobs;
 
-// export const getServerSideProps = async () => {
-//   try {
-//     const res = await axiosPrivate.get('/user/getjobs')
-//     return {
-//       props: {
-//         ads: res?.data?.ads,
-//       }
-//     }
-//   } catch (e) {
-//     return {
-//       notFound: true,
-//     };
-//   }
-// }
+export const getServerSideProps = async () => {
+  try {
+    const res = await axiosPrivate.get('/user/getjobs')
+    return {
+      props: {
+        ads: res?.data?.ads,
+      }
+    }
+  } catch (e) {
+    return {
+      notFound: true,
+    };
+  }
+}
 
 Jobs.getLayout = function getLayout(page: ReactElement) {
   return <NavbarLayout>{page}</NavbarLayout>

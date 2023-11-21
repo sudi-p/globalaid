@@ -21,7 +21,7 @@ const router = express.Router();
 
 router.get("/getuser/", verifyToken, getUser);
 router.get("/gettoprentalsjobs/", getTopRentalsJobs);
-router.get("/getjobs/",verifyToken, getJobs);
+router.get("/getjobs/",checkIfAuthenticated, getJobs);
 router.get("/getrentals/",checkIfAuthenticated, getRentals);
 router.get("/createad/", verifyToken, getCreateAd);
 router.post("/postad/", verifyToken, postAd);

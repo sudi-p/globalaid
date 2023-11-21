@@ -33,18 +33,18 @@ function Rentals({ rentals }: { rentals: RentalProps[]}) {
 export default Rentals;
 
 export const getServerSideProps = async () => {
-  // try {
+  try {
     const res = await axiosPrivate.get('/user/getrentals')
     return {
       props: {
         rentals: res?.data?.rentals,
       }
     }
-  // } catch (e) {
-  //   return {
-  //     notFound: true,
-  //   };
-  // }
+  } catch (e) {
+    return {
+      notFound: true,
+    };
+  }
 }
 
 Rentals.getLayout = function getLayout(page: ReactNode){
