@@ -40,8 +40,7 @@ axiosPrivate.interceptors.response.use(
         headers : { cookie: originalConfig.headers.Cookie},
         withCredentials: true,
       });
-      // we 
-      console.log(res.headers)
+      // we
       const user = res?.data?.user;
       addAuthToStorage(user)
       return axiosPrivate(originalConfig);
