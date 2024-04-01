@@ -7,33 +7,34 @@ import {
   Stack,
   FormLabel
 } from '@mui/material';
+type FilterProps = {
+  checkbox: any,
+  setCheckbox: any,
+}
 
-export default function Filter() {
-  const [checkbox, setCheckbox] = useState({
-    'fullTime': false,
-    'partTime': false,
-    'weekEnds': false,
-    'InPerson': false,
-    'Remote': false,
-    'Hybrid': false,
-  });
+export default function Filter({ checkbox, setCheckbox}: FilterProps) {
   const clearFilters = () => {
     setCheckbox({
       'fullTime': false,
       'partTime': false,
       'weekEnds': false,
-      'InPerson': false,
-      'Remote': false,
-      'Hybrid': false,
+      'permanent': false,
+      'temporary': false,
+      'casual': false,
+      'inPerson': false,
+      'remote': false,
+      'hybrid': false,
     })
   }
   const handleCheckbox = (event: ChangeEvent<HTMLInputElement>) => {
-    setCheckbox({
-      ...checkbox,
-      [event.target.name]: event.target.checked,
-    });
+    const {name, checked } = event.target;
+    setCheckbox((prevState) => {
+      return{
+      ...prevState,
+      [name]: checked,
+    }});
   };
-  const { fullTime, partTime, weekEnds, InPerson, Remote, Hybrid } = checkbox;
+  const { fullTime, partTime,permanent, temporary, casual, inPerson, remote, hybrid } = checkbox;
   return (
     <Paper variant="outlined" className="p-7 w-80">
       <div className="flex justify-between items-center mb-2">
@@ -45,31 +46,31 @@ export default function Filter() {
           <FormLabel component="legend">Job Type</FormLabel>
           <FormControlLabel
             control={
-              <Checkbox checked={fullTime} onChange={handleCheckbox} name="Full-Time" />
+              <Checkbox checked={fullTime} onChange={handleCheckbox} name="fullTime" />
             }
             label="Full-Time"
           />
           <FormControlLabel
             control={
-              <Checkbox checked={partTime} onChange={handleCheckbox} name="Part-Time" />
+              <Checkbox checked={partTime} onChange={handleCheckbox} name="partTime" />
             }
             label="Part-Time"
           />
           <FormControlLabel
             control={
-              <Checkbox checked={weekEnds} onChange={handleCheckbox} name="Permanent" />
+              <Checkbox checked={permanent} onChange={handleCheckbox} name="permanent" />
             }
             label="Permanent"
           />
           <FormControlLabel
             control={
-              <Checkbox checked={fullTime} onChange={handleCheckbox} name="Temporary" />
+              <Checkbox checked={temporary} onChange={handleCheckbox} name="temporary" />
             }
             label="Temporary"
           />
           <FormControlLabel
             control={
-              <Checkbox checked={fullTime} onChange={handleCheckbox} name="Casual" />
+              <Checkbox checked={casual} onChange={handleCheckbox} name="casual" />
             }
             label="Casual"
           />
@@ -79,19 +80,19 @@ export default function Filter() {
           <FormLabel component="legend">Job Site</FormLabel>
           <FormControlLabel
             control={
-              <Checkbox checked={InPerson} onChange={handleCheckbox} name="In-Person" />
+              <Checkbox checked={inPerson} onChange={handleCheckbox} name="inPerson" />
             }
             label="In-Person"
           />
           <FormControlLabel
             control={
-              <Checkbox checked={Remote} onChange={handleCheckbox} name="Remote" />
+              <Checkbox checked={remote} onChange={handleCheckbox} name="remote" />
             }
             label="Remote"
           />
           <FormControlLabel
             control={
-              <Checkbox checked={Hybrid} onChange={handleCheckbox} name="Hybrid" />
+              <Checkbox checked={hybrid} onChange={handleCheckbox} name="hybrid" />
             }
             label="Hybrid"
           />

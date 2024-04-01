@@ -13,7 +13,6 @@ export default function CreateAd() {
   const router = useRouter();
   const { query } = router;
   let { adId } = query;
-  console.log(adId)
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["createAd","adId"],
     queryFn: async() => {

@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from 'react';
+import React, { ReactElement, ReactNode, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 
 import { Email, LocalPhone, LocationOnOutlined } from '@mui/icons-material/';
@@ -7,25 +7,24 @@ import axios, { axiosPrivate } from '@lib/api';
 import NavbarLayout from '@components/layout/navBarLayout/';
 import Filter from '../components/jobs/Filter';
 import SearchBar from '../components/jobs/SearchBar';
-import PageNotFound from './404';
 
 function Jobs({ ads }) {
-// function Jobs() {
-  // const jobsQuery = useQuery({
-  //   queryKey: ['jobs'],
-  //   queryFn: async () => {
-  //     const res = await axiosPrivate.get('/user/getjobs/')
-  //     return res.data;
-  //   }
-  // });
-  // const { isLoading, error, data } = jobsQuery;
-  // if (isLoading) return <h1>Loading...</h1>
-  // if (error) return <PageNotFound />
-  // const { ads } = data;
+  const [checkbox, setCheckbox] = useState({
+    'fullTime': false,
+    'partTime': false,
+    'weekEnds': false,
+    'permanent': false,
+    'temporary': false,
+    'casual': false,
+    'inPerson': false,
+    'remote': false,
+    'hybrid': false,
+  });
+  console.log(ads)
   return (
     <div className="my-5 mx-auto max-w-screen-xl">
       <Stack direction="row" spacing={"20px"}>
-        <Filter />
+        <Filter checkbox={checkbox} setCheckbox={setCheckbox} />
         <JobsList jobs={ads} />
       </Stack>
     </div>
