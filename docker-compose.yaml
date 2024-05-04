@@ -1,23 +1,36 @@
+# The version of the docker-compose.
 version: "3.8"
+# Telling docker-compose to build the client and server images and run them in containers.
 services:
-  frontend:
+  client:
+    # Telling docker-compose to build the client image using the Dockerfile in the client directory.
     build: ./frontend
-    container_name: frontend_c
-    ports: 
-      - '3000:3000'
+    # Giving the container a name.
+    container_name: globalaid_fc
+    # Mapping the port 3000 on the host machine to the port 3000 on the container.
+    ports:
+      - "3000:3000"
+    # Mapping the client directory on the host machine to the /app directory on the container.
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules/
+    # Allows you to run container in detached mode.
     stdin_open: true
     tty: true
-  api_server:
-    image: api-server
-    ports: 
-      - '3001:3001'
-  mongo:
-    image: mongo:3.6.19-xenial
-
-
-
-
-
-    # volumes:
-    #   - ./frontend:/app
-    #   - ./app/node_modules 
+    networks:
+      default:
+        aliases:
+          - server
+  server:
+    # Telling docker-compose to build the client image using the Dockerfile in the server directory.
+    build: ./server
+    container_name: globalaid_sc
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./server:/app
+      - /app/node_modules/
+    networks:
+      default:
+        aliases:
+          - client

@@ -1,19 +1,17 @@
-FROM node:18
+FROM node:17-alpine
 
-# Create app directory
-WORKDIR /usr/src/app
+# We use nodemon to restart the server every time there's a change
+RUN npm install -g nodemon
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
+WORKDIR /app
 
-COPY ./yarn.lock ./
+COPY package.json .
 
-RUN yarn install
+RUN npm install
 
 COPY . .
 
 EXPOSE 3001
 
-CMD ["nodemon", "index.js"]
+# Use script specified in package,json
+CMD ["npm", "run", "dev"]

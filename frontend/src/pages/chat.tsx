@@ -27,7 +27,6 @@ export default function Chats() {
 				<ChatList chat={chat} key={chat.chatId} setChatId={setChatId} />
 			))}
 			</div>
-			
 		</Stack>
 	)
 }

@@ -3,7 +3,7 @@ import { addAuthToStorage } from '@utils/cookie-utils';
 
 let BASE_URL = 'https://www.onlineglobalaid.com/api';
 if (process.env.NODE_ENV !== 'production') {
-  BASE_URL = 'http://localhost:3001/api';
+  BASE_URL = 'http://server:3001/api';
 }
 axios.defaults.withCredentials = true;
 export default axios.create({
