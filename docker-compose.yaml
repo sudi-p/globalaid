@@ -2,11 +2,25 @@
 version: "3.8"
 # Telling docker-compose to build the client and server images and run them in containers.
 services:
+  server:
+    # Telling docker-compose to build the client image using the Dockerfile in the server directory.
+    build: ./server
+    container_name: globalaid_sc
+    networks:
+      - gateway
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./server:/app
+      - /app/node_modules/
+
   client:
     # Telling docker-compose to build the client image using the Dockerfile in the client directory.
     build: ./frontend
     # Giving the container a name.
     container_name: globalaid_fc
+    networks:
+      - gateway
     # Mapping the port 3000 on the host machine to the port 3000 on the container.
     ports:
       - "3000:3000"
@@ -17,20 +31,9 @@ services:
     # Allows you to run container in detached mode.
     stdin_open: true
     tty: true
-    networks:
-      default:
-        aliases:
-          - server
-  server:
-    # Telling docker-compose to build the client image using the Dockerfile in the server directory.
-    build: ./server
-    container_name: globalaid_sc
-    ports:
-      - "3001:3001"
-    volumes:
-      - ./server:/app
-      - /app/node_modules/
-    networks:
-      default:
-        aliases:
-          - client
+    depends_on:
+      - server
+
+networks:
+  gateway:
+    driver: bridge
