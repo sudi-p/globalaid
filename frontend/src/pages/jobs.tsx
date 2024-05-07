@@ -1,55 +1,50 @@
-import React, { ReactElement, ReactNode, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { ReactElement, ReactNode, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-import { Email, LocalPhone, LocationOnOutlined } from '@mui/icons-material/';
-import { Chip, Stack, Paper } from '@mui/material';
-import axios, { axiosPrivate } from '@lib/api';
-import NavbarLayout from '@components/layout/navBarLayout/';
-import Filter from '../components/jobs/Filter';
-import SearchBar from '../components/jobs/SearchBar';
+import { Email, LocalPhone, LocationOnOutlined } from "@mui/icons-material/";
+import { Chip, Stack, Paper } from "@mui/material";
+import axios, { axiosPrivate } from "@lib/api";
+import NavbarLayout from "@components/layout/navBarLayout/";
+import Filter from "../components/jobs/Filter";
 
-function Jobs({ ads }) {
+type JobsListProps = {
+  ads: JobProps[];
+};
+
+function Jobs({ ads }: JobsListProps) {
   const [checkbox, setCheckbox] = useState({
-    'fullTime': false,
-    'partTime': false,
-    'weekEnds': false,
-    'permanent': false,
-    'temporary': false,
-    'casual': false,
-    'inPerson': false,
-    'remote': false,
-    'hybrid': false,
+    fullTime: false,
+    partTime: false,
+    weekEnds: false,
+    permanent: false,
+    temporary: false,
+    casual: false,
+    inPerson: false,
+    remote: false,
+    hybrid: false,
   });
-  console.log(ads)
   return (
     <div className="my-5 mx-auto max-w-screen-xl">
-      <Stack direction="row" spacing={"20px"}>
-        <Filter checkbox={checkbox} setCheckbox={setCheckbox} />
-        <JobsList jobs={ads} />
-      </Stack>
+      <Filter checkbox={checkbox} setCheckbox={setCheckbox} />
+      <JobsList ads={ads} />
     </div>
   );
 }
 
-type JobsListProps = {
-  jobs: JobProps[];
-}
-
-const JobsList = ({ jobs }: JobsListProps) => {
+const JobsList = ({ ads: jobs }: JobsListProps) => {
   return (
     <Stack spacing={"20px"} className="flex-1">
-      <SearchBar />
       <Paper elevation={0} variant="outlined" className="flex-1 p-5">
         <Stack direction="row" flexWrap={"wrap"} gap="15px">
-          {jobs && jobs.map(job => (<JobBox key={job._id} {...job} />))}
-          {jobs && jobs.map(job => (<JobBox key={job._id} {...job} />))}
-          {jobs && jobs.map(job => (<JobBox key={job._id} {...job} />))}
-          {jobs && jobs.map(job => (<JobBox key={job._id} {...job} />))}
+          {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
+          {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
+          {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
+          {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
         </Stack>
       </Paper>
     </Stack>
   );
-}
+};
 type JobProps = {
   _id: string;
   description: string;
@@ -57,10 +52,18 @@ type JobProps = {
   company: string;
   location: string;
   email: string;
-  phone: string
-}
+  phone: string;
+};
 
-const JobBox = ({ _id, description, title, company, location, email, phone }: JobProps) => {
+const JobBox = ({
+  _id,
+  description,
+  title,
+  company,
+  location,
+  email,
+  phone,
+}: JobProps) => {
   return (
     <div key={_id} className={`w-76 p-5 rounded-lg bg-gray-100 text-gray-600`}>
       <div className="flex items-end mb-3.5">
@@ -98,26 +101,26 @@ const JobBox = ({ _id, description, title, company, location, email, phone }: Jo
         )}
       </Stack>
     </div>
-  )
-}
+  );
+};
 
 export default Jobs;
 
 export const getServerSideProps = async () => {
   try {
-    const res = await axiosPrivate.get('/user/getjobs')
+    const res = await axiosPrivate.get("/user/getjobs");
     return {
       props: {
         ads: res?.data?.ads,
-      }
-    }
+      },
+    };
   } catch (e) {
     return {
       notFound: true,
     };
   }
-}
+};
 
 Jobs.getLayout = function getLayout(page: ReactElement) {
-  return <NavbarLayout>{page}</NavbarLayout>
-}
+  return <NavbarLayout>{page}</NavbarLayout>;
+};
