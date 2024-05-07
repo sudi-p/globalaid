@@ -1,14 +1,11 @@
 import React, { ChangeEvent, useState } from "react";
-import {
-  Paper,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-  Stack,
-  FormLabel,
-} from "@mui/material";
+
+import { IoFilterSharp } from "react-icons/io5";
+import { MdDelete } from "react-icons/md";
 import SearchBar from "./SearchBar";
 import FilterCheckBox from "./FilterCheckBox";
+import Button from "@components/ui/Button";
+import { TextField } from "@mui/material";
 
 type CheckboxProps = {
   fullTime: boolean;
@@ -28,6 +25,7 @@ type FilterProps = {
 };
 
 export default function Filter({ checkbox, setCheckbox }: FilterProps) {
+  const [showFilters, handleShowFilter] = useState(false);
   const clearFilters = () => {
     setCheckbox({
       fullTime: false,
@@ -62,33 +60,39 @@ export default function Filter({ checkbox, setCheckbox }: FilterProps) {
   } = checkbox;
 
   return (
-    <div className="flex justify-between">
-      <div className="flex justify-between items-center mb-2">
-        <div className="text-lg font-bold">Filter</div>
-        <div onClick={clearFilters} className="cursor-pointer text-green-500">
-          Reset Filters
-        </div>
+    <div>
+      <div className="flex p-4 justify-center items-center gap-3">
+        <TextField label="Search For Jobs" />
+        <Button handleClick={() => handleShowFilter(!showFilters)}>
+          <IoFilterSharp /> Filter
+        </Button>
+        <Button handleClick={() => handleShowFilter(!showFilters)}>
+          <MdDelete /> Delete Filter
+        </Button>
       </div>
-      <FilterCheckBox
-        title="JobSite"
-        checkboxes={[
-          { label: "Full-Time", value: fullTime, name: "fullTime" },
-          { label: "Part-Time", value: partTime, name: "partTime" },
-          { label: "Permanent", value: permanent, name: "permanent" },
-          { label: "Temporary", value: temporary, name: "temporary" },
-        ]}
-        handleCheckbox={handleCheckbox}
-      />
-      <FilterCheckBox
-        title="JobSite"
-        checkboxes={[
-          { label: "In-Person", value: inPerson, name: "inPerson" },
-          { label: "Remote", value: remote, name: "remote" },
-          { label: "Hybrid", value: hybrid, name: "hybrid" },
-        ]}
-        handleCheckbox={handleCheckbox}
-      />
-      <SearchBar />
+      {showFilters && (
+        <div className="flex gap-4 justify-center p-4 border border-solid border-rounded border-gray-300 transition-all duration-1000 ease-in">
+          <FilterCheckBox
+            title="JobSite"
+            checkboxes={[
+              { label: "Full-Time", value: fullTime, name: "fullTime" },
+              { label: "Part-Time", value: partTime, name: "partTime" },
+              { label: "Permanent", value: permanent, name: "permanent" },
+              { label: "Temporary", value: temporary, name: "temporary" },
+            ]}
+            handleCheckbox={handleCheckbox}
+          />
+          <FilterCheckBox
+            title="JobSite"
+            checkboxes={[
+              { label: "In-Person", value: inPerson, name: "inPerson" },
+              { label: "Remote", value: remote, name: "remote" },
+              { label: "Hybrid", value: hybrid, name: "hybrid" },
+            ]}
+            handleCheckbox={handleCheckbox}
+          />
+        </div>
+      )}
     </div>
   );
 }
