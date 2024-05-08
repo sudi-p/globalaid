@@ -10,7 +10,7 @@ type CheckBoxProps = {
 type FilterCheckBoxProps = {
   title: string;
   checkboxes: Array<CheckBoxProps>;
-  handleCheckbox: (event: ChangeEvent<HTMLInputElement>) => void;
+  handleCheckbox: (event: ChangeEvent<HTMLInputElement>, label: string) => void;
 };
 const FilterCheckBox = ({
   title,
@@ -19,14 +19,14 @@ const FilterCheckBox = ({
 }: FilterCheckBoxProps) => {
   return (
     <FormGroup className="relative w-64">
-      <div className="text-center">{title}</div>
+      <div className="font-semibold mb-4 text-xl">{title}</div>
       <div className="flex flex-wrap">
         {checkboxes.map(({ label, value, name }) => (
           <FormControlLabel
             control={
               <Checkbox
                 checked={!!value}
-                onChange={handleCheckbox}
+                onChange={(e) => handleCheckbox(e, label)}
                 name={name}
               />
             }
