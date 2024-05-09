@@ -1,32 +1,29 @@
 import React, { ReactElement, ReactNode, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-
-import { Chip, Stack, Paper } from "@mui/material";
-import axios, { axiosPrivate } from "@lib/api";
+import { axiosPrivate } from "@lib/api";
 import NavbarLayout from "@components/layout/navBarLayout/";
 import Filter from "../components/jobs/Filter";
 import JobBox, { JobProps } from "@components/jobs/JobBox";
+import { useFilter } from "@components/jobs/hooks/useFilter";
 
 type JobsListProps = {
   ads: JobProps[];
 };
 
 function Jobs({ ads }: JobsListProps) {
-  const [filters, setFilters] = useState({
-    fullTime: false,
-    partTime: false,
-    weekEnds: false,
-    permanent: false,
-    temporary: false,
-    casual: false,
-    inPerson: false,
-    remote: false,
-    hybrid: false,
-    datePosted: "Any",
-  });
+  const { filters, selectedFilters, handleCheckbox, handleDatePosted } =
+    useFilter({
+      commitment: new Set(),
+      workplaceType: new Set(),
+      datePosted: "Any",
+    });
+  console.log(selectedFilters);
   return (
     <div className="my-5 mx-auto max-w-screen-xl">
-      <Filter filters={filters} setFilters={setFilters} />
+      <Filter
+        filters={filters}
+        handleCheckbox={handleCheckbox}
+        handleDatePosted={handleDatePosted}
+      />
       <JobsList ads={ads} />
     </div>
   );

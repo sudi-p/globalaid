@@ -4,30 +4,30 @@ import React, { ChangeEvent, useState } from "react";
 type CheckBoxProps = {
   label: string;
   value: boolean;
-  name: string;
 };
 
 type FilterCheckBoxProps = {
   title: string;
-  checkboxes: Array<CheckBoxProps>;
+  options: Array<CheckBoxProps>;
+  filters: Set<string>;
   handleCheckbox: (event: ChangeEvent<HTMLInputElement>, label: string) => void;
 };
 const FilterCheckBox = ({
   title,
-  checkboxes,
+  options,
+  filters,
   handleCheckbox,
 }: FilterCheckBoxProps) => {
   return (
     <FormGroup className="relative w-64">
       <div className="font-semibold mb-4 text-xl">{title}</div>
       <div className="flex flex-wrap">
-        {checkboxes.map(({ label, value, name }) => (
+        {options.map(({ label, value }) => (
           <FormControlLabel
             control={
               <Checkbox
-                checked={!!value}
+                checked={!!filters.has(label)}
                 onChange={(e) => handleCheckbox(e, label)}
-                name={name}
               />
             }
             label={label}

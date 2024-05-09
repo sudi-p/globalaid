@@ -1,11 +1,12 @@
-const commitments = [
-  { label: "Full Time", name: "fullTime"},
-  { label: "Part Time", name: "partTime"},
-  { label: "Permanent", name: "permanent"},
-  { label: "Temporary", name: "temporary"},
-  { label: "Casual", name: "casual"},
+export const commitments = [
+  { label: "Full Time", value: "fullTime" },
+  { label: "Part Time", value: "partTime" },
+  { label: "Permanent", value: "permanent" },
+  { label: "Temporary", value: "temporary" },
+  { label: "Casual", value: "casual" },
 ];
-const datePostedOptions = [
+
+export const datePostedOptions = [
   "Any",
   "Past 24 Hours",
   "Past 3 Days",
@@ -14,8 +15,8 @@ const datePostedOptions = [
   "Past 3 Months",
 ];
 
-const jobSites = {
-  onSite: "Onsite",
-  remote: "Remote",
-  hybrid: "Hybrid",
-};
+export const jobSites = [
+  { label: "Onsite", value: "onSite" },
+  { label: "Remote", value: "remote" },
+  { label: "Hybrid", value: "hybrid" },
+];
