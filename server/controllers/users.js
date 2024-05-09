@@ -2,6 +2,10 @@ import User from "../models/User.js";
 import Ad, { Job, Rental } from "../models/Ad.js";
 import Conversation, { Message } from "../models/Chat.js";
 
+import algoliasearch from 'algoliasearch';
+const client = algoliasearch(process.env.ALGOLIA_APPLICATION_ID, process.env.ALGOLIA_ADMIN_API_KEY);
+
+
 //getUser ✅
 //getJobs ✅
 //getRentals
@@ -302,8 +306,22 @@ export const createJob = async (req, res) => {
       jobSite,
     });
     await job.save();
+    const index = client.initIndex('jobs')
+    const record = {
+      company: company,
+      isOwner: isOwner,
+      jobType: jobType,
+      jobSite: jobSite,
+      salary: salary,
+      objectId: adId,
+      location: location,
+      email: email,
+      phone: phone,
+      complete: true,
+      available: true,
+    }
+    index.saveObject(record).wait();
     res.status(201).json({ jobId: job._id, message: "Job Published" });
-
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
