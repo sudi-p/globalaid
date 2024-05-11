@@ -1,68 +1,45 @@
 import React, { ChangeEvent, useState } from "react";
-
+import Button from "@components/ui/Button";
 import { IoFilterSharp } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
-import SearchBar from "./SearchBar";
+import { IoMdClose } from "react-icons/io";
 import FilterCheckBox from "./FilterCheckBox";
-import Button from "@components/ui/Button";
-import { TextField } from "@mui/material";
-
-type CheckboxProps = {
-  fullTime: boolean;
-  partTime: boolean;
-  weekEnds: boolean;
-  permanent: boolean;
-  temporary: boolean;
-  casual: boolean;
-  inPerson: boolean;
-  remote: boolean;
-  hybrid: boolean;
-};
+import { FiltersProps, ExtendedFiltersProps } from "../../hooks/useFilter";
+import {
+  commitments,
+  datePostedOptions,
+  jobSites,
+} from "@utils/constants/jobsFilter";
+import styles from "./styles/Filter.module.scss";
 
 type FilterProps = {
-  checkbox: CheckboxProps;
-  setCheckbox: any;
+  filters: ExtendedFiltersProps;
+  handleDatePosted: (type: string) => void;
+  handleCheckbox: (
+    e: ChangeEvent<HTMLInputElement>,
+    label: string,
+    filterType: keyof FiltersProps
+  ) => void;
+  handleTextChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
-export default function Filter({ checkbox, setCheckbox }: FilterProps) {
-  const [showFilters, handleShowFilter] = useState(false);
-  const clearFilters = () => {
-    setCheckbox({
-      fullTime: false,
-      partTime: false,
-      weekEnds: false,
-      permanent: false,
-      temporary: false,
-      casual: false,
-      inPerson: false,
-      remote: false,
-      hybrid: false,
-    });
-  };
-  const handleCheckbox = (event: ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = event.target;
-    setCheckbox((prevState) => {
-      return {
-        ...prevState,
-        [name]: checked,
-      };
-    });
-  };
-  const {
-    fullTime,
-    partTime,
-    permanent,
-    temporary,
-    casual,
-    inPerson,
-    remote,
-    hybrid,
-  } = checkbox;
-
+export default function Filter({
+  filters,
+  handleCheckbox,
+  handleDatePosted,
+  handleTextChange,
+}: FilterProps) {
+  const [showFilters, handleShowFilter] = useState(true);
   return (
     <div>
       <div className="flex p-4 justify-center items-center gap-3">
-        <TextField label="Search For Jobs" />
+        <input
+          placeholder="Search For Jobs"
+          className="p-2 rounded border border-gray-100 w-72"
+          value={filters["searchText"]}
+          name="searchText"
+          onChange={(e) => handleTextChange(e)}
+        />
         <Button handleClick={() => handleShowFilter(!showFilters)}>
           <IoFilterSharp /> Filter
         </Button>
@@ -71,26 +48,43 @@ export default function Filter({ checkbox, setCheckbox }: FilterProps) {
         </Button>
       </div>
       {showFilters && (
-        <div className="flex gap-4 justify-center p-4 border border-solid border-rounded border-gray-300 transition-all duration-1000 ease-in">
+        <div
+          className={`${
+            showFilters ? styles.filters : ""
+          } flex gap-4 p-4 rounded-lg border border-solid border-rounded border-gray-400 my-4`}
+        >
           <FilterCheckBox
-            title="JobSite"
-            checkboxes={[
-              { label: "Full-Time", value: fullTime, name: "fullTime" },
-              { label: "Part-Time", value: partTime, name: "partTime" },
-              { label: "Permanent", value: permanent, name: "permanent" },
-              { label: "Temporary", value: temporary, name: "temporary" },
-            ]}
+            title="Commitment"
+            filterType="commitment"
+            options={commitments}
+            filters={filters}
             handleCheckbox={handleCheckbox}
           />
           <FilterCheckBox
-            title="JobSite"
-            checkboxes={[
-              { label: "In-Person", value: inPerson, name: "inPerson" },
-              { label: "Remote", value: remote, name: "remote" },
-              { label: "Hybrid", value: hybrid, name: "hybrid" },
-            ]}
+            title="Workplace Type"
+            filterType="workplaceType"
+            options={jobSites}
+            filters={filters}
             handleCheckbox={handleCheckbox}
           />
+          <div className="w-80">
+            <div className="font-semibold mb-4 text-xl">Date Posted</div>
+            <div className="flex flex-wrap gap-3">
+              {datePostedOptions.map((type) => (
+                <button
+                  key={type}
+                  onClick={() => handleDatePosted(type)}
+                  className={`w-36 cursor-pointer rounded-3xl p-2 text-center ${
+                    filters.datePosted === type
+                      ? "bg-blue-400 text-white border-0"
+                      : "border border-solid border-blue-400"
+                  }`}
+                >
+                  {type}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>

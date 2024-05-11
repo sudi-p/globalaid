@@ -1,31 +1,31 @@
 import React, { ReactElement, ReactNode, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-
-import { Email, LocalPhone, LocationOnOutlined } from "@mui/icons-material/";
-import { Chip, Stack, Paper } from "@mui/material";
-import axios, { axiosPrivate } from "@lib/api";
+import { axiosPrivate } from "@lib/api";
 import NavbarLayout from "@components/layout/navBarLayout/";
 import Filter from "../components/jobs/Filter";
+import JobBox, { JobProps } from "@components/jobs/JobBox";
+import { useFilter } from "@hooks/useFilter";
 
 type JobsListProps = {
   ads: JobProps[];
 };
 
 function Jobs({ ads }: JobsListProps) {
-  const [checkbox, setCheckbox] = useState({
-    fullTime: false,
-    partTime: false,
-    weekEnds: false,
-    permanent: false,
-    temporary: false,
-    casual: false,
-    inPerson: false,
-    remote: false,
-    hybrid: false,
-  });
+  const { filters, handleCheckbox, handleDatePosted, handleTextChange } =
+    useFilter({
+      commitment: new Set(),
+      workplaceType: new Set(),
+      datePosted: "Any",
+      searchText: "",
+    });
+  console.log(filters);
   return (
     <div className="my-5 mx-auto max-w-screen-xl">
-      <Filter checkbox={checkbox} setCheckbox={setCheckbox} />
+      <Filter
+        filters={filters}
+        handleCheckbox={handleCheckbox}
+        handleDatePosted={handleDatePosted}
+        handleTextChange={handleTextChange}
+      />
       <JobsList ads={ads} />
     </div>
   );
@@ -33,73 +33,11 @@ function Jobs({ ads }: JobsListProps) {
 
 const JobsList = ({ ads: jobs }: JobsListProps) => {
   return (
-    <Stack spacing={"20px"} className="flex-1">
-      <Paper elevation={0} variant="outlined" className="flex-1 p-5">
-        <Stack direction="row" flexWrap={"wrap"} gap="15px">
-          {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
-          {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
-          {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
-          {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
-        </Stack>
-      </Paper>
-    </Stack>
-  );
-};
-type JobProps = {
-  _id: string;
-  description: string;
-  title: string;
-  company: string;
-  location: string;
-  email: string;
-  phone: string;
-};
-
-const JobBox = ({
-  _id,
-  description,
-  title,
-  company,
-  location,
-  email,
-  phone,
-}: JobProps) => {
-  return (
-    <div key={_id} className={`w-76 p-5 rounded-lg bg-gray-100 text-gray-600`}>
-      <div className="flex items-end mb-3.5">
-        <div className="text-xl font-bold">{title}</div> |
-        <div className="hover:text-green-400">{company}</div>
-      </div>
-      {location && (
-        <Chip
-          color="primary"
-          size="small"
-          variant="outlined"
-          label={location}
-          icon={<LocationOnOutlined />}
-        />
-      )}
-      <div className="my-2.5 truncate">{description}</div>
-      <Stack direction="row" spacing={1}>
-        {email && (
-          <Chip
-            color="primary"
-            size="small"
-            variant="outlined"
-            label={email}
-            icon={<Email fontSize="small" />}
-          />
-        )}
-        {phone && (
-          <Chip
-            color="primary"
-            size="small"
-            variant="outlined"
-            label={phone}
-            icon={<LocalPhone />}
-          />
-        )}
-      </Stack>
+    <div className="grid grid-cols-3 gap-10 p-10">
+      {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
+      {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
+      {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
+      {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
     </div>
   );
 };

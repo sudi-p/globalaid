@@ -309,26 +309,6 @@ export const createJob = async (req, res) => {
       },
       { new: false }
     );
-
-    const client = algoliasearch(
-      process.env.ALGOLIA_APPLICATION_ID,
-      process.env.ALGOLIA_ADMIN_API_KEY
-    );
-    const index = client.initIndex("jobs");
-    const record = {
-      company: company,
-      isOwner: isOwner,
-      jobType: jobType,
-      jobSite: jobSite,
-      salary: salary,
-      objectID: adId,
-      location: location,
-      email: email,
-      phone: phone,
-      complete: true,
-      available: true,
-    };
-    await index.saveObject(record).wait();
     const job = new Job({
       ad,
       company,
