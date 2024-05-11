@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import Button from "@components/ui/Button";
 import { IoFilterSharp } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { IoMdClose } from "react-icons/io";
 import FilterCheckBox from "./FilterCheckBox";
-import { FiltersProps, useFilter } from "./hooks/useFilter";
+import { FiltersProps, ExtendedFiltersProps } from "../../hooks/useFilter";
 import {
   commitments,
   datePostedOptions,
@@ -13,30 +13,32 @@ import {
 import styles from "./styles/Filter.module.scss";
 
 type FilterProps = {
-  filters: FiltersProps;
+  filters: ExtendedFiltersProps;
   handleDatePosted: (type: string) => void;
-  handleCheckbox: (name: string, checked: boolean, label: string) => void;
+  handleCheckbox: (
+    e: ChangeEvent<HTMLInputElement>,
+    label: string,
+    filterType: keyof FiltersProps
+  ) => void;
+  handleTextChange: (e: ChangeEvent<HTMLInputElement>) => void;
 };
 
 export default function Filter({
   filters,
   handleCheckbox,
   handleDatePosted,
+  handleTextChange,
 }: FilterProps) {
   const [showFilters, handleShowFilter] = useState(true);
-  const [searchText, setSearchText] = useState("");
-  const clearFilters = () => {
-    // Implement clearFilters logic if needed
-  };
-  console.log(filters);
   return (
     <div>
       <div className="flex p-4 justify-center items-center gap-3">
         <input
           placeholder="Search For Jobs"
           className="p-2 rounded border border-gray-100 w-72"
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
+          value={filters["searchText"]}
+          name="searchText"
+          onChange={(e) => handleTextChange(e)}
         />
         <Button handleClick={() => handleShowFilter(!showFilters)}>
           <IoFilterSharp /> Filter
@@ -45,19 +47,6 @@ export default function Filter({
           <MdDelete /> Delete Filter
         </Button>
       </div>
-      {/* <div className="flex">
-        {!!filters.size &&
-          Array.from(filters).map((selectedFilter) => {
-            return (
-              <div
-                key={selectedFilter}
-                className="p-2 mr-4 text-blue-400 flex items-center gap-2 border border-solid border-blue-400 rounded-3xl"
-              >
-                {selectedFilter} <IoMdClose />
-              </div>
-            );
-          })}
-      </div> */}
       {showFilters && (
         <div
           className={`${
@@ -66,13 +55,15 @@ export default function Filter({
         >
           <FilterCheckBox
             title="Commitment"
+            filterType="commitment"
             options={commitments}
             filters={filters}
             handleCheckbox={handleCheckbox}
           />
           <FilterCheckBox
             title="Workplace Type"
-            checkboxes={jobSites}
+            filterType="workplaceType"
+            options={jobSites}
             filters={filters}
             handleCheckbox={handleCheckbox}
           />

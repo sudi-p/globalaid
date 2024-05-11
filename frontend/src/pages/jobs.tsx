@@ -3,26 +3,28 @@ import { axiosPrivate } from "@lib/api";
 import NavbarLayout from "@components/layout/navBarLayout/";
 import Filter from "../components/jobs/Filter";
 import JobBox, { JobProps } from "@components/jobs/JobBox";
-import { useFilter } from "@components/jobs/hooks/useFilter";
+import { useFilter } from "@hooks/useFilter";
 
 type JobsListProps = {
   ads: JobProps[];
 };
 
 function Jobs({ ads }: JobsListProps) {
-  const { filters, selectedFilters, handleCheckbox, handleDatePosted } =
+  const { filters, handleCheckbox, handleDatePosted, handleTextChange } =
     useFilter({
       commitment: new Set(),
       workplaceType: new Set(),
       datePosted: "Any",
+      searchText: "",
     });
-  console.log(selectedFilters);
+  console.log(filters);
   return (
     <div className="my-5 mx-auto max-w-screen-xl">
       <Filter
         filters={filters}
         handleCheckbox={handleCheckbox}
         handleDatePosted={handleDatePosted}
+        handleTextChange={handleTextChange}
       />
       <JobsList ads={ads} />
     </div>
@@ -31,7 +33,7 @@ function Jobs({ ads }: JobsListProps) {
 
 const JobsList = ({ ads: jobs }: JobsListProps) => {
   return (
-    <div className="grid grid-cols-3 gap-10">
+    <div className="grid grid-cols-3 gap-10 p-10">
       {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
       {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
       {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}

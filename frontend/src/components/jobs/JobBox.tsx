@@ -48,7 +48,7 @@ type IconTextProps = {
   color?: string;
 };
 
-const IconText = ({ icon, text, color }: IconTextProps) => {
+export const IconText = ({ icon, text, color }: IconTextProps) => {
   return (
     <div className="flex items-center gap-2 ">
       <div style={{ color: color }}>{icon}</div>
