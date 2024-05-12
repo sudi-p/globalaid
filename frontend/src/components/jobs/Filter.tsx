@@ -51,7 +51,7 @@ export default function Filter({
         <div
           className={`${
             showFilters ? styles.filters : ""
-          } flex gap-4 p-4 rounded-lg border border-solid border-rounded border-gray-400 my-4`}
+          } flex gap-4 p-4 rounded-lg border border-solid border-rounded border-gray-400 m-4`}
         >
           <FilterCheckBox
             title="Commitment"

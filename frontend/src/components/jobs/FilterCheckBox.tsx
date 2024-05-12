@@ -18,7 +18,7 @@ type FilterCheckBoxProps = {
   filters: ExtendedFiltersProps;
   handleCheckbox: (
     e: ChangeEvent<HTMLInputElement>,
-    label: string,
+    value: string,
     filterType: keyof FiltersProps
   ) => void;
 };
@@ -37,8 +37,8 @@ const FilterCheckBox = ({
           <FormControlLabel
             control={
               <Checkbox
-                checked={filters[filterType]?.has(label)}
-                onChange={(e) => handleCheckbox(e, label, filterType)}
+                checked={filters[filterType]?.has(value)}
+                onChange={(e) => handleCheckbox(e, value, filterType)}
               />
             }
             label={label}
