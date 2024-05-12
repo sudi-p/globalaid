@@ -13,7 +13,7 @@ export interface ExtendedFiltersProps extends FiltersProps {
 
 export type HandleCheckBoxProps = {
   e: ChangeEvent<HTMLInputElement>;
-  label: string;
+  value: string;
   filterType: keyof FiltersProps;
 };
 
@@ -22,14 +22,14 @@ export const useFilter = (initialFilters: ExtendedFiltersProps) => {
 
   const handleCheckbox = (
     e: ChangeEvent<HTMLInputElement>,
-    label: string,
+    value: string,
     filterType: keyof FiltersProps
   ) => {
     const updatedFilters = { ...filters };
     if (e.target.checked) {
-      updatedFilters[filterType].add(label);
+      updatedFilters[filterType].add(value);
     } else {
-      updatedFilters[filterType].delete(label);
+      updatedFilters[filterType].delete(value);
     }
     setFilters(updatedFilters);
   };

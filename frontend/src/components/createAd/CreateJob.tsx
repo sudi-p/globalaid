@@ -1,55 +1,61 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { axiosPrivate } from '../../lib/api';
+import { useState } from "react";
+import { useRouter } from "next/router";
+import { axiosPrivate } from "../../lib/api";
 import {
-  Button, Stack, TextField, Box,
-  Stepper, Step, StepLabel, InputAdornment,
-  FormControl, InputLabel, Select, MenuItem,
-  FormHelperText
-} from '@mui/material/';
+  Button,
+  Stack,
+  TextField,
+  Box,
+  Stepper,
+  Step,
+  StepLabel,
+  InputAdornment,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormHelperText,
+} from "@mui/material/";
 import {
   LocalPhone as LocalPhoneIcon,
   Email as EmailIcon,
   AttachMoney as AttachMoneyIcon,
-} from '@mui/icons-material/';
-import { useForm } from 'react-hook-form';
+} from "@mui/icons-material/";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from "axios";
 
-const steps = [
-  'Title and Description',
-  'Detailed Information',
-];
+const steps = ["Title and Description", "Detailed Information"];
 const CreateJobSchema = yup.object().shape({
-  location: yup
-    .string()
-    .required("Please enter the location"),
-  company: yup
-    .string()
-    .required("Please enter the company name"),
+  location: yup.string().required("Please enter the location"),
+  company: yup.string().required("Please enter the company name"),
 });
 
 type CreateJobProps = {
-  adId: string
-}
+  adId: string;
+};
 
 const CreateJob = ({ adId }: CreateJobProps) => {
-  const { register, handleSubmit, formState: { errors }, } = useForm({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
     resolver: yupResolver(CreateJobSchema),
   });
   const router = useRouter();
-  const [company, setCompany] = useState('');
-  const [jobType, setJobType] = useState('');
-  const [location, setLocation] = useState('');
-  const [salary, setSalary] = useState('');
-  const [jobSite, setJobSite] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [company, setCompany] = useState("");
+  const [jobType, setJobType] = useState("");
+  const [location, setLocation] = useState("");
+  const [salary, setSalary] = useState("");
+  const [jobSite, setJobSite] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [isOwner, setIsOwner] = useState(false);
 
   const createJob = async () => {
-    const res = await axiosPrivate.post('/user/createjob/', {
+    const res = await axiosPrivate.post("/user/createjob/", {
       adId: adId,
       company,
       location,
@@ -58,14 +64,14 @@ const CreateJob = ({ adId }: CreateJobProps) => {
       jobSite,
       email,
       phone,
-      isOwner
+      isOwner,
     });
     router.push(`/myads/${adId}`);
-  }
+  };
   return (
-    <form onSubmit={(handleSubmit(createJob))}>
+    <form onSubmit={handleSubmit(createJob)}>
       <Stack spacing={4}>
-        <Box sx={{ width: '100%' }}>
+        <Box sx={{ width: "100%" }}>
           <Stepper activeStep={1} alternativeLabel>
             {steps.map((label) => (
               <Step key={label}>
@@ -92,10 +98,7 @@ const CreateJob = ({ adId }: CreateJobProps) => {
           error={Boolean(errors.location)}
           helperText={errors.location?.message?.toString()}
         />
-        <FormControl
-          fullWidth
-          error={Boolean(errors.rentalType)}
-        >
+        <FormControl fullWidth error={Boolean(errors.rentalType)}>
           <InputLabel id="demo-simple-select-label">Job Type</InputLabel>
           <Select
             labelId="demo-simple-select-label"
@@ -104,13 +107,15 @@ const CreateJob = ({ adId }: CreateJobProps) => {
             value={jobType}
             onChange={(e) => setJobType(e.target.value)}
           >
-            <MenuItem value="Full-Time">Full-Time</MenuItem>
-            <MenuItem value="Part-Time">Part-time</MenuItem>
-            <MenuItem value="Permanent">Permanent</MenuItem>
-            <MenuItem value="Temporary">Temporary</MenuItem>
-            <MenuItem value="Casual">Casual</MenuItem>
+            <MenuItem value="fullTime">Full-Time</MenuItem>
+            <MenuItem value="partTime">Part-time</MenuItem>
+            <MenuItem value="permanent">Permanent</MenuItem>
+            <MenuItem value="temporary">Temporary</MenuItem>
+            <MenuItem value="casual">Casual</MenuItem>
           </Select>
-          <FormHelperText>{errors.rentalType?.message?.toString()}</FormHelperText>
+          <FormHelperText>
+            {errors.rentalType?.message?.toString()}
+          </FormHelperText>
         </FormControl>
         <Stack spacing={4} direction="row">
           <TextField
@@ -121,15 +126,18 @@ const CreateJob = ({ adId }: CreateJobProps) => {
             onChange={(e) => setSalary(e.target.value)}
             value={salary}
             error={Boolean(errors.email)}
-            helperText={`*Salary Per Hour ${errors.email ? errors.email.message : ""}`}
+            helperText={`*Salary Per Hour ${
+              errors.email ? errors.email.message : ""
+            }`}
             InputProps={{
-              endAdornment: <InputAdornment position="end"><AttachMoneyIcon /></InputAdornment>,
+              endAdornment: (
+                <InputAdornment position="end">
+                  <AttachMoneyIcon />
+                </InputAdornment>
+              ),
             }}
           />
-          <FormControl
-            fullWidth
-            error={Boolean(errors.rentalType)}
-          >
+          <FormControl fullWidth error={Boolean(errors.rentalType)}>
             <InputLabel id="demo-simple-select-label">Job Site</InputLabel>
             <Select
               labelId="demo-simple-select-label"
@@ -138,11 +146,13 @@ const CreateJob = ({ adId }: CreateJobProps) => {
               value={jobSite}
               onChange={(e) => setJobSite(e.target.value)}
             >
-              <MenuItem value="In-Person">In-Person</MenuItem>
-              <MenuItem value="Remote">Remote</MenuItem>
-              <MenuItem value="Hybrid">Hybrid</MenuItem>
+              <MenuItem value="inPerson">In-Person</MenuItem>
+              <MenuItem value="remote">Remote</MenuItem>
+              <MenuItem value="hybrid">Hybrid</MenuItem>
             </Select>
-            <FormHelperText>{errors.rentalType?.message?.toString()}</FormHelperText>
+            <FormHelperText>
+              {errors.rentalType?.message?.toString()}
+            </FormHelperText>
           </FormControl>
         </Stack>
 
@@ -157,7 +167,11 @@ const CreateJob = ({ adId }: CreateJobProps) => {
             error={Boolean(errors.email)}
             helperText={errors.email?.message?.toString()}
             InputProps={{
-              endAdornment: <InputAdornment position="end"><EmailIcon /></InputAdornment>,
+              endAdornment: (
+                <InputAdornment position="end">
+                  <EmailIcon />
+                </InputAdornment>
+              ),
             }}
           />
           <TextField
@@ -170,22 +184,31 @@ const CreateJob = ({ adId }: CreateJobProps) => {
             error={Boolean(errors.phone)}
             helperText={errors.phone?.message?.toString()}
             InputProps={{
-              endAdornment: <InputAdornment position="end"><LocalPhoneIcon /></InputAdornment>,
+              endAdornment: (
+                <InputAdornment position="end">
+                  <LocalPhoneIcon />
+                </InputAdornment>
+              ),
             }}
           />
         </Stack>
         <div className="mb-4 flex leading-normal">
-          Are you hiring for this Job? If you are not hiring or not associated with the hiring process in anyway, Don't Select.<input style={{ 'resize': 'none' }} type="checkbox" className="w-8" onChange={() => setIsOwner(!isOwner)} checked={isOwner} />
+          Are you hiring for this Job? If you are not hiring or not associated
+          with the hiring process in anyway, Don't Select.
+          <input
+            style={{ resize: "none" }}
+            type="checkbox"
+            className="w-8"
+            onChange={() => setIsOwner(!isOwner)}
+            checked={isOwner}
+          />
         </div>
-        <Button
-          color="primary"
-          variant="contained"
-          type="submit"
-          size="large"
-        >Publish Job Posting</Button>
+        <Button color="primary" variant="contained" type="submit" size="large">
+          Publish Job Posting
+        </Button>
       </Stack>
     </form>
-  )
-}
+  );
+};
 
 export default CreateJob;
