@@ -118,8 +118,8 @@ export const getJobs = async (req, res) => {
           if (!job) {
             throw new Error("Job not found");
           }
-          const { company } = job;
-          return { ...ad.toObject(), company };
+          const { company, jobType, jobSite } = job;
+          return { ...ad.toObject(), company, jobType, jobSite };
         } catch (error) {
           return null;
         }
