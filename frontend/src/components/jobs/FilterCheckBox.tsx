@@ -2,7 +2,7 @@ import {
   ExtendedFiltersProps,
   FiltersProps,
   HandleCheckBoxProps,
-} from "@hooks/useFilter";
+} from "@hooks/useJobFilter";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import React, { ChangeEvent, useState } from "react";
 
