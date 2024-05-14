@@ -2,14 +2,13 @@ import React, { ChangeEvent, useState } from "react";
 import Button from "@components/ui/Button";
 import { IoFilterSharp } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
-import { IoMdClose } from "react-icons/io";
 import FilterCheckBox from "./FilterCheckBox";
-import { FiltersProps, ExtendedFiltersProps } from "../../hooks/useFilter";
+import { FiltersProps, ExtendedFiltersProps } from "../../hooks/useJobsFilter";
 import {
   commitments,
   datePostedOptions,
   jobSites,
-} from "@utils/constants/jobsFilter";
+} from "@utils/constants/jobs";
 import styles from "./styles/Filter.module.scss";
 
 type FilterProps = {

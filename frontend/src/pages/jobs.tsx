@@ -3,7 +3,7 @@ import Fuse, { FuseResult } from "fuse.js";
 import NavbarLayout from "@components/layout/navBarLayout/";
 import Filter from "../components/jobs/Filter";
 import JobBox, { JobProps } from "@components/jobs/JobBox";
-import { ExtendedFiltersProps, useFilter } from "@hooks/useFilter";
+import { ExtendedFiltersProps, useJobsFilter } from "@hooks/useJobsFilter";
 import { axiosPrivate } from "@lib/api";
 
 type JobsListProps = {
@@ -13,7 +13,7 @@ type JobsListProps = {
 
 function Jobs({ ads }: JobsListProps) {
   const { filters, handleCheckbox, handleDatePosted, handleTextChange } =
-    useFilter({
+    useJobsFilter({
       commitment: new Set(),
       workplaceType: new Set(),
       datePosted: "Any",
