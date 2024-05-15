@@ -2,7 +2,7 @@ import {
   ExtendedFiltersProps,
   FiltersProps,
   HandleCheckBoxProps,
-} from "@hooks/useJobFilter";
+} from "@hooks/useJobsFilter";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import React, { ChangeEvent, useState } from "react";
 
@@ -30,7 +30,7 @@ const FilterCheckBox = ({
   handleCheckbox,
 }: FilterCheckBoxProps) => {
   return (
-    <FormGroup className="relative w-64">
+    <div className="w-64">
       <div className="font-semibold mb-4 text-xl">{title}</div>
       <div className="flex flex-wrap">
         {options?.map(({ label, value }) => (
@@ -46,7 +46,7 @@ const FilterCheckBox = ({
           />
         ))}
       </div>
-    </FormGroup>
+    </div>
   );
 };
 
