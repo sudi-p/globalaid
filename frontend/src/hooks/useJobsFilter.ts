@@ -5,10 +5,14 @@ export type FiltersProps = {
   workplaceType: Set<string>;
 };
 
+export type DatePostedProps = {
+  label: string, value:number
+}
+
 export interface ExtendedFiltersProps extends FiltersProps {
   searchText?: string;
-  datePosted: string;
-  [key: string]: Set<string> | string | undefined;
+  datePosted: DatePostedProps;
+  [key: string]: Set<string> | string | undefined |DatePostedProps ;
 }
 
 export type HandleCheckBoxProps = {
@@ -34,10 +38,10 @@ export const useJobsFilter = (initialFilters: ExtendedFiltersProps) => {
     setFilters(updatedFilters);
   };
 
-  const handleDatePosted = (type: string) => {
+  const handleDatePosted = (option: DatePostedProps) => {
     setFilters((prevState) => ({
       ...prevState,
-      datePosted: type,
+      datePosted: option,
     }));
   };
 

@@ -16,7 +16,7 @@ function Jobs({ ads }: JobsListProps) {
     useJobsFilter({
       commitment: new Set(),
       workplaceType: new Set(),
-      datePosted: "Any",
+      datePosted: { label: "Any", value: 0 },
       searchText: "",
     });
   return (
@@ -39,24 +39,31 @@ function Jobs({ ads }: JobsListProps) {
 const JobsList = ({ ads: jobs, filters }: JobsListProps) => {
   const { searchText, commitment, workplaceType, datePosted } = filters;
   let displayJobs = [...jobs];
-  console.log(displayJobs);
   if (searchText) {
     const fuseOptions = { keys: ["title", "description", "company"] };
     const fuse = new Fuse(jobs, fuseOptions);
     displayJobs = fuse.search(searchText!).map((result) => result.item);
   }
   if (commitment.size) {
-    displayJobs = displayJobs.filter((job) => {
-      return commitment.has(job.jobType);
+    displayJobs = displayJobs.filter(({ jobType }) => {
+      return commitment.has(jobType);
     });
   }
   if (workplaceType.size) {
-    displayJobs = displayJobs.filter((job) => {
-      console.log(workplaceType, job.jobSite, workplaceType.has(job.jobSite));
-      return workplaceType.has(job.jobSite);
+    displayJobs = displayJobs.filter(({ jobSite }) => {
+      return workplaceType.has(jobSite);
     });
   }
-  console.log(displayJobs);
+  if (datePosted.label !== "Any") {
+    displayJobs = displayJobs.filter(({ createdAt }) => {
+      let createdAtTime = new Date(createdAt);
+      let currentDate = new Date();
+      let differenceInMilliseconds =
+        currentDate.getTime() - createdAtTime.getTime();
+      let days = differenceInMilliseconds / (1000 * 60 * 60 * 24);
+      return days <= datePosted.value;
+    });
+  }
   if (displayJobs.length == 0) return <ZeroFilteredJobs />;
   return (
     <div className="grid grid-cols-3 gap-10 m-4 justify-evenly">

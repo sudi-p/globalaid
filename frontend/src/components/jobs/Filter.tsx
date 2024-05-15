@@ -1,9 +1,13 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import Button from "@components/ui/Button";
 import { IoFilterSharp } from "react-icons/io5";
-import { MdDelete } from "react-icons/md";
+import { MdClose, MdDelete } from "react-icons/md";
 import FilterCheckBox from "./FilterCheckBox";
-import { FiltersProps, ExtendedFiltersProps } from "@hooks/useJobsFilter";
+import {
+  FiltersProps,
+  ExtendedFiltersProps,
+  DatePostedProps,
+} from "@hooks/useJobsFilter";
 import {
   commitments,
   datePostedOptions,
@@ -13,7 +17,7 @@ import styles from "./styles/Filter.module.scss";
 
 type FilterProps = {
   filters: ExtendedFiltersProps;
-  handleDatePosted: (type: string) => void;
+  handleDatePosted: (option: DatePostedProps) => void;
   handleCheckbox: (
     e: ChangeEvent<HTMLInputElement>,
     value: string,
@@ -57,7 +61,7 @@ export default function Filter({
         <div
           className={`${
             showFilters ? styles.filters : styles.removing
-          } flex gap-4 justify-evenly rounded-lg`}
+          } flex relative gap-4 justify-evenly rounded-lg`}
         >
           <FilterCheckBox
             title="Commitment"
@@ -76,21 +80,22 @@ export default function Filter({
           <div className="w-80">
             <div className="font-semibold mb-4 text-xl">Date Posted</div>
             <div className="flex flex-wrap gap-3">
-              {datePostedOptions.map(({ label }) => (
+              {datePostedOptions.map((option) => (
                 <button
-                  key={label}
-                  onClick={() => handleDatePosted(label)}
+                  key={option.label}
+                  onClick={() => handleDatePosted(option)}
                   className={`w-36 cursor-pointer rounded-3xl p-2 text-center ${
-                    filters.datePosted === label
+                    filters.datePosted === option
                       ? "bg-blue-400 text-white border-0"
                       : "border border-solid border-gray-300"
                   }`}
                 >
-                  {label}
+                  {option.label}
                 </button>
               ))}
             </div>
           </div>
+          <MdClose className="text-xl absolute top-3 right-3 hover:bold" />
         </div>
       )}
     </div>

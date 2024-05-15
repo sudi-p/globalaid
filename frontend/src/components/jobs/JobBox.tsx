@@ -14,6 +14,7 @@ export type JobProps = {
   phone: string;
   jobType: string;
   jobSite: string;
+  createdAt: Date;
 };
 
 const JobBox = ({

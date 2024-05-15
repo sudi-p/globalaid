@@ -7,12 +7,12 @@ export const commitments = [
 ];
 
 export const datePostedOptions = [
-  { label: "Any", value: "-1" },
-  { label: "Past 24 Hours", value: "1" },
-  { label: "Past 3 Days", value: "3" },
-  { label: "Past Week", value: "7" },
-  { label: "Past Month", value: "30" },
-  { label: "Past 3 Months", value: "90" },
+  { label: "Any", value: 0 },
+  { label: "Past 24 Hours", value: 1 },
+  { label: "Past 3 Days", value: 3 },
+  { label: "Past Week", value: 7 },
+  { label: "Past Month", value: 30 },
+  { label: "Past 3 Months", value: 90 },
 ];
 
 export const jobSites = [
