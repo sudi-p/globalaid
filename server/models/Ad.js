@@ -37,10 +37,9 @@ const AdSchema = new mongoose.Schema(
     },
   },
   {
-    timeStamps: true,
+    timestamps: true,
   }
 );
-
 
 const JobSchema = new mongoose.Schema(
   {
@@ -70,7 +69,7 @@ const JobSchema = new mongoose.Schema(
     },
   },
   {
-    timeStamps: true,
+    timestamps: true,
   }
 );
 
@@ -91,16 +90,16 @@ const RentalSchema = new mongoose.Schema(
     },
     rentalType: {
       type: String,
-      enum: ['Condo', 'Apartment', 'House', 'Town House', 'Basement'],
+      enum: ["Condo", "Apartment", "House", "Town House", "Basement"],
       requierd: true,
     },
     isOwner: {
       type: Boolean,
-      default: false
+      default: false,
     },
   },
   {
-    timeStamps: true,
+    timestamps: true,
   }
 );
 

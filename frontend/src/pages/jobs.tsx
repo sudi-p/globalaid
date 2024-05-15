@@ -39,22 +39,27 @@ function Jobs({ ads }: JobsListProps) {
 const JobsList = ({ ads: jobs, filters }: JobsListProps) => {
   const { searchText, commitment, workplaceType, datePosted } = filters;
   let displayJobs = [...jobs];
+  console.log(displayJobs);
   if (searchText) {
     const fuseOptions = { keys: ["title", "description", "company"] };
     const fuse = new Fuse(jobs, fuseOptions);
     displayJobs = fuse.search(searchText!).map((result) => result.item);
   }
   if (commitment.size) {
-    console.log(commitment);
     displayJobs = displayJobs.filter((job) => {
-      console.log(commitment, job.jobSite, commitment.has(job.jobSite));
       return commitment.has(job.jobType);
+    });
+  }
+  if (workplaceType.size) {
+    displayJobs = displayJobs.filter((job) => {
+      console.log(workplaceType, job.jobSite, workplaceType.has(job.jobSite));
+      return workplaceType.has(job.jobSite);
     });
   }
   console.log(displayJobs);
   if (displayJobs.length == 0) return <ZeroFilteredJobs />;
   return (
-    <div className="grid grid-cols-3 gap-10 p-10">
+    <div className="grid grid-cols-3 gap-10 m-4 justify-evenly">
       {displayJobs.map((job) => (
         <JobBox key={job._id} {...job} />
       ))}

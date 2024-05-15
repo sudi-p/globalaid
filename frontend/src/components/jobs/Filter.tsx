@@ -1,9 +1,9 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Button from "@components/ui/Button";
 import { IoFilterSharp } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import FilterCheckBox from "./FilterCheckBox";
-import { FiltersProps, ExtendedFiltersProps } from "../../hooks/useJobsFilter";
+import { FiltersProps, ExtendedFiltersProps } from "@hooks/useJobsFilter";
 import {
   commitments,
   datePostedOptions,
@@ -16,7 +16,7 @@ type FilterProps = {
   handleDatePosted: (type: string) => void;
   handleCheckbox: (
     e: ChangeEvent<HTMLInputElement>,
-    label: string,
+    value: string,
     filterType: keyof FiltersProps
   ) => void;
   handleTextChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -28,29 +28,36 @@ export default function Filter({
   handleDatePosted,
   handleTextChange,
 }: FilterProps) {
-  const [showFilters, handleShowFilter] = useState(true);
+  const [showFilters, setShowFilter] = useState(false);
+  const [showFilterAnimation, setShowFilterAnimation] = useState(false);
   return (
     <div>
       <div className="flex p-4 justify-center items-center gap-3">
         <input
           placeholder="Search For Jobs"
-          className="p-2 rounded border border-gray-100 w-72"
+          className="p-3 rounded outline-none border w-96 border-solid border-gray-300 active:border-gray-500"
           value={filters["searchText"]}
           name="searchText"
           onChange={(e) => handleTextChange(e)}
         />
-        <Button handleClick={() => handleShowFilter(!showFilters)}>
-          <IoFilterSharp /> Filter
-        </Button>
-        <Button handleClick={() => handleShowFilter(!showFilters)}>
-          <MdDelete /> Delete Filter
+        <Button
+          handleClick={() => {
+            setShowFilter(!showFilters);
+            setShowFilterAnimation(true);
+          }}
+          activeClassName={`${
+            showFilters &&
+            "bg-blue-300 text-white transition-all duration-75 ease-in"
+          }`}
+        >
+          <IoFilterSharp /> Filters
         </Button>
       </div>
-      {showFilters && (
+      {showFilterAnimation && (
         <div
           className={`${
-            showFilters ? styles.filters : ""
-          } flex gap-4 p-4 rounded-lg border border-solid border-rounded border-gray-400 m-4`}
+            showFilters ? styles.filters : styles.removing
+          } flex gap-4 justify-evenly rounded-lg`}
         >
           <FilterCheckBox
             title="Commitment"
@@ -69,17 +76,17 @@ export default function Filter({
           <div className="w-80">
             <div className="font-semibold mb-4 text-xl">Date Posted</div>
             <div className="flex flex-wrap gap-3">
-              {datePostedOptions.map((type) => (
+              {datePostedOptions.map(({ label }) => (
                 <button
-                  key={type}
-                  onClick={() => handleDatePosted(type)}
+                  key={label}
+                  onClick={() => handleDatePosted(label)}
                   className={`w-36 cursor-pointer rounded-3xl p-2 text-center ${
-                    filters.datePosted === type
+                    filters.datePosted === label
                       ? "bg-blue-400 text-white border-0"
-                      : "border border-solid border-blue-400"
+                      : "border border-solid border-gray-300"
                   }`}
                 >
-                  {type}
+                  {label}
                 </button>
               ))}
             </div>
