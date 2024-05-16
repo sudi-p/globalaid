@@ -10,7 +10,7 @@ const Button = ({ handleClick, children, activeClassName }: ButtonProps) => {
   return (
     <div
       onClick={handleClick}
-      className={`p-2 h-max cursor-pointer border border-solid border-gray-300 rounded-2xl ${activeClassName}`}
+      className={`p-2 h-max w-max cursor-pointer border border-solid border-gray-300 rounded-2xl ${activeClassName}`}
     >
       {children}
     </div>

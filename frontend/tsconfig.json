@@ -3,56 +3,30 @@
     "target": "es5",
     "baseUrl": "./src",
     "paths": {
-      "@components/*": [
-        "components/*"
-      ],
-      "@context/*": [
-        "context/*"
-      ],
-      "@hooks/*": [
-        "hooks/*"
-      ],
-      "@lib/*": [
-        "lib/*"
-      ],
-      "@pages/*": [
-        "pages/*"
-      ],
-      "@store/*": [
-        "store/*"
-      ],
-      "@styles/*": [
-        "styles/*"
-      ],
-      "@types/*": [
-        "types/*"
-      ],
-      "@utils/*": [
-        "utils/*"
-      ],
+      "@src/*": ["./*"],
+      "@components/*": ["components/*"],
+      "@context/*": ["context/*"],
+      "@hooks/*": ["hooks/*"],
+      "@lib/*": ["lib/*"],
+      "@pages/*": ["pages/*"],
+      "@store/*": ["store/*"],
+      "@styles/*": ["styles/*"],
+      "@types/*": ["types/*"],
+      "@utils/*": ["utils/*"]
     },
     "module": "commonjs",
     "jsx": "preserve",
     "outDir": "./dist",
     "strict": true,
     "esModuleInterop": true,
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "incremental": true,
     "moduleResolution": "node",
-    "types": [
-      "node",
-      "jest",
-      "@testing-library/jest-dom",
-      "cypress"
-    ],
+    "types": ["node", "jest", "@testing-library/jest-dom", "cypress"],
     "plugins": [
       {
         "name": "typescript-plugin-css-modules"
@@ -61,14 +35,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "include": [
-    "./pages/**/*",
-    "./src/**/*",
-    "./cypress/**/*",
-  ],
-  "exclude": [
-    "node_modules",
-    "cypress.config.ts",
-    "cypress",
-  ]
+  "include": ["./pages/**/*", "./src/**/*", "./cypress/**/*"],
+  "exclude": ["node_modules", "cypress.config.ts", "cypress"]
 }
