@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import Link from 'next/link';
+import Link from "next/link";
 
 const PageNotFound = () => {
   return (
@@ -14,10 +14,20 @@ const PageNotFound = () => {
           removed or you may be logged out from our system.
         </p>
         <p>
-          Go back to <Link href="/"><a className="font-bold no-underline">Home</a></Link> page.
+          Go back to{" "}
+          <Link href="/" className="font-bold no-underline">
+            Home
+          </Link>{" "}
+          page.
         </p>
       </div>
-      <div style={{ backgroundImage: "url('http://res.cloudinary.com/dtqxwjmwn/image/upload/v1533053037/Untitled.png')" }} className="bg-contain bg-no-repeat m-auto h-52 w-72 md:h-60 md:w-[500px]" />
+      <div
+        style={{
+          backgroundImage:
+            "url('http://res.cloudinary.com/dtqxwjmwn/image/upload/v1533053037/Untitled.png')",
+        }}
+        className="bg-contain bg-no-repeat m-auto h-52 w-72 md:h-60 md:w-[500px]"
+      />
     </div>
   );
 };

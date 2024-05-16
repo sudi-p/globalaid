@@ -17,6 +17,7 @@ export type JobProps = {
   createdAt: Date;
 };
 
+const keyList = [{ text: "email", icon: <GoLocation /> }];
 const JobBox = ({
   _id,
   description,
