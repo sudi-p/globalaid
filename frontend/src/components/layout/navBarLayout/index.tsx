@@ -101,10 +101,8 @@ export function NavBar() {
           } absolute block -left-1 -right-6 z-10 border border-solid border-gray-300 md:border-0 bg-white md:bg-transparent md:static md:flex items-center transition-all duration-500 ease-in`}
         >
           {navLinks.map(({ name, link }) => (
-            <Link href={link} key={name}>
-              <a className="no-underline">
-                <NavText isActive={router.route === link} title={name} />
-              </a>
+            <Link href={link} key={name} className="no-underline">
+              <NavText isActive={router.route === link} title={name} />
             </Link>
           ))}
           <div className="lg:hidden" onClick={() => logout}>

@@ -8,7 +8,12 @@ module.exports = {
         "plugin:testing-library/react",
         "plugin:jest/style",
         "next",
-        "next/core-web-vitals"
+        "next/core-web-vitals",
+        "plugin:storybook/recommended",
+        "plugin:storybook/recommended",
+        "plugin:storybook/recommended",
+        "plugin:storybook/recommended",
+        "plugin:storybook/recommended"
     ],
     "overrides": [
         {

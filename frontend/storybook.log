@@ -1,0 +1,22 @@
+npm ERR! code ERESOLVE
+npm ERR! ERESOLVE unable to resolve dependency tree
+npm ERR! 
+npm ERR! While resolving: globalaid@0.1.0
+npm ERR! Found: next@12.3.4
+npm ERR! node_modules/next
+npm ERR!   next@"^12.3.4" from the root project
+npm ERR! 
+npm ERR! Could not resolve dependency:
+npm ERR! peer next@"^13.5.0 || ^14.0.0" from @storybook/nextjs@8.1.1
+npm ERR! node_modules/@storybook/nextjs
+npm ERR!   dev @storybook/nextjs@"*" from the root project
+npm ERR! 
+npm ERR! Fix the upstream dependency conflict, or retry
+npm ERR! this command with --force or --legacy-peer-deps
+npm ERR! to accept an incorrect (and potentially broken) dependency resolution.
+npm ERR! 
+npm ERR! 
+npm ERR! For a full report see:
+npm ERR! C:\Users\spaud\AppData\Local\npm-cache\_logs\2024-05-16T18_18_40_117Z-eresolve-report.txt
+
+npm ERR! A complete log of this run can be found in: C:\Users\spaud\AppData\Local\npm-cache\_logs\2024-05-16T18_18_40_117Z-debug-0.log
