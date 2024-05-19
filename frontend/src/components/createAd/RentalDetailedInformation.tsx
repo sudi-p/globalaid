@@ -30,7 +30,10 @@ const phoneRegExp =
 
 const PostRentalSchema = yup.object().shape({
   location: yup.string().required("Please enter the location"),
-  rent: yup.number().required("Please enter the rent"),
+  rent: yup
+    .number()
+    .typeError("Please enter a valid number")
+    .required("Please enter the rent"),
   rentalType: yup.string().required("Please select the type of rental"),
   washRoom: yup
     .number()
@@ -147,8 +150,8 @@ const DetailedInformation = ({ adId, refetch }: DetailedInformationProps) => {
             value={rentalType}
             onChange={handleSelectChange}
           >
-            {rentalTypes.map(({ label, value }) => (
-              <MenuItem value={value}>{label}</MenuItem>
+            {rentalTypes.map((rentalType) => (
+              <MenuItem value={rentalType}>{rentalType}</MenuItem>
             ))}
           </Select>
           <FormHelperText>
