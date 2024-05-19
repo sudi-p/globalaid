@@ -1,7 +1,9 @@
 export const rentalTypes = [
-  { label: "Condo", value:"condo" },
-  { label:"Apartment", value:"apartment" },
-  { label:"House", value: "house" },
-  { label:"Town House", value:"townHouse" },
-  { label:"Basement", value: "basement" },
+  "Condo",
+  "Apartment",
+  "House",
+  "Town House",
+  "Basement",
 ]
+export const bedOptions = ["1 Bed + Den", "2", "3", "4", "5"];
+export const bathOptions = ["1", "2", "3", "4"];

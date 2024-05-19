@@ -3,8 +3,11 @@ import Button from "@components/ui/Button";
 export default {
   title: "Button",
   component: Button,
+  argTypes: { handleClick: { action: "handleClick" } },
 };
-
-export const AlertHello = () => (
-  <Button handleClick={() => alert("Hello")}> Say Hello!</Button>
-);
+const Template = (args) => <Button {...args} />;
+export const AlertHello = Template.bind({});
+AlertHello.args = {
+  handleClick: () => alert("Hello"),
+  children: "Say Hello!",
+};
