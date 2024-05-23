@@ -1,8 +1,8 @@
 import User from "../models/User.js";
-import Ad, { Job, Rental } from "../models/Ad.js";
+import Ad, { Job, Rental, RentalImage } from "../models/Ad.js";
 import Conversation, { Message } from "../models/Chat.js";
 
-import algoliasearch from "algoliasearch";
+import uploadImagesToCloudinary from "../cloudinary.js";
 
 //getUser ✅
 //getJobs ✅
@@ -366,10 +366,9 @@ export const createRental = async (req, res) => {
 };
 
 //Skip Upload Rental Photos
-export const skipUploadRentalPhotos = async (req, res) => {
+export const skipUploadRentalImages = async (req, res) => {
   try {
     const { adId } = req.body;
-    console.log("adId", adId);
     const ad = await Ad.findByIdAndUpdate(
       adId,
       {
@@ -377,7 +376,6 @@ export const skipUploadRentalPhotos = async (req, res) => {
       },
       { new: false }
     );
-    console.log(ad);
     if (!ad) res.status(404).json({ message: "Ad not found" });
     else res.status(201).json({ message: "Rental Published" });
   } catch (err) {
@@ -387,7 +385,32 @@ export const skipUploadRentalPhotos = async (req, res) => {
 };
 
 //Upload Rental Photos
+export const uploadRentalImages = async (req, res) => {
+  try {
+    console.log("Hello from uploadRentalImages");
+    const { adId, images } = req.body;
+    const urls = await uploadImagesToCloudinary(images);
+    const ad = await Ad.findByIdAndUpdate(
+      adId,
+      {
+        complete: true,
+      },
+      { new: false }
+    );
+    if (!ad) {
+      return res.status(404).json({ msg: "Ad not found" });
+    }
+    for (const url of urls) {
+      const rentalImage = new RentalImage({ ad: ad, url: url });
+      await rentalImage.save();
+    }
+    return res.status(201).json({ msg: "Photos Uploaded" });
+  } catch (err) {
+    return res.status(500).json({ msg: err.message });
+  }
+};
 
+//Get Chats
 export const getChats = async (req, res) => {
   try {
     const conversations = await Conversation.find({
