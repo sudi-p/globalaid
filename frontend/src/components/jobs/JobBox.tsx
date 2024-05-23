@@ -1,5 +1,8 @@
-import { Email, LocalPhone, LocationOnOutlined } from "@mui/icons-material/";
-import { Chip, Stack } from "@mui/material";
+import "react";
+import { FaBuilding, FaPhone } from "react-icons/fa";
+import { CiMail } from "react-icons/ci";
+import { GoLocation } from "react-icons/go";
+import { ReactNode } from "react";
 
 export type JobProps = {
   _id: string;
@@ -9,8 +12,12 @@ export type JobProps = {
   location: string;
   email: string;
   phone: string;
+  jobType: string;
+  jobSite: string;
+  createdAt: Date;
 };
 
+const keyList = [{ text: "email", icon: <GoLocation /> }];
 const JobBox = ({
   _id,
   description,
@@ -22,43 +29,34 @@ const JobBox = ({
 }: JobProps) => {
   return (
     <div
-      key={_id}
-      className={`w-76 p-5 border border-solid border-gray-300 rounded-lg bg-gray-100 text-gray-600`}
+      className={`w-76 p-5 flex flex-col gap-3 rounded-lg border border-solid border-gray-400 text-gray-700 hover:bg-gray-100 cursor-pointer`}
     >
       <div className="text-xl font-bold">{title}</div>
-      <div className="hover:text-green-400">{company}</div>
+      <IconText icon=<FaBuilding /> text={company} color="maroon" />
       {location && (
-        <Chip
-          color="primary"
-          size="small"
-          variant="outlined"
-          label={location}
-          icon={<LocationOnOutlined />}
-        />
+        <IconText icon=<GoLocation /> text={location} color="blue" />
       )}
-      <div className="my-2.5 truncate">{description}</div>
-      <Stack direction="row" spacing={1}>
-        {email && (
-          <Chip
-            color="primary"
-            size="small"
-            variant="outlined"
-            label={email}
-            icon={<Email fontSize="small" />}
-          />
-        )}
-        {phone && (
-          <Chip
-            color="primary"
-            size="small"
-            variant="outlined"
-            label={phone}
-            icon={<LocalPhone />}
-          />
-        )}
-      </Stack>
+      {email && <IconText icon=<CiMail /> text={email} color="green" />}
+      {phone && <IconText icon=<FaPhone /> text={phone} color="gray" />}
+      <div className="font-bold">Descripton:</div>
+      <div className="truncate">{description}</div>
     </div>
   );
 };
 
 export default JobBox;
+
+type IconTextProps = {
+  icon: ReactNode;
+  text: string;
+  color?: string;
+};
+
+export const IconText = ({ icon, text, color }: IconTextProps) => {
+  return (
+    <div className="flex items-center gap-2 ">
+      <div style={{ color: color }}>{icon}</div>
+      {text}
+    </div>
+  );
+};

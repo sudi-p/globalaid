@@ -55,8 +55,8 @@ function HeroBox({
       <div className="text-lg font-semibold flex-1 ">
         <p>{heading1}</p>
         <p>{heading2}</p>
-        <Link href={link}>
-          <a className="no-underline text-green-400">{linkText}</a>
+        <Link href={link} className="no-underline text-green-400">
+          {linkText}
         </Link>
       </div>
       <div

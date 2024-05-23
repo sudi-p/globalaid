@@ -1,54 +1,96 @@
-import React, { ReactElement, ReactNode, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { Chip, Stack, Paper } from "@mui/material";
-import axios, { axiosPrivate } from "@lib/api";
+import React, { ReactElement } from "react";
+import Fuse, { FuseResult } from "fuse.js";
 import NavbarLayout from "@components/layout/navBarLayout/";
 import Filter from "../components/jobs/Filter";
-import SearchBar from "../components/jobs/SearchBar";
 import JobBox, { JobProps } from "@components/jobs/JobBox";
+import { ExtendedFiltersProps, useJobsFilter } from "@hooks/useJobsFilter";
+import { axiosPrivate } from "@lib/api";
 
-function Jobs({ ads }) {
-  const [checkbox, setCheckbox] = useState({
-    fullTime: false,
-    partTime: false,
-    weekEnds: false,
-    permanent: false,
-    temporary: false,
-    casual: false,
-    inPerson: false,
-    remote: false,
-    hybrid: false,
-  });
-  console.log(ads);
+type JobsListProps = {
+  ads: JobProps[];
+  filters: ExtendedFiltersProps;
+};
+
+function Jobs({ ads }: JobsListProps) {
+  const { filters, handleCheckbox, handleDatePosted, handleTextChange } =
+    useJobsFilter({
+      commitment: new Set(),
+      workplaceType: new Set(),
+      datePosted: { label: "Any", value: 0 },
+      searchText: "",
+    });
   return (
     <div className="my-5 mx-auto max-w-screen-xl">
-      <Stack direction="row" spacing={"20px"}>
-        <Filter checkbox={checkbox} setCheckbox={setCheckbox} />
-        <JobsList jobs={ads} />
-      </Stack>
+      <Filter
+        filters={filters}
+        handleCheckbox={handleCheckbox}
+        handleDatePosted={handleDatePosted}
+        handleTextChange={handleTextChange}
+      />
+      {ads.length == 0 ? (
+        <ZeroJobs />
+      ) : (
+        <JobsList ads={ads} filters={filters} />
+      )}
     </div>
   );
 }
 
-type JobsListProps = {
-  jobs: JobProps[];
-};
-
-const JobsList = ({ jobs }: JobsListProps) => {
+const JobsList = ({ ads: jobs, filters }: JobsListProps) => {
+  const { searchText, commitment, workplaceType, datePosted } = filters;
+  let displayJobs = [...jobs];
+  if (searchText) {
+    const fuseOptions = { keys: ["title", "description", "company"] };
+    const fuse = new Fuse(jobs, fuseOptions);
+    displayJobs = fuse.search(searchText!).map((result) => result.item);
+  }
+  if (commitment.size) {
+    displayJobs = displayJobs.filter(({ jobType }) => {
+      return commitment.has(jobType);
+    });
+  }
+  if (workplaceType.size) {
+    displayJobs = displayJobs.filter(({ jobSite }) => {
+      return workplaceType.has(jobSite);
+    });
+  }
+  if (datePosted.label !== "Any") {
+    displayJobs = displayJobs.filter(({ createdAt }) => {
+      let createdAtTime = new Date(createdAt);
+      let currentDate = new Date();
+      let differenceInMilliseconds =
+        currentDate.getTime() - createdAtTime.getTime();
+      let days = differenceInMilliseconds / (1000 * 60 * 60 * 24);
+      return days <= datePosted.value;
+    });
+  }
+  if (displayJobs.length == 0) return <ZeroFilteredJobs />;
   return (
-    <Stack spacing={"20px"} className="flex-1">
-      <SearchBar />
-      <Paper elevation={0} variant="outlined" className="flex-1 p-5">
-        <Stack direction="row" flexWrap={"wrap"} gap="15px">
-          {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
-          {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
-          {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
-          {jobs && jobs.map((job) => <JobBox key={job._id} {...job} />)}
-        </Stack>
-      </Paper>
-    </Stack>
+    <div className="grid grid-cols-3 gap-10 m-4 justify-evenly">
+      {displayJobs.map((job) => (
+        <JobBox key={job._id} {...job} />
+      ))}
+    </div>
   );
 };
+
+const ZeroFilteredJobs = () => {
+  return (
+    <div className="text-3xl text-center p-52">
+      Sorry there are no jobs that matches your requirement at the moment.
+    </div>
+  );
+};
+
+const ZeroJobs = () => {
+  return (
+    <div className="text-3xl text-center p-52">
+      Sorry there are 0 active jobs at the moment.
+    </div>
+  );
+};
+
+export default Jobs;
 
 export const getServerSideProps = async () => {
   try {
@@ -64,8 +106,6 @@ export const getServerSideProps = async () => {
     };
   }
 };
-
-export default Jobs;
 
 Jobs.getLayout = function getLayout(page: ReactElement) {
   return <NavbarLayout>{page}</NavbarLayout>;

@@ -37,10 +37,9 @@ const AdSchema = new mongoose.Schema(
     },
   },
   {
-    timeStamps: true,
+    timestamps: true,
   }
 );
-
 
 const JobSchema = new mongoose.Schema(
   {
@@ -70,7 +69,7 @@ const JobSchema = new mongoose.Schema(
     },
   },
   {
-    timeStamps: true,
+    timestamps: true,
   }
 );
 
@@ -91,20 +90,26 @@ const RentalSchema = new mongoose.Schema(
     },
     rentalType: {
       type: String,
-      enum: ['Condo', 'Apartment', 'House', 'Town House', 'Basement'],
-      requierd: true,
+      enum: ["Condo", "Apartment", "House", "Town House", "Basement"],
+      required: true,
     },
     isOwner: {
       type: Boolean,
-      default: false
+      default: false,
     },
   },
   {
-    timeStamps: true,
+    timestamps: true,
   }
 );
+
+const RentalImageSchema = new mongoose.Schema({
+  rental: { type: mongoose.Schema.Types.ObjectId, ref: "Rental" },
+  url: { type: String, required: true },
+});
 
 const Ad = mongoose.model("Ad", AdSchema);
 export const Job = mongoose.model("Job", JobSchema);
 export const Rental = mongoose.model("Rental", RentalSchema);
+export const RentalImage = mongoose.model("RentalImage", RentalImageSchema);
 export default Ad;

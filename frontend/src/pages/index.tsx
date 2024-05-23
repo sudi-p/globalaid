@@ -17,14 +17,20 @@ export default function DashboardContainer(props) {
 }
 
 export async function getServerSideProps() {
-  const res = await axios.get("/user/gettoprentalsjobs");
-  const { topJobs, topRentals } = res?.data;
-  return {
-    props: {
-      topJobs,
-      topRentals,
-    },
-  };
+  try {
+    const res = await axios.get("/user/gettoprentalsjobs");
+    const { topJobs, topRentals } = res?.data;
+    return {
+      props: {
+        topJobs,
+        topRentals,
+      },
+    };
+  } catch (e) {
+    return {
+      notFound: true,
+    };
+  }
 }
 
 DashboardContainer.getLayout = function getLayout(page: ReactNode) {

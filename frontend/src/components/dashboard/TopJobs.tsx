@@ -13,8 +13,8 @@ export default function TopJobs({ jobs }: TopJobsProps) {
       <div className="p-5 w-11/12 m-auto max-w-screen-xl">
         <div className="text-2xl mb-5 flex justify-between">
           <div>Top Jobs</div>
-          <Link href="/jobs/">
-            <a className="text-green-400 text-lg no-underline">View More</a>
+          <Link href="/jobs/" className="text-green-400 text-lg no-underline">
+            View More
           </Link>
         </div>
         <div className="flex flex-wrap justify-center m-auto box-border sm:gap-5">

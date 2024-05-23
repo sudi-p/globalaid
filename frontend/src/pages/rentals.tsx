@@ -1,9 +1,10 @@
-import React, { ReactNode } from 'react';
-import { axiosPrivate } from '../lib/api';
-import Rental, { RentalProps } from '../components/rentals/Rental';
-import NavbarLayout from '@components/layout/navBarLayout';
+import React, { ReactNode } from "react";
+import { axiosPrivate } from "../lib/api";
+import Rental, { RentalProps } from "../components/rentals/Rental";
+import NavbarLayout from "@components/layout/navBarLayout";
+import RentalsFilter from "@src/components/rentals/RentalsFilter";
 
-function Rentals({ rentals }: { rentals: RentalProps[]}) {
+function Rentals({ rentals }: { rentals: RentalProps[] }) {
   // const rentalsQuery = useQuery({
   //   queryKey: ['rentals'],
   //   queryFn: async () => {
@@ -17,12 +18,10 @@ function Rentals({ rentals }: { rentals: RentalProps[]}) {
   return (
     <div className="m-auto max-w-screen-xl">
       <div className="flex gap-2">
-        <div>Section for filter</div>
+        <RentalsFilter />
         <div className="flex-1 p-4">
-          {rentals?.map((rental: RentalProps, id:number) => {
-            return (
-              <Rental key={`rental${id}`} {...rental} />
-            )
+          {rentals?.map((rental: RentalProps, id: number) => {
+            return <Rental key={`rental${id}`} {...rental} />;
           })}
         </div>
       </div>
@@ -34,19 +33,19 @@ export default Rentals;
 
 export const getServerSideProps = async () => {
   try {
-    const res = await axiosPrivate.get('/user/getrentals')
+    const res = await axiosPrivate.get("/user/getrentals");
     return {
       props: {
         rentals: res?.data?.rentals,
-      }
-    }
+      },
+    };
   } catch (e) {
     return {
       notFound: true,
     };
   }
-}
+};
 
-Rentals.getLayout = function getLayout(page: ReactNode){
-  return <NavbarLayout>{page}</NavbarLayout>
-}
+Rentals.getLayout = function getLayout(page: ReactNode) {
+  return <NavbarLayout>{page}</NavbarLayout>;
+};
