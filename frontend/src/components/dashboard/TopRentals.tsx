@@ -25,7 +25,7 @@ export default function TopRentals({ rentals }: TopRentalsProps) {
   );
 }
 
-function RentalBox({ id, title, rent, image }: TopRentalProps) {
+function RentalBox({ title, rent, image }: TopRentalProps) {
   return (
     <div className="w-full sm:w-[calc(50%-10px)] xl:w-[calc(25%-15px)] mb-4 sm:mb-0">
       <Paper className="cursor-pointer brightness-95 hover:brightness-100">
