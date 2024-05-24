@@ -30,6 +30,7 @@ export const getUser = async (req, res) => {
 
 export const getTopRentalsJobs = async (req, res) => {
   try {
+    console.log("Hello");
     const topRentals = [
       {
         id: "63f45ba2631adf1b0a35b94f",
