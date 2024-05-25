@@ -1,23 +1,59 @@
+# The version of the docker-compose.
 version: "3.8"
+# Telling docker-compose to build the client and server images and run them in containers.
 services:
-  frontend:
-    build: ./frontend
-    container_name: frontend_c
-    ports: 
-      - '3000:3000'
+  server:
+    # Telling docker-compose to build the client image using the Dockerfile in the server directory.
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: globalaid_sc
+    environment:
+      - WATCHPACK_POLLING=true
+      - NODE_ENV=development
+      - IN_DOCKER=true
+    networks:
+      - gateway
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./server:/app:ro
+      - /app/node_modules
     stdin_open: true
     tty: true
-  api_server:
-    image: api-server
-    ports: 
-      - '3001:3001'
-  mongo:
-    image: mongo:3.6.19-xenial
 
+  client:
+    # Telling docker-compose to build the client image using the Dockerfile in the client directory.
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    # Giving the container a name.
+    container_name: globalaid_fc
+    environment:
+      - WATCHPACK_POLLING=true
+      - NODE_ENV=development
+      - IN_DOCKER=true
+    networks:
+      - gateway
+    # Mapping the port 3000 on the host machine to the port 3000 on the container.
+    ports:
+      - "3000:3000"
+    # Mapping the client directory on the host machine to the /app directory on the container.
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    # Allows you to run container in detached mode.
+    stdin_open: true
+    tty: true
+    depends_on:
+      - server
 
+networks:
+  gateway:
+    driver: bridge
 
-
-
-    # volumes:
-    #   - ./frontend:/app
-    #   - ./app/node_modules 
+volumes:
+  data-volume:
+  node_modules:
+  web-root:
+    driver: local

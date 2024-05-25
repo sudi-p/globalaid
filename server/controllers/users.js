@@ -228,7 +228,7 @@ export const getMyAd = async (req, res) => {
   try {
     const { adId } = req.query;
     let ad = await Ad.findOne({ _id: adId }).lean();
-    if (!ad) res.sendStatus(401);
+    if (!ad) res.sendStatus(404);
     if (!ad.complete) return res.sendStatus(401);
     const adType = ad.adType;
     if (adType == "job") {
@@ -237,8 +237,13 @@ export const getMyAd = async (req, res) => {
       ad = { ...ad, ...job };
     } else {
       const rental = await Rental.findOne({ ad: ad._id }).lean();
-      if (!rental) throw new Error("Rental Not Found");
-      ad = { ...ad, ...rental };
+      if (!rental) return res.status(404).json({ message: "Rental not found" });
+      const rentalImages = await RentalImage.find({
+        rental: rental._id,
+      }).lean();
+      console.log(rentalImages);
+      let images = rentalImages.map((img) => img.url);
+      ad = { ...ad, ...rental, images };
     }
     res.status(201).json({ ad });
   } catch (err) {
@@ -400,8 +405,12 @@ export const uploadRentalImages = async (req, res) => {
     if (!ad) {
       return res.status(404).json({ msg: "Ad not found" });
     }
+    const rental = await Rental.find({ ad: adId });
+    if (!rental) {
+      return res.status(404).json({ msg: "Rental not found" });
+    }
     for (const url of urls) {
-      const rentalImage = new RentalImage({ ad: ad, url: url });
+      const rentalImage = new RentalImage({ rental: rental[0]._id, url: url });
       await rentalImage.save();
     }
     return res.status(201).json({ msg: "Photos Uploaded" });

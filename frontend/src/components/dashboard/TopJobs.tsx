@@ -27,6 +27,15 @@ export default function TopJobs({ jobs }: TopJobsProps) {
   );
 }
 
+type JobCardProps = {
+  id: string;
+  title: string;
+  location: string;
+  jobType: string;
+  salary: number;
+  description: string;
+};
+
 function JobCard({
   title,
   location,

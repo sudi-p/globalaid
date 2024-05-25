@@ -59,6 +59,7 @@ const Login = () => {
       await addAuthToStorage(user);
       router.push("/");
     } catch (err: unknown) {
+      console.log(err);
       setError(err?.response?.data?.msg);
     }
   };
