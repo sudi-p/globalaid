@@ -2,6 +2,8 @@ import React, { Suspense } from "react";
 import { Provider } from "react-redux";
 import store from "../store/store";
 import NextNProgress from "nextjs-progressbar";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -44,6 +46,11 @@ export default function MyApp({ Component, pageProps }) {
                   <Component {...pageProps} />
                 </>
               )}
+              <ToastContainer
+                position="bottom-center"
+                autoClose={1000}
+                hideProgressBar={true}
+              />
             </ThemeProvider>
             <ReactQueryDevtools initialIsOpen={false} />
           </QueryClientProvider>
