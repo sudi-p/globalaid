@@ -12,10 +12,11 @@ import {
   skipUploadRentalImages,
   uploadRentalImages,
   postAd,
+  postMessage,
   getIndividualChat,
   getChats,
   sendChatMessage,
-} from "../controllers/users.js";
+} from "../controllers/users.controllers.js";
 import { verifyToken, checkIfAuthenticated } from "../middleware/auth.js";
 
 const router = express.Router();
@@ -32,6 +33,7 @@ router.post("/skipuploadrentalimages", verifyToken, skipUploadRentalImages);
 router.post("/uploadrentalimages", verifyToken, uploadRentalImages);
 router.post("/skipuploadrentalimages", verifyToken, skipUploadRentalImages);
 router.get("/getmyads/", verifyToken, getMyAds);
+router.post("/postmessage/", verifyToken, postMessage);
 router.get("/getmyad/", verifyToken, getMyAd);
 router.get("/getchats", verifyToken, getChats);
 router.get("/getindividualchat", verifyToken, getIndividualChat);
