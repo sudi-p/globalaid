@@ -8,7 +8,6 @@ if (process.env.NODE_ENV !== "production") {
 if (process.env.IN_DOCKER == "true") {
   BASE_URL = "http://server:3001/api";
 }
-console.log("Hello", process.env.NODE_ENV, process.env.IN_DOCKER);
 axios.defaults.withCredentials = true;
 export default axios.create({
   baseURL: BASE_URL,

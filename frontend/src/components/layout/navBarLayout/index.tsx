@@ -105,9 +105,11 @@ export function NavBar() {
               <NavText isActive={router.route === link} title={name} />
             </Link>
           ))}
-          <div className="lg:hidden" onClick={() => logout}>
-            <NavText title={"Log Out"} />
-          </div>
+          {email && (
+            <div className="lg:hidden" onClick={() => logout}>
+              <NavText title={"Log Out"} />
+            </div>
+          )}
         </div>
         <div className={`${!email && "lg:absolute"} flex items-center`}>
           {email && (
