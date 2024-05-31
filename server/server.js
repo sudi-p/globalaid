@@ -14,6 +14,7 @@ import http from "http";
 
 const app = express();
 const httpServer = http.createServer(app);
+import { Server } from "socket.io";
 
 // Configurations
 const __filename = fileURLToPath(import.meta.url);
@@ -50,3 +51,22 @@ mongoose
     httpServer.listen(PORT, () => console.log(`SERVER PORT: ${PORT}`));
   })
   .catch((error) => console.log(error));
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: ["http://localhost:3000"],
+    methods: ["GET", "POST"],
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("a user connected", socket.id);
+
+  socket.on("sendMessage", ({ message }) => {
+    console.log(message);
+    io.emit("sendMessage", message + "from server");
+  });
+  socket.on("disconnect", () => {
+    console.log("user disconnected", socket.id);
+  });
+});
