@@ -6,7 +6,7 @@ import NavbarLayout from "@components/layout/navBarLayout";
 import { useQuery } from "@tanstack/react-query";
 import Rental from "@src/components/myads/Rental";
 import { Link } from "@mui/material";
-import { FaBriefcase } from "react-icons/fa";
+import Job from "@src/components/myads/Job";
 import {
   Home as HomeIcon,
   Engineering as EngineeringIcon,
@@ -51,15 +51,8 @@ export default function MyAd() {
       </div>
 
       {complete ? (
-        <div className="border-t pt-6">
-          {adType === "rent" ? (
-            <Rental {...data} />
-          ) : (
-            <div className="flex items-center space-x-2 text-xl font-semibold text-gray-700">
-              <FaBriefcase />
-              <span>Job Details</span>
-            </div>
-          )}
+        <div>
+          {adType === "rent" ? <Rental {...data} /> : <Job {...data} />}
         </div>
       ) : (
         <div className="text-xl text-gray-500 mt-4 border border-dotted border-gray-300 w-max p-8 m-auto center flex flex-col items-center justify-center gap-3">
