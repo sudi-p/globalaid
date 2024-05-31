@@ -66,7 +66,7 @@ const Login = () => {
   useEffect(() => {
     if (loggedInUser.isLoggedIn) router.push("/");
   }, [router, loggedInUser]);
-
+  console.log(email, password);
   return (
     <>
       <div className="text-3xl mb-8">Welcome to GlobalAid</div>
@@ -125,7 +125,7 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             <FormHelperText>
-              {errors.password?.message?.toString()}
+              {errors.password && errors.password?.message?.toString()}
             </FormHelperText>
           </FormControl>
         </div>
