@@ -36,9 +36,13 @@ export default function IndividualChat({ chatId }: IndividualChatProps) {
   });
 
   useEffect(() => {
-    socket.on("message", (message) => {
-      setMessages((messages) => [...messages, message]);
+    socket.on("sendMessage", (message) => {
+      console.log(message);
+      // setMessages((messages) => [...messages, message]);
     });
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -47,20 +51,6 @@ export default function IndividualChat({ chatId }: IndividualChatProps) {
       setMessages(messageList);
     }
   }, [data]);
-  const chatMutation = useMutation({
-    mutationFn: () => {
-      return getClient.post("/user/sendChatMessage", {
-        chatId: chatId,
-        chatText: inputChatRef.current?.value,
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["chats", chatId]);
-      if (inputChatRef.current) {
-        inputChatRef.current.value = "";
-      }
-    },
-  });
   const sendChatMessage = () => {
     if (inputChatRef.current) {
       const message = inputChatRef.current.value;
