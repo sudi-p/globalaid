@@ -44,9 +44,9 @@ function RentalBox({ title, rent, image }: TopRentalProps) {
         style={{ backgroundImage: `url('${image}')` }}
       >
         {!image && (
-          <div className="h-full flex flex-col justify-center items-center text-2xl text-gray-400 border-0 border-b border-solid border-gray-300">
+          <div className="h-full flex flex-col justify-center items-center text-xl text-gray-400 border-0 border-b border-solid border-gray-300">
             <CiImageOn className="text-6xl" />
-            <div className="text-3xl">Image</div> Coming Soon
+            <div className="text-2xl">Image</div> Coming Soon
           </div>
         )}
       </div>
