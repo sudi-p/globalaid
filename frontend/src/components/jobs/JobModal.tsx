@@ -33,6 +33,7 @@ const JobModal = ({
   isOwner,
 }: JobModalProps) => {
   const [message, setMessage] = useState("I am interested in this job.");
+  const handleSend = () => {};
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-black bg-opacity-40 z-50">
       <div className=" w-1/3 relative m-auto border border-solid border-gray-400 bg-white rounded-xl p-4">
@@ -61,7 +62,7 @@ const JobModal = ({
             onChange={(e) => setMessage(e.target.value)}
           />
           <div
-            onClick={() => !isOwner && alert("message")}
+            onClick={() => !isOwner && handleSend}
             className={`border border-solid rounded-lg  p-2 text-white ${isOwner ? "cursor-not-allowed bg-blue-300" : "bg-blue-500 cursor-pointer"}`}
           >
             Send

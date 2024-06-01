@@ -117,7 +117,6 @@ export const getJobs = async (req, res) => {
             throw new Error("Job not found");
           }
           const { company, jobType, jobSite } = job;
-          console.log("Hello", loggedInUser);
           const adOwner = ad.user;
           const { firstName, lastName } = adOwner;
           return {
@@ -429,8 +428,6 @@ export const postMessage = async (req, res) => {
     const loggedInUser = req.user;
     let ad = await Ad.find({ _id: adId });
     if (!ad) return res.sendStatus(404);
-    console.log(ad[0]);
-    console.log("Hello", loggedInUser, ad[0].user);
     if (ad[0].user === loggedInUser) return res.sendStatus(400);
     const conversation = new Conversation({
       ad: adId,
@@ -446,36 +443,7 @@ export const postMessage = async (req, res) => {
     conversation.save();
     return res.status(201).json({ msg: "Message Sent" });
   } catch (error) {
-    console.log(error.message);
     return res.status(500).json({ msg: error.message });
-  }
-};
-
-export const sendChatMessage = async (req, res) => {
-  try {
-    const loggedInUser = req.user;
-    const { chatId, chatText } = req.body;
-    if (!chatId || !chatText) return res.sendStatus(404);
-    const conversations = await Conversation.find({ _id: chatId }).populate(
-      "ad"
-    );
-    if (!conversations) return res.sendStatus(404);
-    const conversation = conversations[0];
-    const {
-      ad: { user: adUser },
-    } = conversation;
-    console.log("Hello", adUser, loggedInUser);
-    const message = new Message({
-      conversation,
-      sender: loggedInUser,
-      content: chatText,
-    });
-    message.save();
-    conversation.lastMessage = message;
-    conversation.save();
-    return res.status(201).json({ msg: "message sent" });
-  } catch (err) {
-    return res.status(500).json({ msg: err.message });
   }
 };
 
@@ -514,6 +482,7 @@ export const getChats = async (req, res) => {
 export const getIndividualChat = async (req, res) => {
   try {
     const { chatId } = req.query;
+    const loggedInUser = req.user;
     if (!chatId) return res.sendStatus(404);
     let conversation = await Conversation.find({ _id: chatId })
       .populate("ad")
@@ -521,7 +490,7 @@ export const getIndividualChat = async (req, res) => {
       .lean();
     if (!conversation) return res.sendStatus(404);
     conversation = conversation[0];
-    const { ad, client } = conversation;
+    const { client } = conversation;
     const messages = await Message.find({
       conversation: conversation._id,
     }).sort({ createdAt: 1 });
@@ -532,12 +501,9 @@ export const getIndividualChat = async (req, res) => {
       const lastMessageDuration = Math.abs(
         (tempDate - createdAt) / (1000 * 60 * 60 * 24)
       );
-      console.log(lastMessageDuration);
-      const isMyMessage = sender == req.user;
-      const senderName = `${sender.firstName} ${sender.lastName}`;
+      const isMyMessage = sender == loggedInUser;
       const messageObject = {
         content,
-        senderName,
         isMyMessage,
         messageId: message._id,
       };
@@ -551,6 +517,7 @@ export const getIndividualChat = async (req, res) => {
       messageList.push(messageObject);
     });
     const data = {
+      userId: loggedInUser,
       ad: conversation.ad.title,
       location: conversation.ad.location,
       client,
@@ -558,7 +525,29 @@ export const getIndividualChat = async (req, res) => {
     };
     return res.status(201).json({ ...data });
   } catch (error) {
-    console.log(error.message);
     return res.status(500).json({ msg: error.message });
+  }
+};
+
+export const sendChatMessage = async (chatId, content, senderId) => {
+  try {
+    if (!chatId || !content || !senderId) throw "Wrong Data";
+    let sender = await User.find({ _id: senderId });
+    if (!sender) throw "No User Error";
+    sender = sender[0];
+    let conversation = await Conversation.find({ _id: chatId }).populate("ad");
+    if (!conversation) throw "No Conversation Error";
+    conversation = conversation[0];
+    const message = new Message({
+      conversation,
+      sender: sender,
+      content: content,
+    });
+    message.save();
+    conversation.lastMessage = message;
+    conversation.save();
+    return { messageId: message._id };
+  } catch (err) {
+    return "Error";
   }
 };

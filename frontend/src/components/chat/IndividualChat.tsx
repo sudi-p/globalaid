@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import getClient, { axiosPrivate } from "../../lib/api";
-import { Stack, TextField } from "@mui/material";
+import { axiosPrivate } from "../../lib/api";
+import { TextField } from "@mui/material";
 import { Send as SendIcon } from "@mui/icons-material";
 import PageNotFound from "../../pages/404";
 import { io, Socket } from "socket.io-client";
@@ -11,16 +11,14 @@ type IndividualChatProps = {
 };
 
 type MessageProps = {
-  index: number;
   content: string;
-  createdAt: TimeRanges;
-  senderName: string;
+  createdAt?: TimeRanges | string;
   isMyMessage: boolean;
   messageId: string;
 };
 
 export default function IndividualChat({ chatId }: IndividualChatProps) {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<MessageProps[]>([]);
   let socketRef = useRef<Socket | null>(null);
   const inputChatRef = useRef<HTMLInputElement | null>(null);
   const {
@@ -44,9 +42,11 @@ export default function IndividualChat({ chatId }: IndividualChatProps) {
     if (chatId) {
       socket.emit("joinRoom", { chatId });
     }
-    socket.on("sendMessage", (message) => {
-      console.log(message);
-      // setMessages((messages) => [...messages, message]);
+    socket.on("receiveMessageToOther", (message) => {
+      setMessages((messages) => [...messages, message]);
+    });
+    socket.on("receiveMessageToSelf", (message) => {
+      setMessages((messages) => [...messages, message]);
     });
     return () => {
       socket.disconnect();
@@ -62,14 +62,23 @@ export default function IndividualChat({ chatId }: IndividualChatProps) {
   const sendChatMessage = () => {
     if (inputChatRef.current) {
       const message = inputChatRef.current.value;
-      if (socketRef.current) {
-        socketRef.current.emit("sendMessage", { message });
+      if (message && socketRef.current) {
+        const { userId } = chatData;
+        console.log(chatId, message, userId);
+        const socket = socketRef.current;
+        socket.emit("sendMessage", {
+          chatId,
+          content: message,
+          senderId: userId,
+        });
+        inputChatRef.current.value = "";
       }
     }
   };
   if (isLoading) return <h1>Loading...</h1>;
   if (error) return <PageNotFound />;
   const { ad, location, client } = chatData;
+
   return (
     <div>
       <div className="border border-solid flex flex-col border-gray-400 rounded-lg h-[500px] w-[500px]">
@@ -82,17 +91,22 @@ export default function IndividualChat({ chatId }: IndividualChatProps) {
         <div className="p-5 h-96 overflow-scroll">
           {messages.map((message: MessageProps) => {
             const { content, isMyMessage, messageId, createdAt } = message;
-            console.log(createdAt);
             return (
-              <>
-                {createdAt && <center>{createdAt.toString()}</center>}
+              <div
+                key={messageId}
+                className={`flex flex-col ${isMyMessage ? "items-end" : "items-start"}`}
+              >
+                {createdAt && (
+                  <p className="font-thin text-gray-300">
+                    {createdAt.toString()}
+                  </p>
+                )}
                 <div
-                  key={messageId}
-                  className={`w-52 bg-white border border-solid border-gray-300 rounded p-2 mt-1 mb-2 flex ${isMyMessage ? "bg-blue-200 justify-end" : "justify-start"}`}
+                  className={`w-52 bg-white border border-solid border-gray-300 rounded p-2 mt-1 mb-2 ${isMyMessage && "bg-blue-200"}`}
                 >
                   {content}
                 </div>
-              </>
+              </div>
             );
           })}
         </div>

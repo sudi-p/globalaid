@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import { sendChatMessage } from "../controllers/users.controllers.js";
 
 const configureSocket = (httpServer) => {
   const io = new Server(httpServer, {
@@ -15,15 +16,20 @@ const configureSocket = (httpServer) => {
       socket.join(chatId);
       console.log(`User joined room: ${chatId}`);
     });
-    socket.on("sendMessage", async ({ chatId, sender, content }) => {
-      // const message = new Message({ conversation: chatId, sender, content });
-      // await message.save();
-      // io.to(chatId).emit("receiveMessage", {
-      //   chatId,
-      //   sender,
-      //   content,
-      //   createdAt: message.createdAt,
-      // });
+    socket.on("sendMessage", async ({ chatId, content, senderId }) => {
+      const { messageId } = sendChatMessage(chatId, content, senderId);
+      socket.broadcast.to(chatId).emit("receiveMessageToOther", {
+        chatId,
+        isMyMessage: false,
+        content,
+        messageId,
+      });
+      socket.emit("receiveMessageToSelf", {
+        chatId,
+        isMyMessage: true,
+        content,
+        messageId,
+      });
     });
 
     socket.on("disconnect", () => {
