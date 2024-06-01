@@ -3,7 +3,6 @@ import Ad, { Job, Rental, RentalImage } from "../models/Ad.models.js";
 import Conversation, { Message } from "../models/Chat.models.js";
 
 import uploadImagesToCloudinary from "../cloudinary.js";
-import { getReceiverSocketId, io } from "../socket/socket.js";
 
 //getUser ✅
 //getJobs ✅
@@ -527,17 +526,29 @@ export const getIndividualChat = async (req, res) => {
       conversation: conversation._id,
     }).sort({ createdAt: 1 });
     let messageList = [];
+    let tempDate = new Date(2021 / 12 / 12);
     messages.map((message) => {
-      const { content, isAdOwner, createdAt } = message;
-      const sender = isAdOwner ? ad.user : client;
+      const { content, sender, createdAt } = message;
+      const lastMessageDuration = Math.abs(
+        (tempDate - createdAt) / (1000 * 60 * 60 * 24)
+      );
+      console.log(lastMessageDuration);
+      const isMyMessage = sender == req.user;
       const senderName = `${sender.firstName} ${sender.lastName}`;
-      messageList.push({
+      const messageObject = {
         content,
-        createdAt,
         senderName,
-        sender,
+        isMyMessage,
         messageId: message._id,
-      });
+      };
+      if (lastMessageDuration > 1) {
+        let date = createdAt.toISOString().split("T")[0];
+        if (Math.abs(createdAt - new Date()) / (1000 * 60 * 60 * 24) <= 1)
+          date = "Today";
+        messageObject.createdAt = date;
+        tempDate = createdAt;
+      }
+      messageList.push(messageObject);
     });
     const data = {
       ad: conversation.ad.title,
@@ -547,6 +558,7 @@ export const getIndividualChat = async (req, res) => {
     };
     return res.status(201).json({ ...data });
   } catch (error) {
+    console.log(error.message);
     return res.status(500).json({ msg: error.message });
   }
 };

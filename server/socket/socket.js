@@ -1,38 +1,67 @@
 import { Server } from "socket.io";
-import http from "http";
-import express from "express";
 
-const app = express();
+const configureSocket = (httpServer) => {
+  const io = new Server(httpServer, {
+    cors: {
+      origin: ["http://localhost:3000"],
+      methods: ["GET", "POST"],
+    },
+    cookie: true,
+  });
 
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: ["http://localhost:3000"],
-    methods: ["GET", "POST"],
-  },
-});
+  io.on("connection", (socket) => {
+    console.log("a user connected", socket.id);
+    socket.on("joinRoom", ({ chatId }) => {
+      socket.join(chatId);
+      console.log(`User joined room: ${chatId}`);
+    });
+    socket.on("sendMessage", async ({ chatId, sender, content }) => {
+      // const message = new Message({ conversation: chatId, sender, content });
+      // await message.save();
+      // io.to(chatId).emit("receiveMessage", {
+      //   chatId,
+      //   sender,
+      //   content,
+      //   createdAt: message.createdAt,
+      // });
+    });
 
-export const getReceiverSocketId = (receiverId) => {
-  return userSocketMap[receiverId];
+    socket.on("disconnect", () => {
+      console.log("user disconnected", socket.id);
+    });
+  });
 };
 
-const userSocketMap = {}; // {userId: socketId}
+export default configureSocket;
 
-io.on("connection", (socket) => {
-  console.log("a user connected", socket.id);
+// import jwt from "jsonwebtoken";
+// import cookie from "cookie";
 
-  const userId = socket.handshake.query.userId;
-  if (userId != "undefined") userSocketMap[userId] = socket.id;
+// Authenticating SOCKET Part
+// io.use((socket, next) => {
+//   try {
+//     console.log("Hello");
+//     const cookies = socket.request.headers;
+//     console.log(cookies);
+//     if (!cookies) {
+//       return next(new Error("Authentication error"));
+//     }
+//     const parsedCookies = cookie.parse(cookies);
+//     const token = parsedCookies["accessToken"];
 
-  // io.emit() is used to send events to all the connected clients
-  io.emit("getOnlineUsers", Object.keys(userSocketMap));
+//     if (!token) {
+//       return next(new Error("Authentication error"));
+//     }
 
-  // socket.on() is used to listen to the events. can be used both on client and server side
-  socket.on("disconnect", () => {
-    console.log("user disconnected", socket.id);
-    delete userSocketMap[userId];
-    io.emit("getOnlineUsers", Object.keys(userSocketMap));
-  });
-});
+//     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+//       if (err) {
+//         return next(new Error("Authentication error"));
+//       }
 
-export { app, io, server };
+//       socket.user = decoded; // Save decoded user info to socket object
+//       next();
+//     });
+//   } catch (error) {
+//     next(new Error("Internal server error"));
+//   }
+// });

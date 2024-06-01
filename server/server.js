@@ -11,10 +11,10 @@ import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/users.routes.js";
 import { fileURLToPath } from "url";
 import http from "http";
+import configureSocket from "./socket/socket.js";
 
 const app = express();
-const httpServer = http.createServer(app);
-import { Server } from "socket.io";
+export const httpServer = http.createServer(app);
 
 // Configurations
 const __filename = fileURLToPath(import.meta.url);
@@ -52,21 +52,5 @@ mongoose
   })
   .catch((error) => console.log(error));
 
-const io = new Server(httpServer, {
-  cors: {
-    origin: ["http://localhost:3000"],
-    methods: ["GET", "POST"],
-  },
-});
-
-io.on("connection", (socket) => {
-  console.log("a user connected", socket.id);
-
-  socket.on("sendMessage", ({ message }) => {
-    console.log(message);
-    io.emit("sendMessage", message + "from server");
-  });
-  socket.on("disconnect", () => {
-    console.log("user disconnected", socket.id);
-  });
-});
+//Socket Configuration
+configureSocket(httpServer);
