@@ -1,7 +1,12 @@
 import React from "react";
 import Link from "next/link";
-import { Paper } from "@mui/material";
-import { TopRentalProps } from "@store/slices/DashboardSlice";
+
+export type TopRentalProps = {
+  id: string;
+  title: string;
+  rent: number;
+  image: string;
+};
 
 type TopRentalsProps = {
   rentals: TopRentalProps[];

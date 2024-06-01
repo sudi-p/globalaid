@@ -45,7 +45,6 @@ export default function IndividualChat({ chatId }: IndividualChatProps) {
       socket.emit("joinRoom", { chatId });
     }
     socket.on("receiveMessageToOther", (message) => {
-      console.log(message);
       setMessages((messages) => [message, ...messages]);
     });
     socket.on("receiveMessageToSelf", (message) => {

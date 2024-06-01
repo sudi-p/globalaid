@@ -1,7 +1,15 @@
 import React from "react";
 import { Paper, Button } from "@mui/material";
 import Link from "next/link";
-import { TopJobProps } from "@store/slices/DashboardSlice";
+
+export type TopJobProps = {
+  id: string;
+  title: string;
+  salary: number;
+  location: string;
+  description: string;
+  jobType: string;
+};
 
 type TopJobsProps = {
   jobs: TopJobProps[];
