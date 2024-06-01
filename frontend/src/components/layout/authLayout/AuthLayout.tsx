@@ -1,11 +1,14 @@
 import React, { ReactNode } from "react";
 import Link from "next/link";
 import Logo from "@components/common/Logo";
-import color from "@utils/constants/base";
+import Head from "next/head";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <>
+      <Head>
+        <title>GlobalAid | Simplifying Student Life</title>
+      </Head>
       <div className={`bg-[#41b3A3] lg:flex h-full pb-5 lg:pb-0`}>
         <div className="flex-1 lg:h-screen text-white px-8 py-5">
           <div className="width-max">

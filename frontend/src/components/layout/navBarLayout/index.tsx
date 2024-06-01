@@ -89,7 +89,7 @@ export function NavBar() {
   return (
     <>
       <Head>
-        <title>GlobalAid | Makes your life easier</title>
+        <title>GlobalAid | Simplifying Student Life</title>
       </Head>
       <div
         className={`px-2 md:px-10 lg:px-4 h-16 relative flex justify-between items-center font-semibold max-w-screen-xl md:m-auto md:w-11/12`}

@@ -201,7 +201,7 @@ export const getDashboard = async (req, res) => {
 
     // Fetch the ads created by the logged-in user
     const ads = await Ad.find({ user: loggedInUser }).lean();
-    console.log(ads);
+    let conversationsCount = 0;
     // Fetch detailed information for each ad
     const detailedAds = await Promise.all(
       ads.map(async (ad) => {
@@ -211,7 +211,8 @@ export const getDashboard = async (req, res) => {
         } else if (ad.adType === "rental") {
           details = await Rental.findOne({ ad: ad._id }).lean();
         }
-
+        const conversations = await Conversation.find({ ad: ad._id }).lean();
+        conversationsCount += conversations.length;
         return {
           ...ad,
           details,
@@ -220,7 +221,7 @@ export const getDashboard = async (req, res) => {
     );
 
     // Send the detailed ads as a response
-    res.status(201).json({ ads: detailedAds });
+    res.status(201).json({ ads: detailedAds, conversationsCount });
   } catch (err) {
     console.error("Error fetching dashboard data:", err);
     res.status(500).json({ message: "Internal Server Error" });
@@ -233,7 +234,6 @@ export const getMyAd = async (req, res) => {
     const { adId } = req.query;
     let ad = await Ad.findOne({ _id: adId }).lean();
     if (!ad) res.sendStatus(404);
-    if (!ad.complete) return res.sendStatus(401);
     const adType = ad.adType;
     if (adType == "job") {
       const job = await Job.findOne({ ad: ad._id }).lean();
