@@ -1,4 +1,13 @@
 import React from "react";
+import IconText from "../ui/IconText";
+import { MdBathtub, MdLocationOn } from "react-icons/md";
+import {
+  FaBed,
+  FaBuilding,
+  FaEnvelope,
+  FaMoneyBillWave,
+  FaPhone,
+} from "react-icons/fa";
 type RentalProps = {
   washRoom: number;
   rentalType: string;
@@ -7,24 +16,67 @@ type RentalProps = {
   isOwner: boolean;
   images: Array<string>;
   bedRoom: number;
+  email: string;
+  phone: string;
 };
 type RentalAdProps = { ad: RentalProps };
 
 const Rental = ({
-  ad: { washRoom, rentalType, rent, location, isOwner, images, bedRoom },
+  ad: {
+    washRoom,
+    rentalType,
+    rent,
+    location,
+    isOwner,
+    images,
+    bedRoom,
+    email,
+    phone,
+  },
 }: RentalAdProps) => {
   return (
-    <div>
-      <div>{washRoom} Washrooms </div>
-      <div className="mb-1">{rentalType}</div>
-      <div className="mb-1">Rent: {rent}</div>
-      <div className="mb-1">{location}</div>
-      <div className="flex gap-2">
-        {images.map((image) => (
-          <img src={image} className="h-32 w-32 rounded-lg" />
-        ))}
+    <>
+      <div className="flex flex-col gap-2 mb-10">
+        <div
+          className="text-xl border-0 border-b border-solid border-gray-300 pb-2 mb-2 flex justify-between
+      "
+        >
+          Contact and Basic Information
+          <div className="text-green-300">Edit</div>
+        </div>
+        <IconText text={phone} icon=<FaPhone /> color="green" />
+        <IconText text={email} icon=<FaEnvelope /> color="blue" />
+        <IconText text={`${bedRoom} beds`} icon=<FaBed /> color="maroon" />
+        <IconText
+          text={`${washRoom} baths`}
+          icon=<MdBathtub />
+          color="maroon"
+        />
+        <IconText text={rentalType} icon=<FaBuilding /> color="maroon" />
+        <IconText
+          text={`${rent} per month`}
+          icon=<FaMoneyBillWave />
+          color="green"
+        />
+        <IconText text={location} icon=<MdLocationOn /> />
       </div>
-    </div>
+      <div>
+        <div className="text-xl border-0 border-b border-solid border-gray-300 pb-2 mb-2 flex justify-between">
+          Gallery
+          <div className="text-green-300">Edit</div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {images.map((image, index) => (
+            <img
+              key={index}
+              src={image}
+              alt={`Rental Image ${index + 1}`}
+              className="h-32 w-32 object-cover rounded-lg shadow-sm transition-transform duration-300 hover:scale-105"
+            />
+          ))}
+        </div>
+      </div>
+    </>
   );
 };
 
