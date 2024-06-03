@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import IconText from "../ui/IconText";
 import { MdBathtub, MdLocationOn } from "react-icons/md";
 import {
@@ -8,6 +8,7 @@ import {
   FaMoneyBillWave,
   FaPhone,
 } from "react-icons/fa";
+import { IoPersonSharp } from "react-icons/io5";
 type RentalProps = {
   washRoom: number;
   rentalType: string;
@@ -34,15 +35,38 @@ const Rental = ({
     phone,
   },
 }: RentalAdProps) => {
+  const [ad, setAd] = useState({
+    washRoom,
+    rentalType,
+    rent,
+    location,
+    isOwner,
+    bedRoom,
+    email,
+    phone,
+  });
+  const [edit, setEdit] = useState(false);
+  useEffect(() => {
+    setAd({
+      washRoom,
+      rentalType,
+      rent,
+      location,
+      isOwner,
+      bedRoom,
+      email,
+      phone,
+    });
+  }, [ad]);
+  console.log(ad);
   return (
-    <>
-      <div className="flex flex-col gap-2 mb-10">
-        <div
-          className="text-xl border-0 border-b border-solid border-gray-300 pb-2 mb-2 flex justify-between
-      "
-        >
+    <div className="flex gap-10">
+      <div className="flex-1 flex flex-col gap-4 rounded border border-solid border-gray-300 p-4">
+        <div className="text-xl border-0 border-b border-solid border-gray-300 pb-2 mb-2 flex justify-between">
           Contact and Basic Information
-          <div className="text-green-300">Edit</div>
+          <div onClick={() => setEdit(true)} className="text-green-300">
+            Edit
+          </div>
         </div>
         <IconText text={phone} icon=<FaPhone /> color="green" />
         <IconText text={email} icon=<FaEnvelope /> color="blue" />
@@ -59,9 +83,13 @@ const Rental = ({
           color="green"
         />
         <IconText text={location} icon=<MdLocationOn /> />
+        <IconText
+          text={isOwner ? "Owner" : "Not Owner"}
+          icon=<IoPersonSharp />
+        />
       </div>
-      <div>
-        <div className="text-xl border-0 border-b border-solid border-gray-300 pb-2 mb-2 flex justify-between">
+      <div className="flex-1 rounded border border-solid border-gray-300 p-4">
+        <div className="text-xl border-0 border-b border-solid border-gray-300 pb-2 mb-4 flex justify-between">
           Gallery
           <div className="text-green-300">Edit</div>
         </div>
@@ -76,7 +104,7 @@ const Rental = ({
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
