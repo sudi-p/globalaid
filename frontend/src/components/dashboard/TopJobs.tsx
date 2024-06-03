@@ -13,7 +13,10 @@ export default function TopJobs({ jobs }: TopJobsProps) {
       <div className="p-5 w-11/12 m-auto max-w-screen-xl">
         <div className="text-2xl mb-5 flex justify-between">
           <div>Top Jobs</div>
-          <Link href="/jobs/" className="text-green-400 text-lg no-underline">
+          <Link
+            href="/jobs/"
+            className="text-green-400 text-lg no-underline hover:font-semibold"
+          >
             View More
           </Link>
         </div>
@@ -45,24 +48,24 @@ function JobCard({
 }: JobCardProps) {
   return (
     <div className="w-full sm:w-[calc(50%-10px)] xl:w-[calc(25%-15px)] mb-4 sm:mb-0">
-      <Paper className="p-5 cursor-pointer brightness-95 hover:brightness-100">
+      <div className="p-5 cursor-pointer shadow-md rounded-lg border border-solid border-gray-300 transition duration-300 ease-in-out transform hover:scale-105">
         <div className="flex justify-between">
           <div className="w-44">
-            <span className="block text-lg font-bold">{title}</span>
-            <span className="text-gray-400">
+            <span className="block text-xl font-semibold">{title}</span>
+            <span className="text-gray-500 text-sm">
               {location} | {jobType}
             </span>
           </div>
-          <div className="font-bold">${salary}/Hour</div>
+          <div className="font-semibold">${salary}/Hour</div>
         </div>
-        <p className="h-[4.1rem] overflow-hidden w-full leading-snug">
-          {description.slice(0, 110)}...
+        <p className="h-[5rem] overflow-hidden text-sm leading-relaxed">
+          {description.slice(0, 120)}
+          {description.length > 120 && "..."}
         </p>
-        <Button fullWidth size="small" variant="outlined">
-          {" "}
+        <Button fullWidth size="small" variant="contained" color="primary">
           Learn More
         </Button>
-      </Paper>
+      </div>
     </div>
   );
 }
