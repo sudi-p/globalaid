@@ -44,6 +44,7 @@ const SelectSection = ({
                 }
                 text={option}
                 active={selected}
+                key={option}
                 activeColor="green"
                 icon={selected && <MdDone />}
               />
