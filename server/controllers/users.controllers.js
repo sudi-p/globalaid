@@ -1,6 +1,6 @@
-import User from "../models/User.js";
-import Ad, { Job, Rental, RentalImage } from "../models/Ad.js";
-import Conversation, { Message } from "../models/Chat.js";
+import User from "../models/User.models.js";
+import Ad, { Job, Rental, RentalImage } from "../models/Ad.models.js";
+import Conversation, { Message } from "../models/Chat.models.js";
 
 import uploadImagesToCloudinary from "../cloudinary.js";
 
@@ -17,10 +17,6 @@ import uploadImagesToCloudinary from "../cloudinary.js";
 export const getUser = async (req, res) => {
   try {
     const user = await User.findOne({ id: req.user.id });
-    console.log(
-      process.env.ALGOLIA_APPLICATION_ID,
-      process.env.ALGOLIA_ADMIN_API_KEY
-    );
     const { firstName, lastName, email } = user;
     res.status(201).json({ firstName, lastName, email });
   } catch (err) {
@@ -107,19 +103,39 @@ export const getTopRentalsJobs = async (req, res) => {
 export const getJobs = async (req, res) => {
   try {
     let filter = { available: true, adType: "job" };
+
+    let loggedInUser;
     if (req.isAuthenticated) {
-      filter.user = req.user;
+      loggedInUser = req.user;
     }
-    const ads = await Ad.find(filter);
+    const ads = await Ad.find(filter).populate("user").lean();
     let data = await Promise.all(
       ads.map(async (ad) => {
         try {
-          const job = await Job.findOne({ ad: ad });
+          const job = await Job.findOne({ ad: ad }).lean();
           if (!job) {
             throw new Error("Job not found");
           }
           const { company, jobType, jobSite } = job;
-          return { ...ad.toObject(), company, jobType, jobSite };
+          const adOwner = ad.user;
+          console.log(
+            adOwner._id,
+            loggedInUser,
+            Object.is(adOwner._id.toString(), loggedInUser)
+          );
+          const { firstName, lastName } = adOwner;
+          let canMessage = true;
+          if (!loggedInUser || loggedInUser == adOwner._id.toString())
+            canMessage = false;
+          console.log(canMessage);
+          return {
+            ...ad,
+            postedBy: `${firstName} ${lastName}`,
+            company,
+            jobType,
+            jobSite,
+            canMessage: canMessage,
+          };
         } catch (error) {
           return null;
         }
@@ -241,13 +257,11 @@ export const getMyAd = async (req, res) => {
       const rentalImages = await RentalImage.find({
         rental: rental._id,
       }).lean();
-      console.log(rentalImages);
       let images = rentalImages.map((img) => img.url);
       ad = { ...ad, ...rental, images };
     }
     res.status(201).json({ ad });
   } catch (err) {
-    console.log(err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -265,7 +279,6 @@ export const getCreateAd = async (req, res) => {
     ad.createAdLevel = createAdLevel;
     res.status(201).json({ ad });
   } catch (err) {
-    console.log(err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -325,7 +338,6 @@ export const createJob = async (req, res) => {
     await job.save();
     res.status(201).json({ jobId: job._id, message: "Job Published" });
   } catch (err) {
-    console.log(err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -384,7 +396,6 @@ export const skipUploadRentalImages = async (req, res) => {
     if (!ad) res.status(404).json({ message: "Ad not found" });
     else res.status(201).json({ message: "Rental Published" });
   } catch (err) {
-    console.log(err);
     res.sendStatus(500);
   }
 };
@@ -392,7 +403,6 @@ export const skipUploadRentalImages = async (req, res) => {
 //Upload Rental Photos
 export const uploadRentalImages = async (req, res) => {
   try {
-    console.log("Hello from uploadRentalImages");
     const { adId, images } = req.body;
     const urls = await uploadImagesToCloudinary(images);
     const ad = await Ad.findByIdAndUpdate(
@@ -419,68 +429,122 @@ export const uploadRentalImages = async (req, res) => {
   }
 };
 
+// postMessageFromRentalJobPage
+export const postMessage = async (req, res) => {
+  try {
+    const { adId, messageText } = req.body;
+    if (!adId || !messageText) return res.sendStatus(400);
+    const loggedInUser = req.user;
+    let ad = await Ad.find({ _id: adId });
+    if (!ad) return res.sendStatus(404);
+    if (ad[0].user === loggedInUser) return res.sendStatus(400);
+    const conversation = new Conversation({
+      ad: adId,
+      client: loggedInUser,
+    });
+    const message = new Message({
+      conversation: conversation._id,
+      sender: loggedInUser,
+      content: messageText,
+    });
+    message.save();
+    conversation.lastMessage = message;
+    conversation.save();
+    return res.status(201).json({ msg: "Message Sent" });
+  } catch (error) {
+    return res.status(500).json({ msg: error.message });
+  }
+};
+
 //Get Chats
 export const getChats = async (req, res) => {
   try {
+    const loggedInUser = req.user.id;
+
+    // Fetch conversations involving the logged-in user
     const conversations = await Conversation.find({
-      participants: { $in: [req.user.id] },
+      participants: loggedInUser,
     })
-      .populate("ad")
-      .populate("participants")
-      .populate("lastMessage")
-      .populate("lastMessage.sender")
-      .populate("lastMessage.receipient");
-    const chatsPromise = conversations.map(async (conversation) => {
-      let { lastMessage, ad, _id: chatId } = conversation;
-      lastMessage = await lastMessage.populate(["sender", "recipient"]);
-      const { sender, recipient } = lastMessage;
-      let client;
-      if (lastMessage.sender._id.toString() === req.user.id) {
-        client = `${recipient.firstName} ${recipient.lastName}`;
-      } else {
-        client = `${sender.firstName} ${sender.lastName}`;
-      }
-      return {
-        title: ad.title,
-        lastMessage: lastMessage.content,
-        client: client,
-        chatId,
-      };
-    });
-    const chats = await Promise.all(chatsPromise);
-    return res.status(201).json(chats);
+      .populate({
+        path: "ad",
+        populate: {
+          path: "user",
+          model: User,
+        },
+      })
+      .populate("client")
+      .populate("lastMessage");
+
+    // Map and process each conversation asynchronously
+    const chats = await Promise.all(
+      conversations.map(async (conversation) => {
+        const { _id: chatId, lastMessage, ad, client } = conversation;
+        const { user: adUser, title } = ad;
+        const isClient = client._id.toString() === loggedInUser;
+
+        const clientName = isClient
+          ? `${adUser.firstName} ${adUser.lastName}`
+          : `${client.firstName} ${client.lastName}`;
+
+        return {
+          title,
+          lastMessage: lastMessage.content,
+          client: clientName,
+          chatId,
+        };
+      })
+    );
+
+    // Respond with the chat data
+    return res.status(200).json(chats);
   } catch (err) {
+    console.error(err);
     return res.status(500).json({ msg: err.message });
   }
 };
 
 export const getIndividualChat = async (req, res) => {
   try {
-    const conversation = await Conversation.findOne({ id: req.params.id })
+    const { chatId } = req.query;
+    const loggedInUser = req.user;
+    if (!chatId) return res.sendStatus(404);
+    let conversation = await Conversation.find({ _id: chatId })
       .populate("ad")
-      .populate("participants");
-    const messages = await Message.find({ conversation: conversation._id })
-      .populate("sender")
-      .populate("recipient")
-      .sort({ createdAt: 1 });
+      .populate("client")
+      .lean();
+    if (!conversation) return res.sendStatus(404);
+    conversation = conversation[0];
+    const { client } = conversation;
+    const messages = await Message.find({
+      conversation: conversation._id,
+    })
+      .sort({ createdAt: -1 })
+      .populate("sender");
     let messageList = [];
-    const client = conversation.participants.find(
-      (participant) => participant._id.toString() !== req.user.id
-    );
+    let tempDate = new Date(2021 / 12 / 12);
     messages.map((message) => {
-      const content = message.content;
-      const createdAt = message.createdAt;
-      const sender = req.user.id === message.sender._id.toString();
-      const senderName = `${message.sender.firstName} ${message.sender.lastName}`;
-      messageList.push({
+      const { content, sender, createdAt } = message;
+      const lastMessageDuration = Math.abs(
+        (tempDate - createdAt) / (1000 * 60 * 60 * 24)
+      );
+      const isMyMessage = sender._id == loggedInUser;
+      const messageObject = {
         content,
-        createdAt,
-        senderName,
-        sender,
+        isMyMessage,
+        senderName: sender.firstName,
         messageId: message._id,
-      });
+      };
+      if (lastMessageDuration > 1) {
+        let date = createdAt.toISOString().split("T")[0];
+        if (Math.abs(createdAt - new Date()) / (1000 * 60 * 60 * 24) <= 1)
+          date = "Today";
+        messageObject.createdAt = date;
+        tempDate = createdAt;
+      }
+      messageList.push(messageObject);
     });
     const data = {
+      userId: loggedInUser,
       ad: conversation.ad.title,
       location: conversation.ad.location,
       client,
@@ -492,31 +556,25 @@ export const getIndividualChat = async (req, res) => {
   }
 };
 
-export const sendChatMessage = async (req, res) => {
+export const sendChatMessage = async (chatId, content, senderId) => {
   try {
-    const { chatId, chatText } = req.body;
-    const conversation = await Conversation.findOne({ _id: chatId }).populate(
-      "participants"
-    );
-    const participants = conversation.participants;
-
-    const recipient = participants.find(
-      (participant) => participant._id.toString() !== req.user.id
-    );
-    const sender = participants.find(
-      (participant) => participant._id.toString() === req.user.id
-    );
+    if (!chatId || !content || !senderId) throw "Wrong Data";
+    let sender = await User.find({ _id: senderId }).lean();
+    if (!sender) throw "No User Error";
+    sender = sender[0];
+    let conversation = await Conversation.find({ _id: chatId }).populate("ad");
+    if (!conversation) throw "No Conversation Error";
+    conversation = conversation[0];
     const message = new Message({
       conversation,
-      sender,
-      recipient,
-      content: chatText,
+      sender: sender,
+      content: content,
     });
     message.save();
     conversation.lastMessage = message;
     conversation.save();
-    return res.status(201).json({ msg: "message sent" });
+    return { messageId: message._id, senderName: sender.firstName };
   } catch (err) {
-    return res.status(500).json({ msg: err.message });
+    return "Error";
   }
 };

@@ -2,16 +2,21 @@ import React, { ReactElement } from "react";
 import Fuse, { FuseResult } from "fuse.js";
 import NavbarLayout from "@components/layout/navBarLayout/";
 import Filter from "../components/jobs/Filter";
-import JobBox, { JobProps } from "@components/jobs/JobBox";
+import JobBox from "@components/jobs/JobBox";
+import { JobProps } from "@components/jobs/JobModal";
 import { ExtendedFiltersProps, useJobsFilter } from "@hooks/useJobsFilter";
 import { axiosPrivate } from "@lib/api";
+import { useQuery } from "@tanstack/react-query";
+
+import { Skeleton } from "@mui/material";
+import PageNotFound from "@pages/404";
 
 type JobsListProps = {
   ads: JobProps[];
   filters: ExtendedFiltersProps;
 };
 
-function Jobs({ ads }: JobsListProps) {
+function Jobs() {
   const { filters, handleCheckbox, handleDatePosted, handleTextChange } =
     useJobsFilter({
       commitment: new Set(),
@@ -19,6 +24,36 @@ function Jobs({ ads }: JobsListProps) {
       datePosted: { label: "Any", value: 0 },
       searchText: "",
     });
+  const { isLoading, error, data } = useQuery({
+    queryKey: ["jobs"],
+    queryFn: async () => {
+      const res = await axiosPrivate.get("/user/getjobs");
+      return res.data;
+    },
+  });
+  if (isLoading) {
+    return (
+      <div className="my-5 p-6 mx-auto max-w-screen-xl w-max">
+        <Skeleton
+          className="flex p-4 mx-auto justify-center items-center gap-3"
+          variant="rounded"
+          height={20}
+          width={300}
+        />
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-10 mx-auto justify-center">
+          <Skeleton width={290} height={290} />
+          <Skeleton width={290} height={290} />
+          <Skeleton width={290} height={290} />
+          <Skeleton width={290} height={290} />
+          <Skeleton width={290} height={290} />
+          <Skeleton width={290} height={290} />
+          <Skeleton width={290} height={290} />
+        </div>
+      </div>
+    );
+  }
+  if (error) return <PageNotFound />;
+  const { ads } = data;
   return (
     <div className="my-5 mx-auto max-w-screen-xl">
       <Filter
@@ -27,7 +62,7 @@ function Jobs({ ads }: JobsListProps) {
         handleDatePosted={handleDatePosted}
         handleTextChange={handleTextChange}
       />
-      {ads.length == 0 ? (
+      {ads && ads.length == 0 ? (
         <ZeroJobs />
       ) : (
         <JobsList ads={ads} filters={filters} />
@@ -65,10 +100,11 @@ const JobsList = ({ ads: jobs, filters }: JobsListProps) => {
     });
   }
   if (displayJobs.length == 0) return <ZeroFilteredJobs />;
+  console.log(displayJobs);
   return (
-    <div className="grid grid-cols-3 gap-10 m-4 justify-evenly">
+    <div className="grid grid-cols-2 lg:grid-cols-3 gap-10 m-4 justify-evenly">
       {displayJobs.map((job) => (
-        <JobBox key={job._id} {...job} />
+        <JobBox key={job._id} job={job} />
       ))}
     </div>
   );
@@ -91,21 +127,6 @@ const ZeroJobs = () => {
 };
 
 export default Jobs;
-
-export const getServerSideProps = async () => {
-  try {
-    const res = await axiosPrivate.get("/user/getjobs");
-    return {
-      props: {
-        ads: res?.data?.ads,
-      },
-    };
-  } catch (e) {
-    return {
-      notFound: true,
-    };
-  }
-};
 
 Jobs.getLayout = function getLayout(page: ReactElement) {
   return <NavbarLayout>{page}</NavbarLayout>;

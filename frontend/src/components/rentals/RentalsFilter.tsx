@@ -7,7 +7,7 @@ import {
 } from "@src/utils/constants/rentals";
 import useRentalsFilter from "@src/hooks/useRentalsFilter";
 
-const Filter = () => {
+const RentalsFilter = () => {
   const { selectedFilter, handleSelectButton, handleTextChange } =
     useRentalsFilter();
   const { searchText, beds, baths, rentalTypes } = selectedFilter;
@@ -55,4 +55,4 @@ const Filter = () => {
   );
 };
 
-export default Filter;
+export default RentalsFilter;
