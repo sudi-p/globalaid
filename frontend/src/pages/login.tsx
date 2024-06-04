@@ -17,7 +17,7 @@ import {
   Alert,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material/";
-import { useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import AuthLayout from "@components/layout/authLayout/AuthLayout";
@@ -31,7 +31,7 @@ const LoginSchema = yup.object().shape({
 
 const Login = () => {
   const router = useRouter();
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const {
     register,
     handleSubmit,
@@ -40,10 +40,10 @@ const Login = () => {
     resolver: yupResolver(LoginSchema),
   });
   const [error, setError] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const loggedInUser = useSelector((state: RootState) => state.loggedInUser);
-  const login = async () => {
+  const login = async (data: FieldValues): Promise<void> => {
+    const email = data.email as string;
+    const password = data.password as string;
     try {
       const res = await axios.post(
         "/auth/login/",
@@ -58,7 +58,7 @@ const Login = () => {
       const user = res?.data?.user;
       await addAuthToStorage(user);
       router.push("/");
-    } catch (err: unknown) {
+    } catch (err: any) {
       console.log(err);
       setError(err?.response?.data?.msg);
     }
@@ -66,7 +66,6 @@ const Login = () => {
   useEffect(() => {
     if (loggedInUser.isLoggedIn) router.push("/");
   }, [router, loggedInUser]);
-  console.log(email, password);
   return (
     <>
       <div className="text-3xl mb-8">Welcome to GlobalAid</div>
@@ -90,8 +89,6 @@ const Login = () => {
             fullWidth
             {...register("email")}
             label="Email"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
             error={Boolean(errors.email)}
             helperText={errors.email?.message?.toString()}
           />
@@ -121,8 +118,6 @@ const Login = () => {
               }
               id="outlined-adornment-password"
               label="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
             />
             <FormHelperText>
               {errors.password && errors.password?.message?.toString()}
