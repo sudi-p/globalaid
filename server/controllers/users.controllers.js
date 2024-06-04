@@ -118,14 +118,23 @@ export const getJobs = async (req, res) => {
           }
           const { company, jobType, jobSite } = job;
           const adOwner = ad.user;
+          console.log(
+            adOwner._id,
+            loggedInUser,
+            Object.is(adOwner._id.toString(), loggedInUser)
+          );
           const { firstName, lastName } = adOwner;
+          let canMessage = true;
+          if (!loggedInUser || loggedInUser == adOwner._id.toString())
+            canMessage = false;
+          console.log(canMessage);
           return {
             ...ad,
             postedBy: `${firstName} ${lastName}`,
             company,
             jobType,
             jobSite,
-            isOwner: ad.user == loggedInUser,
+            canMessage: canMessage,
           };
         } catch (error) {
           return null;
@@ -420,7 +429,7 @@ export const uploadRentalImages = async (req, res) => {
   }
 };
 
-// postMessage
+// postMessageFromRentalJobPage
 export const postMessage = async (req, res) => {
   try {
     const { adId, messageText } = req.body;
@@ -450,31 +459,46 @@ export const postMessage = async (req, res) => {
 //Get Chats
 export const getChats = async (req, res) => {
   try {
-    const loggedInUser = req.user;
+    const loggedInUser = req.user.id;
+
+    // Fetch conversations involving the logged-in user
     const conversations = await Conversation.find({
-      participants: { $in: [req.user.id] },
+      participants: loggedInUser,
     })
-      .populate("ad")
+      .populate({
+        path: "ad",
+        populate: {
+          path: "user",
+          model: User,
+        },
+      })
       .populate("client")
       .populate("lastMessage");
 
-    const chatsPromise = conversations.map(async (conversation) => {
-      let { _id: chatId, lastMessage, ad, client } = conversation;
-      const { user: adUser, title } = ad;
-      const clientName =
-        client == loggedInUser
+    // Map and process each conversation asynchronously
+    const chats = await Promise.all(
+      conversations.map(async (conversation) => {
+        const { _id: chatId, lastMessage, ad, client } = conversation;
+        const { user: adUser, title } = ad;
+        const isClient = client._id.toString() === loggedInUser;
+
+        const clientName = isClient
           ? `${adUser.firstName} ${adUser.lastName}`
           : `${client.firstName} ${client.lastName}`;
-      return {
-        title: title,
-        lastMessage: lastMessage.content,
-        client: clientName,
-        chatId,
-      };
-    });
-    const chats = await Promise.all(chatsPromise);
-    return res.status(201).json(chats);
+
+        return {
+          title,
+          lastMessage: lastMessage.content,
+          client: clientName,
+          chatId,
+        };
+      })
+    );
+
+    // Respond with the chat data
+    return res.status(200).json(chats);
   } catch (err) {
+    console.error(err);
     return res.status(500).json({ msg: err.message });
   }
 };
@@ -493,7 +517,9 @@ export const getIndividualChat = async (req, res) => {
     const { client } = conversation;
     const messages = await Message.find({
       conversation: conversation._id,
-    }).sort({ createdAt: 1 });
+    })
+      .sort({ createdAt: -1 })
+      .populate("sender");
     let messageList = [];
     let tempDate = new Date(2021 / 12 / 12);
     messages.map((message) => {
@@ -501,10 +527,11 @@ export const getIndividualChat = async (req, res) => {
       const lastMessageDuration = Math.abs(
         (tempDate - createdAt) / (1000 * 60 * 60 * 24)
       );
-      const isMyMessage = sender == loggedInUser;
+      const isMyMessage = sender._id == loggedInUser;
       const messageObject = {
         content,
         isMyMessage,
+        senderName: sender.firstName,
         messageId: message._id,
       };
       if (lastMessageDuration > 1) {
@@ -532,7 +559,7 @@ export const getIndividualChat = async (req, res) => {
 export const sendChatMessage = async (chatId, content, senderId) => {
   try {
     if (!chatId || !content || !senderId) throw "Wrong Data";
-    let sender = await User.find({ _id: senderId });
+    let sender = await User.find({ _id: senderId }).lean();
     if (!sender) throw "No User Error";
     sender = sender[0];
     let conversation = await Conversation.find({ _id: chatId }).populate("ad");
@@ -546,7 +573,7 @@ export const sendChatMessage = async (chatId, content, senderId) => {
     message.save();
     conversation.lastMessage = message;
     conversation.save();
-    return { messageId: message._id };
+    return { messageId: message._id, senderName: sender.firstName };
   } catch (err) {
     return "Error";
   }

@@ -18,6 +18,7 @@ import Footer from "./Footer";
 import Logo from "@components/common/Logo";
 import useAxiosPrivate from "@hooks/useAxiosPrivate";
 import { clearAuthFromStorage, getUserFromStorage } from "@utils/cookie-utils";
+import Head from "next/head";
 
 type NavbarLayoutProps = {
   children: ReactNode;
@@ -91,6 +92,9 @@ export function NavBar() {
   email ? navLinks.push(...extraNavLinks) : navLinks.push(...authLinks);
   return (
     <>
+      <Head>
+        <title>GlobalAid | Makes your life easier</title>
+      </Head>
       <div
         className={`px-2 md:px-10 lg:px-4 h-16 relative flex justify-between items-center font-semibold max-w-screen-xl md:m-auto md:w-11/12`}
       >

@@ -1,8 +1,9 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { FaBuilding, FaLocationArrow } from "react-icons/fa";
-import { MdClose } from "react-icons/md";
+import { MdClose, MdError } from "react-icons/md";
 import Button from "../ui/Button";
 import { GoLocation } from "react-icons/go";
+import { axiosPrivate } from "../../lib/api";
 
 export type JobProps = {
   _id: string;
@@ -16,7 +17,7 @@ export type JobProps = {
   jobType: string;
   jobSite: string;
   createdAt: Date;
-  isOwner: Boolean;
+  canMessage: Boolean;
 };
 
 export type JobModalProps = JobProps & {
@@ -24,16 +25,29 @@ export type JobModalProps = JobProps & {
 };
 
 const JobModal = ({
+  _id: adId,
   title,
   postedBy,
   description,
   company,
   location,
   setShowJobDetails,
-  isOwner,
+  canMessage,
 }: JobModalProps) => {
+  console.log(canMessage);
   const [message, setMessage] = useState("I am interested in this job.");
-  const handleSend = () => {};
+  const [error, setError] = useState("");
+  const handleSend = async () => {
+    if (message) {
+      const res = await axiosPrivate.post("/user/postmessage", {
+        adId,
+        messageText: message,
+      });
+      console.log(res.data);
+    } else {
+      setError("Please enter the message");
+    }
+  };
   return (
     <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-black bg-opacity-40 z-50">
       <div className=" w-1/3 relative m-auto border border-solid border-gray-400 bg-white rounded-xl p-4">
@@ -54,20 +68,30 @@ const JobModal = ({
         <div className="mb-4">
           <GoLocation /> {location}
         </div>
-        <div className="p-4 border border-solid border-gray-300 rounded-lg flex flex-col items-center gap-2">
-          <textarea
-            className=" p-3 box-border outline-none border border-solid rounded-lg border-gray-300 w-full"
-            value={message}
-            rows={4}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <div
-            onClick={() => !isOwner && handleSend}
-            className={`border border-solid rounded-lg  p-2 text-white ${isOwner ? "cursor-not-allowed bg-blue-300" : "bg-blue-500 cursor-pointer"}`}
-          >
-            Send
+        {canMessage && (
+          <div className="p-4 border border-solid border-gray-300 rounded-lg flex flex-col items-center gap-2">
+            <textarea
+              className=" p-3 box-border outline-none border border-solid rounded-lg border-gray-300 w-full"
+              value={message}
+              rows={4}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+            {error && (
+              <div className="bg-red-100 p-3 w-full rounded-lg font-semibold text-red-500 flex items-center justify-center gap-2">
+                <MdError />
+                {error}
+              </div>
+            )}
+            <div
+              onClick={handleSend}
+              className={
+                "border border-solid rounded-lg  p-2 text-white bg-blue-500 cursor-pointer"
+              }
+            >
+              Send
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

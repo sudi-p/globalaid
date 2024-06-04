@@ -8,6 +8,9 @@ import { ExtendedFiltersProps, useJobsFilter } from "@hooks/useJobsFilter";
 import { axiosPrivate } from "@lib/api";
 import { useQuery } from "@tanstack/react-query";
 
+import { Skeleton } from "@mui/material";
+import PageNotFound from "@pages/404";
+
 type JobsListProps = {
   ads: JobProps[];
   filters: ExtendedFiltersProps;
@@ -22,13 +25,34 @@ function Jobs() {
       searchText: "",
     });
   const { isLoading, error, data } = useQuery({
-    queryKey: ["chats"],
+    queryKey: ["jobs"],
     queryFn: async () => {
       const res = await axiosPrivate.get("/user/getjobs");
       return res.data;
     },
   });
-  if (isLoading) return "Loading..";
+  if (isLoading) {
+    return (
+      <div className="my-5 p-6 mx-auto max-w-screen-xl w-max">
+        <Skeleton
+          className="flex p-4 mx-auto justify-center items-center gap-3"
+          variant="rounded"
+          height={20}
+          width={300}
+        />
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-10 mx-auto justify-center">
+          <Skeleton width={290} height={290} />
+          <Skeleton width={290} height={290} />
+          <Skeleton width={290} height={290} />
+          <Skeleton width={290} height={290} />
+          <Skeleton width={290} height={290} />
+          <Skeleton width={290} height={290} />
+          <Skeleton width={290} height={290} />
+        </div>
+      </div>
+    );
+  }
+  if (error) return <PageNotFound />;
   const { ads } = data;
   return (
     <div className="my-5 mx-auto max-w-screen-xl">
@@ -76,6 +100,7 @@ const JobsList = ({ ads: jobs, filters }: JobsListProps) => {
     });
   }
   if (displayJobs.length == 0) return <ZeroFilteredJobs />;
+  console.log(displayJobs);
   return (
     <div className="grid grid-cols-2 lg:grid-cols-3 gap-10 m-4 justify-evenly">
       {displayJobs.map((job) => (

@@ -1,55 +1,54 @@
-import React, { Suspense } from 'react';
-import { Provider } from 'react-redux';
-import store from '../store/store';
-import NextNProgress from 'nextjs-progressbar';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import '../styles/globals.css';
+import React, { Suspense } from "react";
+import { Provider } from "react-redux";
+import store from "../store/store";
+import NextNProgress from "nextjs-progressbar";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import "../styles/globals.css";
 
 const theme = createTheme({
   palette: {
     primary: {
       main: "#41b3A3",
-      contrastText: "#fff"
+      contrastText: "#fff",
     },
     secondary: {
-      main: '#41b3A3',
-      contrastText: "#fff"
+      main: "#41b3A3",
+      contrastText: "#fff",
     },
     text: {
-      primary: '#173A5E',
-      secondary: '#46505A',
+      primary: "#173A5E",
+      secondary: "#46505A",
     },
   },
 });
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 export default function MyApp({ Component, pageProps }) {
   const getLayout = Component.getLayout ?? ((page) => page);
   return (
-    // <React.StrictMode>
+    <React.StrictMode>
       <Suspense>
         <Provider store={store}>
           <QueryClientProvider client={queryClient}>
-              <ThemeProvider theme={theme}>
-                {getLayout(
-                  <>
+            <ThemeProvider theme={theme}>
+              {getLayout(
+                <>
                   <NextNProgress
-                  color={'#41b3A3'}
-                  options={{ showSpinner: false }}
-                  showOnShallow
-                  height={5}
-                />
+                    color={"#41b3A3"}
+                    options={{ showSpinner: false }}
+                    showOnShallow
+                    height={5}
+                  />
                   <Component {...pageProps} />
-                  </>
-                )}
-              </ThemeProvider>
-              <ReactQueryDevtools initialIsOpen={false} />
+                </>
+              )}
+            </ThemeProvider>
+            <ReactQueryDevtools initialIsOpen={false} />
           </QueryClientProvider>
         </Provider>
       </Suspense>
-    // </React.StrictMode>
-  )
-};
-
+    </React.StrictMode>
+  );
+}

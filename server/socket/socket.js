@@ -11,23 +11,27 @@ const configureSocket = (httpServer) => {
   });
 
   io.on("connection", (socket) => {
-    console.log("a user connected", socket.id);
     socket.on("joinRoom", ({ chatId }) => {
       socket.join(chatId);
-      console.log(`User joined room: ${chatId}`);
     });
     socket.on("sendMessage", async ({ chatId, content, senderId }) => {
-      const { messageId } = sendChatMessage(chatId, content, senderId);
+      const { messageId, senderName } = await sendChatMessage(
+        chatId,
+        content,
+        senderId
+      );
       socket.broadcast.to(chatId).emit("receiveMessageToOther", {
         chatId,
         isMyMessage: false,
         content,
+        senderName,
         messageId,
       });
       socket.emit("receiveMessageToSelf", {
         chatId,
         isMyMessage: true,
         content,
+        senderName,
         messageId,
       });
     });

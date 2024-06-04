@@ -8,7 +8,7 @@ import JobModal, { JobProps } from "./JobModal";
 
 const keyList = [{ text: "email", icon: <GoLocation /> }];
 const JobBox = ({ job }: { job: JobProps }) => {
-  const { _id, description, title, company, location, email, phone } = job;
+  const { description, title, company, location, email, phone } = job;
   const [showJobDetails, setShowJobDetails] = useState(false);
   return (
     <div
