@@ -1,18 +1,26 @@
 import React, { ReactNode, useEffect } from "react";
 import NavbarLayout from "@components/layout/navBarLayout/";
 import Hero from "../components/dashboard/Hero";
-import TopRentals from "../components/dashboard/TopRentals";
-import TopJobs from "../components/dashboard/TopJobs";
+import TopRentals, { TopRentalProps } from "../components/dashboard/TopRentals";
+import TopJobs, { TopJobProps } from "../components/dashboard/TopJobs";
 import axios from "@lib/api";
 
-export default function DashboardContainer(props) {
-  const { topJobs, topRentals } = props;
+export type DashboardProps = {
+  topRentals: TopRentalProps[];
+  topJobs: TopJobProps[];
+  status: number;
+};
+
+export default function DashboardContainer({
+  topJobs,
+  topRentals,
+}: DashboardProps) {
   return (
-    <div>
+    <>
       <Hero />
       <TopRentals rentals={topRentals} />
       <TopJobs jobs={topJobs} />
-    </div>
+    </>
   );
 }
 

@@ -26,76 +26,45 @@ export const getUser = async (req, res) => {
 
 export const getTopRentalsJobs = async (req, res) => {
   try {
-    const topRentals = [
-      {
-        id: "63f45ba2631adf1b0a35b94f",
-        title: "2 Bedroom Hall Kitchen Apartment for rent",
-        rent: 2500,
-        image:
-          "https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/76900a54-e2ed-435e-9dd4-6d9b702149cd.webp",
-      },
-      {
-        id: "63f45ba2631adfg1b0a35b94f",
-        title: "2 Bedroom Hall Kitchen Apartment for rent",
-        rent: 1000,
-        image:
-          "https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/ae4fa65c-749d-41a7-920f-6956eab4c138.webp",
-      },
-      {
-        id: "63f45ba2ertv1adf1b0a35b94f",
-        title: "2 Bedroom Hall Kitchen Apartment for rent",
-        rent: 3500,
-        image:
-          "https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/e12e3117-3e56-4f7c-888a-761165979e2d.webp",
-      },
-      {
-        id: "63f45ba234rfadf1b0a35b94f",
-        title: "1 Bedroom Hall Kitchen Apartment for rent",
-        rent: 2800,
-        image:
-          "https://res.cloudinary.com/dtqxwjmwn/image/upload/v1674415211/GlobalAid/rentals/rental1/8e3e4e55-83e1-4e03-b2f9-89c86b0bdcb9.webp",
-      },
-    ];
-    const topJobs = [
-      {
-        id: "63f45ba2631adf1b0a35b94f",
-        title: "Cleaner",
-        salary: 16,
-        location: "Toronto",
-        description:
-          "We are seeking professional Waiter / Waitress with fine dining experience. This is a very important role for us and we rely heavily on our serving staff. They manage the pulse of the dining room and ensure patrons have a memorable dining experience.",
-        jobType: "part-time",
-      },
-      {
-        id: "63f45ba2631adfg1b0a35b94f",
-        title: "Waiter",
-        salary: 17,
-        location: "Toronto",
-        description:
-          "This position is responsible for cleaning and sanitizing processing equipment in a safe manner.",
-        jobType: "part-time",
-      },
-      {
-        id: "63f45ba2ertv1adf1b0a35b94f",
-        title: "Bairsta",
-        salary: 20,
-        location: "Toronto",
-        description:
-          "We are seeking professional Waiter / Waitress with fine dining experience. This is a very important role for us and we rely heavily on our serving staff. They manage the pulse of the dining room and ensure patrons have a memorable dining experience.",
-        jobType: "part-time",
-      },
-      {
-        id: "63f45ba234rfadf1b0a35b94f",
-        title: "Host",
-        salary: 25,
-        location: "Toronto",
-        description:
-          "We are seeking professional Waiter / Waitress with fine dining experience. This is a very important role for us and we rely heavily on our serving staff. They manage the pulse of the dining room and ensure patrons have a memorable dining experience.",
-        jobType: "part-time",
-      },
-    ];
+    const rentals = await Rental.find()
+      .sort({ createdAt: -1 })
+      .limit(4)
+      .lean()
+      .populate("ad");
+    const topRentals = await Promise.all(
+      rentals.map(async (rental) => {
+        const { _id: id, rent, ad } = rental;
+        const { title } = ad;
+        const rentalImage = await RentalImage.findOne({ rental: id }).lean();
+        console.log(rentalImage);
+        return {
+          id,
+          rent,
+          title,
+          image: rentalImage?.url,
+        };
+      })
+    );
+    const jobs = await Job.find()
+      .sort({ createAt: -1 })
+      .limit(4)
+      .lean()
+      .populate("ad");
+    const topJobs = jobs.map((job) => {
+      const { _id: id, ad, salary, jobType } = job;
+      const { title, description, location } = ad;
+      return {
+        id,
+        salary,
+        title,
+        location,
+        description,
+        jobType,
+      };
+    });
     return res.status(201).json({ topJobs, topRentals });
   } catch (err) {
+    console.log(err.message);
     res.status(500).json({ message: err.message });
   }
 };
@@ -118,11 +87,6 @@ export const getJobs = async (req, res) => {
           }
           const { company, jobType, jobSite } = job;
           const adOwner = ad.user;
-          console.log(
-            adOwner._id,
-            loggedInUser,
-            Object.is(adOwner._id.toString(), loggedInUser)
-          );
           const { firstName, lastName } = adOwner;
           let canMessage = true;
           if (!loggedInUser || loggedInUser == adOwner._id.toString())
