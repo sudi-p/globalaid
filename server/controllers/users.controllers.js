@@ -192,14 +192,38 @@ export const getRentals = async (req, res) => {
     return res.status(500).json({ msg: err.message });
   }
 };
+//getDashboard
 
-//getMyAds
-export const getMyAds = async (req, res) => {
+export const getDashboard = async (req, res) => {
   try {
-    let ads = await Ad.find({ user: req.user }).lean();
-    res.status(201).json({ ads });
+    // Assuming req.user contains the logged-in user information
+    const loggedInUser = req.user;
+
+    // Fetch the ads created by the logged-in user
+    const ads = await Ad.find({ user: loggedInUser }).lean();
+    console.log(ads);
+    // Fetch detailed information for each ad
+    const detailedAds = await Promise.all(
+      ads.map(async (ad) => {
+        let details;
+        if (ad.adType === "job") {
+          details = await Job.findOne({ ad: ad._id }).lean();
+        } else if (ad.adType === "rental") {
+          details = await Rental.findOne({ ad: ad._id }).lean();
+        }
+
+        return {
+          ...ad,
+          details,
+        };
+      })
+    );
+
+    // Send the detailed ads as a response
+    res.status(201).json({ ads: detailedAds });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("Error fetching dashboard data:", err);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

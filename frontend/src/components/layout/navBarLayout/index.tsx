@@ -71,8 +71,8 @@ export function NavBar() {
   ];
   const extraNavLinks = [
     {
-      name: "My Ads",
-      link: "/myads",
+      name: "Dashboard",
+      link: "/dashboard",
     },
   ];
   const authLinks = [
