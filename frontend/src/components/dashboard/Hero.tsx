@@ -22,7 +22,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <Paper className="p-4 lg:p-8">
+    <div className="py-6 lg:p-8">
       <div className="max-w-screen-xl m-auto w-full">
         <motion.div
           initial={{ opacity: 0 }}
@@ -48,7 +48,7 @@ export default function Hero() {
           )}
         </motion.div>
       </div>
-    </Paper>
+    </div>
   );
 }
 
