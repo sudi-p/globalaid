@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 type IconTextProps = {
   icon: ReactNode;
-  text: string;
+  text: string | number;
   color?: string;
 };
 

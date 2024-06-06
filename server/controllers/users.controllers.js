@@ -237,16 +237,16 @@ export const getMyAd = async (req, res) => {
     const adType = ad.adType;
     if (adType == "job") {
       const job = await Job.findOne({ ad: ad._id }).lean();
-      if (!job) throw new Error("Job Not Found");
-      ad = { ...ad, ...job };
+      if (job) ad = { ...ad, ...job };
     } else {
       const rental = await Rental.findOne({ ad: ad._id }).lean();
-      if (!rental) return res.status(404).json({ message: "Rental not found" });
-      const rentalImages = await RentalImage.find({
-        rental: rental._id,
-      }).lean();
-      let images = rentalImages.map((img) => img.url);
-      ad = { ...ad, ...rental, images };
+      if (rental) {
+        const rentalImages = await RentalImage.find({
+          rental: rental._id,
+        }).lean();
+        let images = rentalImages.map((img) => img.url);
+        ad = { ...ad, ...rental, images };
+      }
     }
     res.status(201).json({ ad });
   } catch (err) {
