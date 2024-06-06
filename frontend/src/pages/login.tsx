@@ -57,7 +57,7 @@ const Login = () => {
       );
       const user = res?.data?.user;
       await addAuthToStorage(user);
-      router.push("/");
+      router.push("/dashboard/");
     } catch (err: any) {
       console.log(err);
       setError(err?.response?.data?.msg);

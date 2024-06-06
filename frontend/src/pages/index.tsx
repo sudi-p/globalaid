@@ -1,8 +1,8 @@
 import React, { ReactNode, useEffect } from "react";
 import NavbarLayout from "@components/layout/navBarLayout/";
-import Hero from "../components/dashboard/Hero";
-import TopRentals, { TopRentalProps } from "../components/dashboard/TopRentals";
-import TopJobs, { TopJobProps } from "../components/dashboard/TopJobs";
+import Hero from "../components/home/Hero";
+import TopRentals, { TopRentalProps } from "../components/home/TopRentals";
+import TopJobs, { TopJobProps } from "../components/home/TopJobs";
 import axios from "@lib/api";
 
 export type DashboardProps = {
