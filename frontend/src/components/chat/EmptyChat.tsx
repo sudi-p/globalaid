@@ -4,7 +4,7 @@ import { MdChatBubbleOutline } from "react-icons/md";
 
 const NoChats = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-screen w-full bg-gray-100">
+    <div className="flex flex-col items-center justify-center my-32 w-full bg-gray-100">
       <div className="flex flex-col items-center p-6 bg-white shadow-md border border-solid border-gray-300 rounded-lg">
         <MdChatBubbleOutline className="text-gray-400 text-6xl mb-4" />
         <h2 className="text-2xl font-bold text-gray-700 mb-2">

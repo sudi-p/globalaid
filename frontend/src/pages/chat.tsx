@@ -30,15 +30,8 @@ export default function Chats() {
   }, [chats, chatId]);
   if (isLoading) return <ChatSkeleton />;
   if (error) return <PageNotFound />;
-  return (
-    <>
-      {chats.length ? (
-        <ChatList chatId={chatId} setChatId={setChatId} chats={chats} />
-      ) : (
-        <NoChats />
-      )}
-    </>
-  );
+  if (!chats.length) return <NoChats />;
+  return <ChatList chatId={chatId} setChatId={setChatId} chats={chats} />;
 }
 
 Chats.getLayout = function getLayout(page: ReactNode) {
