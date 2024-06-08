@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import axios from "@lib/api";
-import { fetchUserSuccess } from "@store/slices/LoggedInUserSlice";
+import { toast } from "react-toastify";
 import {
   TextField,
   FormControl,
@@ -58,6 +58,7 @@ const Login = () => {
       const user = res?.data?.user;
       await addAuthToStorage(user);
       router.push("/dashboard/");
+      toast.success("Login Succesfull");
     } catch (err: any) {
       console.log(err);
       setError(err?.response?.data?.msg);

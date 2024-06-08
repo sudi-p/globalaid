@@ -8,6 +8,7 @@ import { IconButton, Link, Tooltip } from "@mui/material";
 import SummaryBox from "@src/components/dashboard/SummaryBox";
 import { FcAdvertising, FcSms } from "react-icons/fc";
 import { FaEye } from "react-icons/fa6";
+import { toast } from "react-toastify";
 
 const Dashboard = () => {
   const [isCompleteList, setIsCompleteList] = useState(true);
