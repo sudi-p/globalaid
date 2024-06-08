@@ -4,6 +4,7 @@ import { MdClose, MdError } from "react-icons/md";
 import Button from "../ui/Button";
 import { GoLocation } from "react-icons/go";
 import { axiosPrivate } from "../../lib/api";
+import { toast } from "react-toastify";
 
 export type JobProps = {
   _id: string;
@@ -43,53 +44,55 @@ const JobModal = ({
         adId,
         messageText: message,
       });
+      toast.success("Message Sent");
       console.log(res.data);
     } else {
       setError("Please enter the message");
     }
   };
   return (
-    <div className="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center bg-black bg-opacity-40 z-50">
-      <div className=" w-1/3 relative m-auto border border-solid border-gray-400 bg-white rounded-xl p-4">
+    <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-40 z-50">
+      <div className="w-full max-w-2xl relative m-auto border border-gray-400 bg-white rounded-xl p-6 shadow-lg">
         <MdClose
           onClick={(e) => {
             e.stopPropagation();
             setShowJobDetails(false);
           }}
-          className="absolute text-xl font-bold right-4 top-4 hover:text-black hover:font-bold"
+          className="absolute text-2xl font-bold right-4 top-4 cursor-pointer text-gray-600 hover:text-black"
         />
-        <div className="text-2xl mb-4">{title}</div>
-        Posted By: {postedBy}
-        <div>Description:</div>
-        <div className="my-4">{description}</div>
-        <div className="mb-4">
-          <FaBuilding /> {company}
+        <div className="text-3xl font-semibold mb-6">{title}</div>
+        <div className="text-lg text-gray-700 mb-4">
+          <span className="font-semibold">Posted By:</span> {postedBy}
         </div>
-        <div className="mb-4">
-          <GoLocation /> {location}
+        <div className="text-lg font-semibold mb-2">Description:</div>
+        <div className="text-gray-700 mb-6">{description}</div>
+        <div className="text-lg flex items-center mb-4">
+          <FaBuilding className="mr-2 text-gray-600" /> {company}
+        </div>
+        <div className="text-lg flex items-center mb-6">
+          <GoLocation className="mr-2 text-gray-600" /> {location}
         </div>
         {canMessage && (
-          <div className="p-4 border border-solid border-gray-300 rounded-lg flex flex-col items-center gap-2">
+          <div className="p-4 border border-gray-300 rounded-lg flex flex-col items-center gap-4 bg-gray-50">
             <textarea
-              className=" p-3 box-border outline-none border border-solid rounded-lg border-gray-300 w-full"
+              className="p-3 w-full border border-gray-300 rounded-lg outline-none focus:border-blue-500"
               value={message}
               rows={4}
               onChange={(e) => setMessage(e.target.value)}
+              placeholder="Type your message here..."
             />
             {error && (
-              <div className="bg-red-100 p-3 w-full rounded-lg font-semibold text-red-500 flex items-center justify-center gap-2">
-                <MdError />
+              <div className="bg-red-100 p-3 w-full rounded-lg text-red-600 flex items-center justify-center gap-2">
+                <MdError className="text-red-600" />
                 {error}
               </div>
             )}
-            <div
+            <button
               onClick={handleSend}
-              className={
-                "border border-solid rounded-lg  p-2 text-white bg-blue-500 cursor-pointer"
-              }
+              className="w-full py-2 text-lg font-semibold text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition duration-200"
             >
               Send
-            </div>
+            </button>
           </div>
         )}
       </div>
